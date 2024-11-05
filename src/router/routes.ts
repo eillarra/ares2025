@@ -49,6 +49,7 @@ const routes: RouteRecordRaw[] = [
   // but you can also remove it
   {
     path: '/:catchAll(.*)*',
+    strict: true,
     component: () => import('pages/ErrorNotFound.vue'),
   },
 ];

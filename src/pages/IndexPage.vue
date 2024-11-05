@@ -20,7 +20,9 @@
           <q-img src="~assets/photos/stadshal.jpg" :ratio="$q.screen.gt.xs ? 0.7 : 1.35" />
         </div>
         <div class="col-12 col-sm col-md" :class="{ 'ares__border-left q-pl-xl': $q.screen.gt.xs }">
-          <p class="ares__text-red" :class="{ 'q-mt-xl': $q.screen.gt.sm }">{{ welcomeText }}</p>
+          <p class="ares__text-red" :class="{ 'q-mt-xl': $q.screen.gt.sm }">
+            {{ welcomeText }}
+          </p>
           <ares-btn
             :icon="iconVenue"
             label="More information"
@@ -55,7 +57,7 @@ import { storeToRefs } from 'pinia';
 
 import { useEventStore } from 'src/evan/stores/event';
 
-import MarkedDiv from 'src/components/MarkedDiv.vue';
+import MarkedDiv from 'components/MarkedDiv.vue';
 
 import { iconVenue } from 'src/icons';
 

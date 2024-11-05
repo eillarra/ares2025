@@ -32,7 +32,7 @@ import { useMeta } from 'quasar';
 
 import { useEventStore } from 'src/evan/stores/event';
 
-import MarkedDiv from 'src/components/MarkedDiv.vue';
+import MarkedDiv from 'components/MarkedDiv.vue';
 
 import { iconEmail } from 'src/icons';
 

@@ -49,8 +49,8 @@
               <img src="~assets/ares-logo.svg" class="ares__logo-footer q-mb-lg" />
             </router-link>
             <p class="text-body1 ares__text-red">
-              The 20th International Conference on Availability, Reliability and Security (ARES 2025), will be held in
-              2025 in Ghent, Belgium.
+              The 20th International Conference on Availability, Reliability and Security (ARES 2025), will be held
+              August 11-14, 2025 in Ghent, Belgium.
               <!-- TODO: use event dates from Evan once confirmed -->
             </p>
           </div>
@@ -99,9 +99,9 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-import UgentLogo from 'src/components/logos/UgentLogo.vue';
-import SbaLogo from 'src/components/logos/SbaLogo.vue';
+import UgentLogo from 'components/logos/UgentLogo.vue';
+import SbaLogo from 'components/logos/SbaLogo.vue';
 
-const visibleDialogMenu = ref(false);
+const visibleDialogMenu = ref<boolean>(false);
 const menu = [['Venue and location', 'venue']];
 </script>

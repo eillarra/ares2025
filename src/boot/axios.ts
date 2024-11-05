@@ -3,7 +3,7 @@ import axios, { AxiosInstance } from 'axios';
 
 import { EVAN_API_ENDPOINT, EVAN_EVENT_CODE } from 'src/constants';
 
-declare module '@vue/runtime-core' {
+declare module 'vue' {
   interface ComponentCustomProperties {
     $axios: AxiosInstance;
     $api: AxiosInstance;
