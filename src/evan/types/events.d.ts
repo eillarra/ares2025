@@ -1,0 +1,3 @@
+interface EvanEvent {
+  code: string;
+}
