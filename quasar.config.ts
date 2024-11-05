@@ -45,7 +45,7 @@ export default configure((/* ctx */) => {
 
       // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
 
-      // publicPath: '/',
+      publicPath: '/ares2025/', // TODO: remove when we have custom domain
       // analyze: true,
       // env: {},
       // rawDefine: {}
