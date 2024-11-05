@@ -1,7 +1,7 @@
 {
   "orientation": "portrait",
-  "background_color": "#ffffff",
-  "theme_color": "#027be3",
+  "background_color": "#fce275",
+  "theme_color": "#bf0303",
   "icons": [
     {
       "src": "icons/icon-128x128.png",

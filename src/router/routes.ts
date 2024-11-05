@@ -25,10 +25,10 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/ContactPage.vue'),
       },
       {
-        path: '/imprint/',
-        name: 'imprint',
+        path: '/disclaimer/',
+        name: 'disclaimer',
         strict: true,
-        component: () => import('pages/ImprintPage.vue'),
+        component: () => import('pages/DisclaimerPage.vue'),
       },
       {
         path: '/privacy-policy/',

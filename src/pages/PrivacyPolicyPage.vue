@@ -1,9 +1,9 @@
 <template>
-  <div class="q-my-xl">
+  <div class="q-my-xl q-pb-xl">
     <div class="container">
       <div class="row q-col-gutter-y-lg q-col-gutter-x-xl justify-between">
         <div class="col-12 col-md-4 flex column">
-          <h3 class="text-mono">Privacy policy for this website and related services</h3>
+          <h2 class="ares__text-title">Privacy policy for this website and related services</h2>
           <q-separator />
           <h6 class="ares__text-red">
             Ghent University, Technologiepark 126, 9052 Gent, Belgium, is the data controller (“we” or “us”) for this
@@ -25,8 +25,6 @@ import { storeToRefs } from 'pinia';
 import { useMeta } from 'quasar';
 
 import { useEventStore } from 'src/evan/stores/event';
-
-import MarkedDiv from 'components/MarkedDiv.vue';
 
 const eventStore = useEventStore();
 

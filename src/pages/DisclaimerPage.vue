@@ -1,13 +1,10 @@
 <template>
-  <div class="q-my-xl">
+  <div class="q-my-xl q-pb-xl">
     <div class="container">
       <div class="row q-col-gutter-y-lg q-col-gutter-x-xl justify-between">
         <div class="col-12 col-md-4 flex column">
-          <h3 class="text-mono">Imprint</h3>
+          <h2 class="ares__text-title">Disclaimer</h2>
           <q-separator />
-          <h6 class="ares__text-red">
-            With the registration participants agree to comply with the code of conduct for ARES.
-          </h6>
         </div>
         <div class="col-12 col-md-7">
           <marked-div v-if="legalNoticeText" :text="legalNoticeText" />
@@ -24,19 +21,17 @@ import { useMeta } from 'quasar';
 
 import { useEventStore } from 'src/evan/stores/event';
 
-import MarkedDiv from 'components/MarkedDiv.vue';
-
 const eventStore = useEventStore();
 
 const { contentsDict } = storeToRefs(eventStore);
 
 const legalNoticeText = computed<MarkdownText | null>(
-  () => (contentsDict.value['legal_notice']?.value as MarkdownText) || null,
+  () => (contentsDict.value['disclaimer']?.value as MarkdownText) || null,
 );
 
 useMeta(() => {
   return {
-    title: 'Imprint',
+    title: 'Disclaimer',
   };
 });
 </script>

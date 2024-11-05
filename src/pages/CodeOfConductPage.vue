@@ -1,15 +1,15 @@
 <template>
-  <div class="q-my-xl">
+  <div class="q-my-xl q-pb-xl">
     <div class="container">
       <div class="row q-col-gutter-y-lg q-col-gutter-x-xl justify-between">
         <div class="col-12 col-md-4 flex column">
-          <h3 class="text-mono">Code of Conduct</h3>
+          <h2 class="ares__text-title">Code of Conduct</h2>
           <q-separator />
           <h6 class="ares__text-red">
             With the registration participants agree to comply with the code of conduct for ARES.
           </h6>
           <q-space />
-          <q-card flat bordered square class="q-pa-sm q-mb-md" :class="{ 'q-pa-lg ': $q.screen.gt.sm }">
+          <q-card flat bordered square class="q-pa-sm q-mb-md" :class="{ 'q-pa-lg': $q.screen.gt.sm }">
             <q-card-section>
               <h4 class="ares__text-subtitle2">Reporting</h4>
               <marked-div v-if="reportingText" :text="reportingText" class="q-mb-lg text-body2" />
@@ -31,8 +31,6 @@ import { storeToRefs } from 'pinia';
 import { useMeta } from 'quasar';
 
 import { useEventStore } from 'src/evan/stores/event';
-
-import MarkedDiv from 'components/MarkedDiv.vue';
 
 import { iconEmail } from 'src/icons';
 

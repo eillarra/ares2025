@@ -7,7 +7,7 @@ $breakpoint-xs: 599px !default;
 /* Colors */
 
 $ares-red: #bf0303;
-$ares-yellow: #fde997; // original at 75% opacity
+$ares-yellow: #fce275;
 
 $separator-color: #343c3f !default;
 
@@ -60,14 +60,31 @@ body {
     max-width: $container-width;
 
     @media (max-width: $container-width) {
-      padding-left: 20px;
-      padding-right: 20px;
+      padding-left: 1rem;
+      padding-right: 1rem;
     }
   }
 
-  @media (min-width: $container-width) {
-    .q-toolbar {
-      padding: 0;
+  .ares__header {
+    z-index: 2002;
+  }
+
+  .ares__toolbar {
+    padding: 1rem 0.5rem 1rem 1rem;
+
+    @media (min-width: $container-width) {
+      padding: 2rem 0;
+    }
+  }
+
+  .ares__drawer {
+    .q-item {
+      padding: 0.5rem 0.1rem;
+    }
+
+    .q-item__section--avatar {
+      padding-right: 0.5rem;
+      min-width: 24px;
     }
   }
 }
@@ -82,9 +99,52 @@ body {
 
 /* Typography */
 
-.ares__footer-menu {
+.ares__text-headline,
+.ares__text-title,
+.ares__text-subtitle2,
+.ares__router-link-menu,
+samp,
+.text-mono {
   font-family: 'Mabry Mono', monospace;
-  font-size: 0.9rem;
+  word-spacing: -0.225em;
+}
+
+.ares__text-headline,
+.ares__text-title,
+.ares__text-subtitle2 {
+  line-height: 1.3;
+  text-wrap: balance;
+}
+
+.ares__text-headline {
+  font-size: 1.25em !important;
+
+  @media (min-width: $container-width) {
+    font-size: 1.8em !important;
+  }
+}
+
+.ares__text-title {
+  font-size: 1.35em !important;
+  margin-top: 0;
+
+  @media (min-width: $container-width) {
+    font-size: 1.5em !important;
+  }
+
+  + hr.q-separator {
+    margin: 0.5rem 0;
+  }
+}
+
+.ares__text-subtitle2 {
+  font-size: 1em !important;
+  text-transform: uppercase;
+  margin-top: 0;
+}
+
+.ares__router-link-menu {
+  font-size: 0.8rem;
   line-height: 1.8;
 
   a {
@@ -95,13 +155,6 @@ body {
       text-decoration: underline;
     }
   }
-}
-
-.ares__text-subtitle2 {
-  font-family: 'Mabry Mono', monospace;
-  font-size: 1em !important;
-  text-transform: uppercase;
-  margin-top: 0;
 }
 
 .text-helvetica {
@@ -116,10 +169,12 @@ body {
   font-size: smaller !important;
 }
 
+.text-caption {
+  line-height: 1.4 !important;
+}
+
 samp,
 .text-mono {
-  font-family: 'Mabry Mono', monospace;
-
   .text-body2 &,
   &.text-body2 {
     font-size: 0.85em;
@@ -144,6 +199,12 @@ strong .text-weight-medium,
 .text-weight-bolder {
   font-family: 'Mabry Bold', 'Helvetica Neue', Arial, Helvetica, sans-serif;
   font-weight: 700;
+}
+
+blockquote {
+  margin: 1em 0;
+  padding: 0 1em;
+  border-left: 1px dashed $ares-red;
 }
 
 ul {
@@ -191,7 +252,11 @@ a {
 /* Images */
 
 .ares__logo {
-  height: 48px;
+  height: 36px;
+
+  &.a-lg {
+    height: 48px;
+  }
 }
 
 .ares__logo-footer {

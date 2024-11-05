@@ -1,39 +1,63 @@
 <template>
-  <q-layout view="hHh LpR lff" class="ares__layout">
-    <q-dialog v-model="visibleDialogMenu" position="top" full-width full-height>
-      <q-card>
-        <q-card-section>
-          <q-btn unelevated round icon="close" color="white" text-color="dark" v-close-popup />
-          <div class="q-gutter-y-md text-center q-pt-none q-pb-xl">
-            <router-link :to="{ name: 'home' }">
-              <img src="~assets/ares-logo.svg" class="ares__logo" />
-            </router-link>
-            <p v-for="(item, idx) in menu" :key="idx" class="text-h4 text-grey-8 text-weight-light">
-              <router-link :to="{ name: item[1] }" class="text-body1 text-inherit">{{ item[0] }}</router-link>
-            </p>
-          </div>
-        </q-card-section>
-      </q-card>
-    </q-dialog>
-    <q-header bordered class="ares__header bg-white text-dark">
+  <q-layout v-show="_loaded" view="hHh lpr lfr" class="ares__layout">
+    <q-header class="ares__header bg-white text-dark">
       <q-toolbar class="ares__toolbar container">
+        <router-link :to="{ name: 'home' }">
+          <img src="~assets/ares-logo.svg" class="ares__logo" :class="{ 'a-lg': $q.screen.gt.sm }" />
+        </router-link>
+        <q-space v-if="$q.screen.lt.md" />
+        <q-btn-group square flat v-else class="q-ml-xl">
+          <q-btn v-for="(item, idx) in menu" :key="idx" no-caps :to="{ name: item[0] }" :label="item[1]" size="lg" />
+        </q-btn-group>
         <q-btn
-          flat
+          outline
           round
           v-show="$q.screen.lt.md"
-          @click="visibleDialogMenu = !visibleDialogMenu"
-          icon="menu"
+          @click="rightDrawer = !rightDrawer"
+          :icon="iconMenu"
           class="q-mr-sm"
-        ></q-btn>
-        <q-space v-if="$q.screen.lt.md" />
-        <router-link :to="{ name: 'home' }">
-          <img src="~assets/ares-logo.svg" class="ares__logo q-my-xl" />
-        </router-link>
-        <q-btn-group square flat v-if="$q.screen.gt.sm" class="q-ml-xl">
-          <q-btn v-for="(item, idx) in menu" :key="idx" no-caps :to="{ name: item[1] }" :label="item[0]" size="lg" />
-        </q-btn-group>
+        />
       </q-toolbar>
+      <q-separator />
     </q-header>
+
+    <q-drawer v-if="!$q.screen.gt.sm" v-model="rightDrawer" :width="280" side="right" class="ares__drawer">
+      <q-toolbar class="ares__toolbar">
+        <q-space v-if="$q.screen.lt.md" />
+        <q-btn
+          outline
+          round
+          v-show="$q.screen.lt.md"
+          @click="rightDrawer = !rightDrawer"
+          :icon="iconClose"
+          class="q-mr-sm"
+        />
+      </q-toolbar>
+      <div class="q-pa-lg">
+        <q-list dense class="">
+          <q-item
+            v-for="(item, idx) in menu"
+            :key="idx"
+            no-caps
+            :to="{ name: item[0] }"
+            exact
+            active-class="text-weight-bold"
+          >
+            <q-item-section avatar>
+              <q-icon :name="item[2]" />
+            </q-item-section>
+            <q-item-section>{{ item[1] }}</q-item-section>
+          </q-item>
+        </q-list>
+        <q-separator class="q-mt-lg q-mb-md" />
+        <div class="ares__router-link-menu flex column text-right">
+          <router-link :to="{ name: 'contact' }" class="q-mt-md">Contact</router-link>
+          <router-link :to="{ name: 'codeOfConduct' }">Code of Conduct</router-link>
+          <router-link :to="{ name: 'privacyPolicy' }">Privacy Policy</router-link>
+          <router-link :to="{ name: 'disclaimer' }">Disclaimer</router-link>
+        </div>
+      </div>
+    </q-drawer>
 
     <q-page-container>
       <q-page>
@@ -48,19 +72,15 @@
             <router-link :to="{ name: 'home' }">
               <img src="~assets/ares-logo.svg" class="ares__logo-footer q-mb-lg" />
             </router-link>
-            <p class="text-body1 ares__text-red">
-              The 20th International Conference on Availability, Reliability and Security (ARES 2025), will be held
-              August 11-14, 2025 in Ghent, Belgium.
-              <!-- TODO: use event dates from Evan once confirmed -->
-            </p>
+            <p class="text-body1 ares__text-red">{{ footerText }}</p>
           </div>
           <div class="col-12 col-sm-3 col-md-4 offset-md-1">
-            <div class="ares__footer-menu flex column">
-              <router-link :to="{ name: 'venue' }">Venue and location</router-link>
+            <div class="ares__router-link-menu flex column">
+              <router-link v-for="(item, idx) in menu" :key="idx" :to="{ name: item[0] }">{{ item[1] }}</router-link>
               <router-link :to="{ name: 'contact' }" class="q-mt-md">Contact</router-link>
               <router-link :to="{ name: 'codeOfConduct' }">Code of Conduct</router-link>
               <router-link :to="{ name: 'privacyPolicy' }">Privacy Policy</router-link>
-              <router-link :to="{ name: 'imprint' }">Imprint</router-link>
+              <router-link :to="{ name: 'disclaimer' }">Disclaimer</router-link>
             </div>
           </div>
           <div class="col-12 col-sm-6 col-md-3">
@@ -97,11 +117,27 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
+import { storeToRefs } from 'pinia';
+
+import { useEventStore } from 'src/evan/stores/event';
+import { dateRange } from 'src/evan/utils/dates';
 
 import UgentLogo from 'components/logos/UgentLogo.vue';
 import SbaLogo from 'components/logos/SbaLogo.vue';
 
-const visibleDialogMenu = ref<boolean>(false);
-const menu = [['Venue and location', 'venue']];
+import { iconClose, iconMenu, iconVenue } from 'src/icons';
+
+const eventStore = useEventStore();
+
+const { _loaded, event } = storeToRefs(eventStore);
+
+const rightDrawer = ref<boolean>(false);
+const menu = [['venue', 'Venue and location', iconVenue]];
+
+const footerText = computed<string>(() => {
+  if (!event.value) return '';
+  const dates = dateRange(event.value.start_date, event.value.end_date);
+  return `The ${event.value.full_name} (${event.value.name}), will be held ${dates} in ${event.value.city}, ${event.value.country.name}.`;
+});
 </script>
