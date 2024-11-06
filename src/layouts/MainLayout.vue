@@ -71,14 +71,17 @@
             </router-link>
             <p class="text-body1 ares__text-red">{{ footerText }}</p>
           </div>
-          <div class="col-12 col-sm-3 col-md-4 offset-md-1">
+          <div class="col-6 col-sm-3 col-md-2 offset-md-1">
             <div class="ares__router-link-menu flex column">
               <router-link v-for="(item, idx) in menu" :key="idx" :to="{ name: item[0] }">{{ item[1] }}</router-link>
-              <div class="q-mt-md"></div>
+            </div>
+          </div>
+          <div class="col-6 col-sm-3 col-md-2">
+            <div class="ares__router-link-menu flex column">
               <router-link v-for="(item, idx) in submenu" :key="idx" :to="{ name: item[0] }">{{ item[1] }}</router-link>
             </div>
           </div>
-          <div class="col-12 col-sm-6 col-md-3">
+          <div class="col-12 col-sm-6 col-md-3" :class="{ 'q-mt-lg': $q.screen.lt.md }">
             <div class="row q-col-gutter-xl ares__footer-organizers text-caption q-mb-xl">
               <div class="col">
                 Organised by<br />
