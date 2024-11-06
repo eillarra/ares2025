@@ -5,11 +5,13 @@ import {
   ionMailOutline,
   ionMapOutline,
   ionMenuOutline,
+  ionPeopleOutline,
   ionReloadOutline,
 } from '@quasar/extras/ionicons-v6';
 
 export const iconCached = ionReloadOutline;
 export const iconClose = ionCloseOutline;
+export const iconCommittees = ionPeopleOutline;
 export const iconEmail = ionMailOutline;
 export const iconMap = ionMapOutline;
 export const iconMenu = ionMenuOutline;

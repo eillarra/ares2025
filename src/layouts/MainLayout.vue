@@ -49,12 +49,9 @@
             <q-item-section>{{ item[1] }}</q-item-section>
           </q-item>
         </q-list>
-        <q-separator class="q-mt-lg q-mb-md" />
+        <q-separator class="q-mt-lg q-mb-xl" />
         <div class="ares__router-link-menu flex column text-right">
-          <router-link :to="{ name: 'contact' }" class="q-mt-md">Contact</router-link>
-          <router-link :to="{ name: 'codeOfConduct' }">Code of Conduct</router-link>
-          <router-link :to="{ name: 'privacyPolicy' }">Privacy Policy</router-link>
-          <router-link :to="{ name: 'disclaimer' }">Disclaimer</router-link>
+          <router-link v-for="(item, idx) in submenu" :key="idx" :to="{ name: item[0] }">{{ item[1] }}</router-link>
         </div>
       </div>
     </q-drawer>
@@ -77,10 +74,8 @@
           <div class="col-12 col-sm-3 col-md-4 offset-md-1">
             <div class="ares__router-link-menu flex column">
               <router-link v-for="(item, idx) in menu" :key="idx" :to="{ name: item[0] }">{{ item[1] }}</router-link>
-              <router-link :to="{ name: 'contact' }" class="q-mt-md">Contact</router-link>
-              <router-link :to="{ name: 'codeOfConduct' }">Code of Conduct</router-link>
-              <router-link :to="{ name: 'privacyPolicy' }">Privacy Policy</router-link>
-              <router-link :to="{ name: 'disclaimer' }">Disclaimer</router-link>
+              <div class="q-mt-md"></div>
+              <router-link v-for="(item, idx) in submenu" :key="idx" :to="{ name: item[0] }">{{ item[1] }}</router-link>
             </div>
           </div>
           <div class="col-12 col-sm-6 col-md-3">
@@ -126,14 +121,23 @@ import { dateRange } from 'src/evan/utils/dates';
 import UgentLogo from 'components/logos/UgentLogo.vue';
 import SbaLogo from 'components/logos/SbaLogo.vue';
 
-import { iconClose, iconMenu, iconVenue } from 'src/icons';
+import { iconClose, iconCommittees, iconMenu, iconVenue } from 'src/icons';
 
 const eventStore = useEventStore();
 
 const { _loaded, event } = storeToRefs(eventStore);
 
 const rightDrawer = ref<boolean>(false);
-const menu = [['venue', 'Venue and location', iconVenue]];
+const menu = [
+  ['committees', 'Committees', iconCommittees],
+  ['venue', 'Venue and location', iconVenue],
+];
+const submenu = [
+  ['contact', 'Contact'],
+  ['codeOfConduct', 'Code of Conduct'],
+  ['privacyPolicy', 'Privacy Policy'],
+  ['disclaimer', 'Disclaimer'],
+];
 
 const footerText = computed<string>(() => {
   if (!event.value) return '';

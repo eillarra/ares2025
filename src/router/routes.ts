@@ -19,6 +19,18 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/CodeOfConductPage.vue'),
       },
       {
+        path: '/conference/committee/',
+        redirect: {
+          name: 'committees',
+        },
+      },
+      {
+        path: '/conference/committees/',
+        name: 'committees',
+        strict: true,
+        component: () => import('pages/conference/CommitteesPage.vue'),
+      },
+      {
         path: '/contact/',
         name: 'contact',
         strict: true,
