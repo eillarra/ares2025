@@ -49,6 +49,12 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/PrivacyPolicyPage.vue'),
       },
       {
+        path: '/submission-guidelines/',
+        name: 'submissions',
+        strict: true,
+        component: () => import('pages/conference/SubmissionsPage.vue'),
+      },
+      {
         path: '/venue-and-location/',
         name: 'venue',
         strict: true,

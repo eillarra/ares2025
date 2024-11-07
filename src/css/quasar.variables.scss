@@ -12,6 +12,9 @@
 // to match your app's branding.
 // Tip: Use the "Theme Builder" on Quasar's documentation website.
 
+$ares-red: #bf0303;
+$ares-yellow: #fce275;
+
 $primary: #1976d2;
 $secondary: #26a69a;
 $accent: #9c27b0;
@@ -26,10 +29,12 @@ $warning: #f2c037;
 
 $dark: #343c3f !default;
 $separator-color: $dark;
+$shadow-color: #ddd;
 
 // Typography
 
 $body-font-size: 18px !default;
+$button-font-size: 16px !default;
 
 $h1: (
   size: 3rem,

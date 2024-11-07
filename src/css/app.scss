@@ -103,8 +103,11 @@ body {
 .ares__text-title,
 .ares__text-subtitle2,
 .ares__router-link-menu,
-samp,
-.text-mono {
+.text-mono,
+code,
+kbd,
+pre,
+samp {
   font-family: 'Mabry Mono', monospace;
   word-spacing: -0.225em;
 }
@@ -235,18 +238,36 @@ a {
 
 /* Markdown component */
 
-.ares__marked {
+.evan__marked {
   h1,
   h2,
-  h3 {
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: 'Mabry Bold', 'Helvetica Neue', Arial, Helvetica, sans-serif;
     font-weight: 700;
     font-size: 1em;
     text-wrap: balance;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-size: 1em;
+    margin-top: 2em;
 
     &:first-child {
       margin-top: 0;
     }
+  }
+
+  h4,
+  h5,
+  h6 {
+    font-size: 0.85em;
+    margin-bottom: 0.5em;
+    color: $separator-color;
   }
 }
 
@@ -272,6 +293,10 @@ a {
 /* Quasar tweaks */
 
 .ares__q-btn {
+  .block {
+    padding-bottom: 1px;
+  }
+
   .q-icon {
     vertical-align: bottom;
     font-size: 1.35em;

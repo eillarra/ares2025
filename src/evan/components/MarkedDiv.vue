@@ -1,5 +1,5 @@
 <template>
-  <div v-if="text" v-html="html" class="ares__marked"></div>
+  <div v-if="text" v-html="html" class="evan__marked"></div>
 </template>
 
 <script setup lang="ts">
