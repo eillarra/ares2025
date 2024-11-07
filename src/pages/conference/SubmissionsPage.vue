@@ -16,6 +16,7 @@
               href="https://easychair.org/conferences/?conf=ares2025"
               target="_blank"
               rel="noopener noreferrer"
+              class="ares__bg-yellow"
               :class="{ 'full-width': $q.screen.lt.sm }"
             />
           </div>
