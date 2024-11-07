@@ -66,10 +66,30 @@
       <div class="container">
         <div class="row q-col-gutter-x-xl q-col-gutter-y-lg justify-between">
           <div class="col-12 col-sm-12 col-md-4">
-            <router-link :to="{ name: 'home' }">
-              <img src="~assets/ares-logo.svg" class="ares__logo-footer q-mb-lg" />
-            </router-link>
-            <p class="text-body1 ares__text-red">{{ footerText }}</p>
+            <div class="q-gutter-x-lg flex items-center">
+              <router-link :to="{ name: 'home' }" class="q-pt-xs">
+                <img src="~assets/ares-icon.svg" class="ares__logo-footer" />
+              </router-link>
+              <a
+                href="https://easychair.org/conferences/?conf=ares2025"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="EasyChair"
+                aria-label="EasyChair"
+              >
+                <q-icon :name="iconEasyChair" size="sm" />
+              </a>
+              <a
+                href="https://x.com/ARES_Conference"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="X / Twitter"
+                aria-label="X / Twitter"
+              >
+                <q-icon :name="iconX" size="sm" />
+              </a>
+            </div>
+            <p class="text-body1 ares__text-red q-mt-lg">{{ footerText }}</p>
           </div>
           <div class="col-6 col-sm-3 col-md-2 offset-md-1">
             <div class="ares__router-link-menu flex column">
@@ -81,7 +101,7 @@
               <router-link v-for="(item, idx) in submenu" :key="idx" :to="{ name: item[0] }">{{ item[1] }}</router-link>
             </div>
           </div>
-          <div class="col-12 col-sm-6 col-md-3" :class="{ 'q-mt-lg': $q.screen.lt.md }">
+          <div class="col-12 col-sm-6 col-md-3" :class="{ 'q-mt-lg': $q.screen.lt.sm }">
             <div class="row q-col-gutter-xl ares__footer-organizers text-caption q-mb-xl">
               <div class="col">
                 Organised by<br />
@@ -124,7 +144,7 @@ import { dateRange } from 'src/evan/utils/dates';
 import UgentLogo from 'components/logos/UgentLogo.vue';
 import SbaLogo from 'components/logos/SbaLogo.vue';
 
-import { iconClose, iconCommittees, iconMenu, iconSubmissions, iconVenue } from 'src/icons';
+import { iconClose, iconCommittees, iconMenu, iconSubmissions, iconVenue, iconEasyChair, iconX } from 'src/icons';
 
 const eventStore = useEventStore();
 
