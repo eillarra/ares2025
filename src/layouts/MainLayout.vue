@@ -70,7 +70,7 @@
               <router-link :to="{ name: 'home' }" class="q-pt-xs">
                 <img src="~assets/ares-icon.svg" class="ares__logo-footer" />
               </router-link>
-              <a
+              <!--<a
                 href="https://easychair.org/conferences/?conf=ares2025"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -78,7 +78,7 @@
                 aria-label="EasyChair"
               >
                 <q-icon :name="iconEasyChair" size="sm" />
-              </a>
+              </a>-->
               <a
                 href="https://x.com/ARES_Conference"
                 target="_blank"
@@ -144,7 +144,7 @@ import { dateRange } from 'src/evan/utils/dates';
 import UgentLogo from 'components/logos/UgentLogo.vue';
 import SbaLogo from 'components/logos/SbaLogo.vue';
 
-import { iconClose, iconCommittees, iconMenu, iconSubmissions, iconVenue, iconEasyChair, iconX } from 'src/icons';
+import { iconClose, iconCommittees, iconMenu, iconVenue, iconX } from 'src/icons';
 
 const eventStore = useEventStore();
 
@@ -152,7 +152,7 @@ const { _loaded, event } = storeToRefs(eventStore);
 
 const rightDrawer = ref<boolean>(false);
 const menu = [
-  ['submissions', 'Submissions', iconSubmissions],
+  // ['submissions', 'Submissions', iconSubmissions],
   ['committees', 'Committees', iconCommittees],
   ['venue', 'Venue and location', iconVenue],
 ];
