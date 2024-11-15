@@ -1,21 +1,21 @@
 /* eslint-env node */
 
 // Configuration for your app
-// https://v2.quasar.dev/quasar-cli-vite/quasar-config-js
+// https://quasar.dev/quasar-cli-vite/quasar-config-js
 
 import { configure } from 'quasar/wrappers';
 
 export default configure((/* ctx */) => {
   return {
-    // https://v2.quasar.dev/quasar-cli-vite/prefetch-feature
+    // https://quasar.dev/quasar-cli-vite/prefetch-feature
     // preFetch: true,
 
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
-    // https://v2.quasar.dev/quasar-cli-vite/boot-files
-    boot: ['axios', 'components'],
+    // https://quasar.dev/quasar-cli-vite/boot-files
+    boot: ['sentry', 'axios', 'components'],
 
-    // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
+    // https://quasar.dev/quasar-cli-vite/quasar-config-js#css
     css: ['app.scss'],
 
     // https://github.com/quasarframework/quasar/tree/dev/extras
@@ -31,7 +31,7 @@ export default configure((/* ctx */) => {
       // 'material-icons', // optional, you are not bound to it
     ],
 
-    // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#build
+    // Full list of options: https://quasar.dev/quasar-cli-vite/quasar-config-js#build
     build: {
       target: {
         browser: ['es2022', 'firefox115', 'chrome115', 'safari14'],
@@ -47,7 +47,10 @@ export default configure((/* ctx */) => {
 
       // publicPath: '/',
       // analyze: true,
-      // env: {},
+      env: {
+        APP_DOMAIN: process.env.APP_DOMAIN || 'localhost:9200',
+        GIT_COMMIT_HASH: process.env.GIT_COMMIT_HASH || 'dev',
+      },
       // rawDefine: {}
       // ignorePublicFolder: true,
       // minify: false,
@@ -73,7 +76,7 @@ export default configure((/* ctx */) => {
       ],
     },
 
-    // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
+    // Full list of options: https://quasar.dev/quasar-cli-vite/quasar-config-js#devServer
     devServer: {
       // https: true
       open: false, // opens browser window automatically
@@ -96,10 +99,10 @@ export default configure((/* ctx */) => {
     },
 
     // animations: 'all', // --- includes all animations
-    // https://v2.quasar.dev/options/animations
+    // https://quasar.dev/options/animations
     animations: [],
 
-    // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#sourcefiles
+    // https://quasar.dev/quasar-cli-vite/quasar-config-js#sourcefiles
     // sourceFiles: {
     //   rootComponent: 'src/App.vue',
     //   router: 'src/router/index',
@@ -112,7 +115,7 @@ export default configure((/* ctx */) => {
     //   bexManifestFile: 'src-bex/manifest.json
     // },
 
-    // https://v2.quasar.dev/quasar-cli-vite/developing-ssr/configuring-ssr
+    // https://quasar.dev/quasar-cli-vite/developing-ssr/configuring-ssr
     ssr: {
       prodPort: 3000, // The default port that the production server should use
       // (gets superseded if process.env.PORT is specified at runtime)
@@ -158,17 +161,17 @@ export default configure((/* ctx */) => {
       pwaManifestFile: 'src-pwa/manifest.json',
     },
 
-    // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-cordova-apps/configuring-cordova
+    // Full list of options: https://quasar.dev/quasar-cli-vite/developing-cordova-apps/configuring-cordova
     cordova: {
       // noIosLegacyBuildFlag: true, // uncomment only if you know what you are doing
     },
 
-    // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-capacitor-apps/configuring-capacitor
+    // Full list of options: https://quasar.dev/quasar-cli-vite/developing-capacitor-apps/configuring-capacitor
     capacitor: {
       hideSplashscreen: true,
     },
 
-    // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-electron-apps/configuring-electron
+    // Full list of options: https://quasar.dev/quasar-cli-vite/developing-electron-apps/configuring-electron
     electron: {
       // extendElectronMainConf (esbuildConf) {},
       // extendElectronPreloadConf (esbuildConf) {},
@@ -201,7 +204,7 @@ export default configure((/* ctx */) => {
       },
     },
 
-    // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-browser-extensions/configuring-bex
+    // Full list of options: https://quasar.dev/quasar-cli-vite/developing-browser-extensions/configuring-bex
     bex: {
       // extendBexScriptsConf (esbuildConf) {},
       // extendBexManifestJson (json) {},
