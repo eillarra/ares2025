@@ -7,10 +7,7 @@
           <q-separator />
         </div>
         <div class="col-12 col-md-7">
-          <marked-div v-if="contactText" :text="contactText" />
-          <blockquote class="q-my-xl">
-            <marked-div v-if="contactInfo" :text="contactInfo" />
-          </blockquote>
+          <marked-div v-if="contactText" :text="contactText" class="q-mb-lg" />
           <ares-btn :icon="iconEmail" label="Contact us" type="a" :href="`mailto:${contactEmail}`" />
         </div>
       </div>
@@ -32,10 +29,7 @@ const eventStore = useEventStore();
 const { contactEmail, contentsDict } = storeToRefs(eventStore);
 
 const contactText = computed<MarkdownText | null>(
-  () => (contentsDict.value['contact.intro']?.value as MarkdownText) || null,
-);
-const contactInfo = computed<MarkdownText | null>(
-  () => (contentsDict.value['contact.info']?.value as MarkdownText) || null,
+  () => (contentsDict.value['contact']?.value as MarkdownText) || null,
 );
 
 useMeta(() => {
