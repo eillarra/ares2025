@@ -28,9 +28,7 @@ const eventStore = useEventStore();
 
 const { contactEmail, contentsDict } = storeToRefs(eventStore);
 
-const contactText = computed<MarkdownText | null>(
-  () => (contentsDict.value['contact']?.value as MarkdownText) || null,
-);
+const contactText = computed<MarkdownText | null>(() => (contentsDict.value['contact']?.value as MarkdownText) || null);
 
 useMeta(() => {
   return {
