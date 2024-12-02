@@ -17,13 +17,12 @@
     "@quasar/extras": "^1.16.4",
     "@sentry/vue": "^8.32.0",
     "axios": "^1.2.1",
-    "marked": "^14.1.2",
+    "evan": "file:./src/evan",
     "pinia": "^2.0.11",
     "quasar": "^2.16.0",
     "register-service-worker": "^1.7.2",
     "vue": "^3.4.18",
-    "vue-router": "^4.0.12",
-    "evan-package": "file:./src/evan"
+    "vue-router": "^4.0.12"
   },
   "devDependencies": {
     "@quasar/app-vite": "^2.0.0-rc.1",

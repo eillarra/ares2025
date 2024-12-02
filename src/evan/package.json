@@ -2,6 +2,7 @@
   "name": "evan-helpers",
   "version": "0.0.1",
   "dependencies": {
-    "date-fns": "^4.1.0"
+    "date-fns": "^4.1.0",
+    "marked": "^14.1.2"
   }
 }
