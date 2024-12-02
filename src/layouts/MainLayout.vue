@@ -56,7 +56,7 @@
       </div>
     </q-drawer>
 
-    <q-page-container>
+    <q-page-container class="bg-white">
       <q-page>
         <router-view />
       </q-page>
