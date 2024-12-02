@@ -1,3 +1,12 @@
+interface ImportantDate {
+  key: number;
+  label: string;
+  format: 'date' | 'range' | 'month';
+  start_date: string;
+  end_date: string;
+  formatted?: string;
+}
+
 interface EvanEvent {
   code: string;
   name: string;
@@ -13,4 +22,8 @@ interface EvanEvent {
   registration_deadline: string;
   registration_url: Url;
   venues: EvanVenue[];
+  // old API
+  custom_data: {
+    dates: ImportantDate[];
+  };
 }

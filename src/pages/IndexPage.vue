@@ -8,10 +8,18 @@
           <div :class="{ 'q-pr-xl ': $q.screen.gt.sm }">
             <h3 class="ares__text-headline">{{ event?.full_name }}</h3>
             <p>{{ focusesText }}</p>
+            <div v-if="importantDates.length" class="q-my-xl">
+              <h5><strong>Important dates</strong></h5>
+              <ul class="q-my-none">
+                <li v-for="date in importantDates" :key="date.id" class="q-ml-none">
+                  {{ date.formatted }}: {{ date.label }}
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
         <div class="col-12 col-sm-6 col-md-3">
-          <q-img src="~assets/photos/stadshal.jpg" :ratio="$q.screen.gt.xs ? 0.7 : 1.35" />
+          <q-img src="~assets/photos/stadshal.jpg" :ratio="$q.screen.gt.xs ? 0.5 : 1.35" />
         </div>
         <div class="col-12 col-sm col-md" :class="{ 'ares__border-left q-pl-xl': $q.screen.gt.xs }">
           <p class="ares__text-red" :class="{ 'q-mt-xl': $q.screen.gt.sm }">{{ welcomeText }}</p>
@@ -48,7 +56,7 @@ import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 
 import { useEventStore } from 'src/evan/stores/event';
-import { dateRange } from 'src/evan/utils/dates';
+import { dateRange, formatImportantDate } from 'src/evan/utils/dates';
 
 import { iconVenue } from 'src/icons';
 
@@ -69,4 +77,11 @@ const aboutAresIntroText = computed<MarkdownText | null>(
 const aboutAresText = computed<MarkdownText | null>(
   () => (contentsDict.value['ares.about']?.value as MarkdownText) || null,
 );
+const importantDates =
+  computed<ImportantDate[]>(() =>
+    event.value?.custom_data.dates.map((d) => ({
+      ...d,
+      formatted: formatImportantDate(d),
+    })),
+  ) || [];
 </script>
