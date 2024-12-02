@@ -12,7 +12,7 @@ export const useEventStore = defineStore('evanEvent', () => {
 
   const contactEmail = computed(() => {
     if (_event.value) return _event.value.email;
-    return 'ares@ugent.be';
+    return 'evan@ugent.be';
   });
 
   const contentsDict = computed(() => {

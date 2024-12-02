@@ -144,7 +144,7 @@ import { dateRange } from 'src/evan/utils/dates';
 import UgentLogo from 'components/logos/UgentLogo.vue';
 import SbaLogo from 'components/logos/SbaLogo.vue';
 
-import { iconClose, iconCommittees, iconMenu, iconVenue, iconX } from 'src/icons';
+import { iconClose, iconCommittees, iconMenu, iconSend, iconVenue, iconX } from 'src/icons';
 
 const eventStore = useEventStore();
 
@@ -152,7 +152,7 @@ const { _loaded, event } = storeToRefs(eventStore);
 
 const rightDrawer = ref<boolean>(false);
 const menu = [
-  // ['submissions', 'Submissions', iconSubmissions],
+  ['callForPapers', 'Call for Papers', iconSend],
   ['committees', 'Committees', iconCommittees],
   ['venue', 'Venue and location', iconVenue],
 ];

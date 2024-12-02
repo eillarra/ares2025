@@ -13,6 +13,12 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/IndexPage.vue'),
       },
       {
+        path: '/call-for-papers/',
+        name: 'callForPapers',
+        strict: true,
+        component: () => import('pages/conference/CallForPapersPage.vue'),
+      },
+      {
         path: '/code-of-conduct/',
         name: 'codeOfConduct',
         strict: true,
@@ -48,12 +54,6 @@ const routes: RouteRecordRaw[] = [
         strict: true,
         component: () => import('pages/PrivacyPolicyPage.vue'),
       },
-      /*{
-        path: '/submission-guidelines/',
-        name: 'submissions',
-        strict: true,
-        component: () => import('pages/conference/SubmissionsPage.vue'),
-      },*/
       {
         path: '/venue-and-location/',
         name: 'venue',

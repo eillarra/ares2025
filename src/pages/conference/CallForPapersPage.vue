@@ -3,17 +3,18 @@
     <div class="container">
       <div class="row q-col-gutter-y-lg q-col-gutter-x-xl justify-between">
         <div class="col-12 col-md-4 flex column">
-          <h2 class="ares__text-title">Submission guidelines</h2>
+          <h2 class="ares__text-title">Call for Papers</h2>
           <q-separator />
           <h6 class="ares__text-red">
             Authors are invited to submit research and application papers according to the following guidelines.
           </h6>
           <div class="q-mb-lg">
             <ares-btn
-              :icon="iconEasyChair"
-              label="Submit your paper to EasyChair"
+              v-if="submissionsUrl"
+              :icon="iconSend"
+              label="Submit your paper"
               type="a"
-              href="https://easychair.org/conferences/?conf=ares2025"
+              :href="submissionsUrl"
               target="_blank"
               rel="noopener noreferrer"
               class="ares__bg-yellow"
@@ -24,7 +25,7 @@
           <q-card flat bordered square class="q-pa-sm q-mb-md" :class="{ 'q-pa-lg': $q.screen.gt.sm }">
             <q-card-section>
               <h4 class="ares__text-subtitle2">If you need any assistance, do not hesitate to contact us</h4>
-              <ares-btn :icon="iconEmail" label="Ask a question" type="a" href="mailto:ares@sba-research.org" />
+              <ares-btn :icon="iconEmail" label="Ask a question" type="a" :href="`mailto:${contactEmail}`" />
             </q-card-section>
           </q-card>
         </div>
@@ -43,14 +44,18 @@ import { useMeta } from 'quasar';
 
 import { useEventStore } from 'src/evan/stores/event';
 
-import { iconEasyChair, iconEmail } from 'src/icons';
+import { iconEmail, iconSend } from 'src/icons';
 
 const eventStore = useEventStore();
 
-const { contentsDict } = storeToRefs(eventStore);
+const { contactEmail, contentsDict } = storeToRefs(eventStore);
 
 const submissionsText = computed<MarkdownText | null>(
-  () => (contentsDict.value['submissions']?.value as MarkdownText) || null,
+  () => (contentsDict.value['call_for_papers']?.value as MarkdownText) || null,
+);
+
+const submissionsUrl = computed<string | null>(
+  () => (contentsDict.value['call_for_papers.url']?.value as string) || null,
 );
 
 useMeta(() => {
