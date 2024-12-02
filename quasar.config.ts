@@ -204,12 +204,12 @@ export default configure((/* ctx */) => {
       },
     },
 
-    // Full list of options: https://quasar.dev/quasar-cli-vite/developing-browser-extensions/configuring-bex
+    // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-browser-extensions/configuring-bex
     bex: {
       // extendBexScriptsConf (esbuildConf) {},
       // extendBexManifestJson (json) {},
 
-      contentScripts: ['my-content-script'],
+      extraScripts: [],
     },
   };
 });
