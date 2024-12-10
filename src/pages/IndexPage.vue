@@ -10,8 +10,8 @@
             <p>{{ focusesText }}</p>
             <div v-if="importantDates.length" class="q-my-xl">
               <h5><strong>Important dates</strong></h5>
-              <ul class="q-my-none">
-                <li v-for="date in importantDates" :key="date.id" class="q-ml-none">
+              <ul>
+                <li v-for="date in importantDates" :key="date.id">
                   {{ date.formatted }}: {{ date.label }}
                 </li>
               </ul>

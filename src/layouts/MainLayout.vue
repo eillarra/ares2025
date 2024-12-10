@@ -70,15 +70,15 @@
               <router-link :to="{ name: 'home' }" class="q-pt-xs">
                 <img src="~assets/ares-icon.svg" class="ares__logo-footer" />
               </router-link>
-              <!--<a
-                href="https://easychair.org/conferences/?conf=ares2025"
+              <a
+                :href="submissionsUrl"
                 target="_blank"
                 rel="noopener noreferrer"
                 title="EasyChair"
                 aria-label="EasyChair"
               >
                 <q-icon :name="iconEasyChair" size="sm" />
-              </a>-->
+              </a>
               <a
                 href="https://x.com/ARES_Conference"
                 target="_blank"
@@ -144,11 +144,11 @@ import { dateRange } from 'src/evan/utils/dates';
 import UgentLogo from 'components/logos/UgentLogo.vue';
 import SbaLogo from 'components/logos/SbaLogo.vue';
 
-import { iconClose, iconCommittees, iconMenu, iconSend, iconVenue, iconX } from 'src/icons';
+import { iconClose, iconCommittees, iconEasyChair, iconMenu, iconSend, iconVenue, iconX } from 'src/icons';
 
 const eventStore = useEventStore();
 
-const { _loaded, event } = storeToRefs(eventStore);
+const { _loaded, event, contentsDict } = storeToRefs(eventStore);
 
 const rightDrawer = ref<boolean>(false);
 const menu = [
@@ -168,4 +168,8 @@ const footerText = computed<string>(() => {
   const dates = dateRange(event.value.start_date, event.value.end_date);
   return `The ${event.value.full_name} (${event.value.name}), will be held ${dates} in ${event.value.city}, ${event.value.country.name}.`;
 });
+
+const submissionsUrl = computed<string | null>(
+  () => (contentsDict.value['call_for_papers.url']?.value as string) || null,
+);
 </script>
