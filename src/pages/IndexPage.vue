@@ -11,9 +11,7 @@
             <div v-if="importantDates.length" class="q-my-xl">
               <h5><strong>Important dates</strong></h5>
               <ul>
-                <li v-for="date in importantDates" :key="date.id">
-                  {{ date.formatted }}: {{ date.label }}
-                </li>
+                <li v-for="date in importantDates" :key="date.id">{{ date.formatted }}: {{ date.label }}</li>
               </ul>
             </div>
           </div>

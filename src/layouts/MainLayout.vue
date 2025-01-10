@@ -153,6 +153,8 @@ const { _loaded, event, contentsDict } = storeToRefs(eventStore);
 const rightDrawer = ref<boolean>(false);
 const menu = [
   ['callForPapers', 'Call for Papers', iconSend],
+  ['callForWorkshops', 'Call for Workshops', iconSend],
+  ['callForEUWorkshops', 'Call for EU Workshops', iconSend],
   ['committees', 'Committees', iconCommittees],
   ['venue', 'Venue and location', iconVenue],
 ];
