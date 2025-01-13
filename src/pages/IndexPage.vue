@@ -8,7 +8,7 @@
           <div :class="{ 'q-pr-xl ': $q.screen.gt.sm }">
             <h3 class="ares__text-headline">{{ event?.full_name }}</h3>
             <p>{{ focusesText }}</p>
-            <div v-if="importantDates.length" class="q-my-xl">
+            <div v-if="importantDates && importantDates.length" class="q-my-xl">
               <h5><strong>Important dates</strong></h5>
               <ul>
                 <li v-for="date in importantDates" :key="date.id">{{ date.formatted }}: {{ date.label }}</li>

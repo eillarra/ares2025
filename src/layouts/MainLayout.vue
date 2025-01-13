@@ -7,7 +7,25 @@
         </router-link>
         <q-space v-if="$q.screen.lt.md" />
         <q-btn-group square flat v-else class="q-ml-xl">
-          <q-btn v-for="(item, idx) in menu" :key="idx" no-caps :to="{ name: item[0] }" :label="item[1]" size="lg" />
+          <template v-for="(item, idx) in menu" :key="idx">
+            <q-btn v-if="!item.children" no-caps :to="{ name: item.route }" :label="item.label" size="lg" />
+            <q-btn v-else no-caps :label="item.label" size="lg" :menu="true" :items="item.children">
+              <q-menu class="ares__bg-yellow">
+                <q-list style="min-width: 150px">
+                  <q-item
+                    v-for="(child, idx) in item.children"
+                    :key="idx"
+                    no-caps
+                    :to="{ name: child.route }"
+                    exact
+                    active-class="text-weight-bold"
+                  >
+                    <q-item-section>{{ child.label }}</q-item-section>
+                  </q-item>
+                </q-list>
+              </q-menu>
+            </q-btn>
+          </template>
         </q-btn-group>
         <q-btn
           outline
@@ -35,23 +53,33 @@
       </q-toolbar>
       <div class="q-pa-lg">
         <q-list dense class="">
-          <q-item
-            v-for="(item, idx) in menu"
-            :key="idx"
-            no-caps
-            :to="{ name: item[0] }"
-            exact
-            active-class="text-weight-bold"
-          >
-            <q-item-section avatar>
-              <q-icon :name="item[2]" />
-            </q-item-section>
-            <q-item-section>{{ item[1] }}</q-item-section>
-          </q-item>
+          <template v-for="(item, idx) in menu" :key="idx">
+            <q-item v-if="!item.children" no-caps :to="{ name: item.route }" exact active-class="text-weight-bold">
+              <q-item-section avatar>
+                <q-icon :name="item.icon" />
+              </q-item-section>
+              <q-item-section>{{ item.label }}</q-item-section>
+            </q-item>
+            <q-item v-else no-caps>
+              <q-item-section avatar top>
+                <q-icon :name="item.icon" />
+              </q-item-section>
+              <q-item-section>
+                {{ item.label }}
+                <ul class="q-pl-none ares__router-link-menu">
+                  <li v-for="(child, idx) in item.children" :key="idx">
+                    <router-link :to="{ name: child.route }" class="inherit">{{ child.label }}</router-link>
+                  </li>
+                </ul></q-item-section
+              >
+            </q-item>
+          </template>
         </q-list>
         <q-separator class="q-mt-lg q-mb-xl" />
         <div class="ares__router-link-menu flex column text-right">
-          <router-link v-for="(item, idx) in submenu" :key="idx" :to="{ name: item[0] }">{{ item[1] }}</router-link>
+          <router-link v-for="(item, idx) in submenu" :key="idx" :to="{ name: item.route }">{{
+            item.label
+          }}</router-link>
         </div>
       </div>
     </q-drawer>
@@ -91,34 +119,30 @@
             </div>
             <p class="text-body1 ares__text-red q-mt-lg">{{ footerText }}</p>
           </div>
-          <div class="col-6 col-sm-3 col-md-2 offset-md-1">
+          <div class="col-12 col-sm-6 col-md-4 offset-md-1">
             <div class="ares__router-link-menu flex column">
-              <router-link v-for="(item, idx) in menu" :key="idx" :to="{ name: item[0] }">{{ item[1] }}</router-link>
+              <template v-for="(item, idx) in menu" :key="idx">
+                <router-link v-if="!item.children" :to="{ name: item.route }">{{ item.label }}</router-link>
+                <div v-else>
+                  <span class="text-grey-7">{{ item.label }}</span>
+                  <ul class="q-pl-lg">
+                    <li v-for="(child, idx) in item.children" :key="idx">
+                      <router-link :to="{ name: child.route }">{{ child.label }}</router-link>
+                    </li>
+                  </ul>
+                </div>
+              </template>
             </div>
           </div>
-          <div class="col-6 col-sm-3 col-md-2">
+          <div class="col-12 col-sm-6 col-md-3">
             <div class="ares__router-link-menu flex column">
-              <router-link v-for="(item, idx) in submenu" :key="idx" :to="{ name: item[0] }">{{ item[1] }}</router-link>
-            </div>
-          </div>
-          <div class="col-12 col-sm-6 col-md-3" :class="{ 'q-mt-lg': $q.screen.lt.sm }">
-            <div class="row q-col-gutter-xl ares__footer-organizers text-caption q-mb-xl">
-              <div class="col">
-                Organised by<br />
-                <a href="https://www.ugent.be/en" target="_blank" rel="noopener noreferrer">
-                  <ugent-logo color="#555" class="q-mt-md" />
-                </a>
-              </div>
-              <div class="col">
-                In cooperation with<br />
-                <a href="https://www.sba-research.org/" target="_blank" rel="noopener noreferrer">
-                  <sba-logo color="#555" class="q-mt-md" />
-                </a>
-              </div>
+              <router-link v-for="(item, idx) in submenu" :key="idx" :to="{ name: item.route }">{{
+                item.label
+              }}</router-link>
             </div>
           </div>
         </div>
-        <div class="row q-col-gutter-xl">
+        <div class="row q-col-gutter-xl q-pt-xl">
           <div class="col-12 col-md-4 text-caption">
             <p class="q-mb-sm">
               <strong><span class="text-helvetica">&copy;</span> 2024 Ghent University</strong>
@@ -127,6 +151,22 @@
               >The images on this web site are reproduced with the permission of the copyright owner,
               <a href="https://stad.gent/en">Stad Gent</a>.</span
             >
+          </div>
+          <div class="col-12 col-md-6 offset-md-1" :class="{ 'q-mt-lg': $q.screen.lt.sm }">
+            <div class="row q-col-gutter-xl ares__footer-organizers text-caption q-mb-xl">
+              <div class="col">
+                Organised by<br />
+                <a href="https://www.ugent.be/en" target="_blank" rel="noopener noreferrer">
+                  <ugent-logo color="#555" class="q-mt-md" />
+                </a>
+              </div>
+              <div class="col col-md-4">
+                In cooperation with<br />
+                <a href="https://www.sba-research.org/" target="_blank" rel="noopener noreferrer">
+                  <sba-logo color="#555" class="q-mt-md" />
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -151,18 +191,33 @@ const eventStore = useEventStore();
 const { _loaded, event, contentsDict } = storeToRefs(eventStore);
 
 const rightDrawer = ref<boolean>(false);
-const menu = [
-  ['callForPapers', 'Call for Papers', iconSend],
-  ['callForWorkshops', 'Call for Workshops', iconSend],
-  ['callForEUWorkshops', 'Call for EU Workshops', iconSend],
-  ['committees', 'Committees', iconCommittees],
-  ['venue', 'Venue and location', iconVenue],
+const menu: MenuItem[] = [
+  {
+    route: 'callForPapers',
+    label: 'Calls for participation',
+    icon: iconSend,
+    children: [
+      { route: 'callForPapers', label: 'Call for Papers' },
+      { route: 'callForWorkshops', label: 'Call for Workshops' },
+      { route: 'callForEUWorkshops', label: 'Call for EU Workshops' },
+    ],
+  },
+  {
+    route: 'committees',
+    label: 'Committees',
+    icon: iconCommittees,
+    children: [
+      { route: 'committees', label: 'Organizing Committees & Chairs' },
+      { route: 'programCommittee', label: 'Program Committee' },
+    ],
+  },
+  { route: 'venue', label: 'Venue and location', icon: iconVenue },
 ];
-const submenu = [
-  ['contact', 'Contact'],
-  ['codeOfConduct', 'Code of Conduct'],
-  ['privacyPolicy', 'Privacy Policy'],
-  ['disclaimer', 'Disclaimer'],
+const submenu: MenuItem[] = [
+  { route: 'contact', label: 'Contact' },
+  { route: 'codeOfConduct', label: 'Code of Conduct' },
+  { route: 'privacyPolicy', label: 'Privacy Policy' },
+  { route: 'disclaimer', label: 'Disclaimer' },
 ];
 
 const footerText = computed<string>(() => {
