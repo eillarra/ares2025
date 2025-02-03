@@ -1,11 +1,14 @@
 import { fabLinkedin, fabTwitter, fabYoutube, fabXTwitter, fabGithub } from '@quasar/extras/fontawesome-v6';
 import {
+  ionCalendarOutline,
   ionCloseOutline,
+  ionEaselOutline,
   ionLayersOutline,
   ionLocationOutline,
   ionMailOutline,
   ionMapOutline,
   ionMenuOutline,
+  ionPersonOutline,
   ionPeopleOutline,
   ionReloadOutline,
   ionSendOutline,
@@ -17,7 +20,10 @@ export const iconCommittees = ionPeopleOutline;
 export const iconEmail = ionMailOutline;
 export const iconMap = ionMapOutline;
 export const iconMenu = ionMenuOutline;
+export const iconPerson = ionPersonOutline;
+export const iconProgram = ionCalendarOutline;
 export const iconSend = ionSendOutline;
+export const iconSession = ionEaselOutline;
 export const iconSubmissions = ionLayersOutline;
 export const iconVenue = ionLocationOutline;
 

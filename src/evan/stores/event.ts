@@ -29,7 +29,7 @@ export const useEventStore = defineStore('evanEvent', () => {
 
   const mainVenue = computed<EvanVenue | undefined>(() => {
     if (!event.value) return undefined;
-    return event.value.venues.find((venue) => venue.is_main);
+    return event.value.venues?.find((venue) => venue.is_main);
   });
 
   async function fetchEvent() {

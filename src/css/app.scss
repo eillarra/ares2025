@@ -11,11 +11,13 @@ $ares-yellow: #fce275;
 
 $separator-color: #343c3f !default;
 
-.ares__text-red {
+.ares__text-red,
+.text-ares-red {
   color: $ares-red !important;
 }
 
-.ares__bg-red {
+.ares__bg-red,
+.bg-ares-red {
   background-color: $ares-red !important;
 }
 
@@ -140,10 +142,18 @@ samp {
   }
 }
 
-.ares__text-subtitle2 {
+.ares__text-subtitle2,
+.ares__text-subtitle3 {
   font-size: 1em !important;
-  text-transform: uppercase;
   margin-top: 0;
+}
+
+.ares__text-subtitle2 {
+  text-transform: uppercase;
+}
+
+.ares__text-subtitle3 {
+  font-weight: 700;
 }
 
 .ares__router-link-menu {
@@ -174,6 +184,10 @@ samp {
 
 .text-caption {
   line-height: 1.4 !important;
+}
+
+.text-strike {
+  text-decoration: line-through;
 }
 
 samp,

@@ -136,6 +136,7 @@
           </div>
           <div class="col-12 col-sm-6 col-md-3">
             <div class="ares__router-link-menu flex column">
+              <a href="https://www.ares-conference.eu/archive" target="_blank">Archive</a>
               <router-link v-for="(item, idx) in submenu" :key="idx" :to="{ name: item.route }">{{
                 item.label
               }}</router-link>
@@ -184,7 +185,7 @@ import { dateRange } from 'src/evan/utils/dates';
 import UgentLogo from 'components/logos/UgentLogo.vue';
 import SbaLogo from 'components/logos/SbaLogo.vue';
 
-import { iconClose, iconCommittees, iconEasyChair, iconMenu, iconSend, iconVenue, iconX } from 'src/icons';
+import { iconClose, iconCommittees, iconEasyChair, iconMenu, iconProgram, iconSend, iconVenue, iconX } from 'src/icons';
 
 const eventStore = useEventStore();
 
@@ -211,6 +212,7 @@ const menu: MenuItem[] = [
       { route: 'programCommittee', label: 'Program Committee' },
     ],
   },
+  { route: 'program', label: 'Program', icon: iconProgram },
   { route: 'venue', label: 'Venue and location', icon: iconVenue },
 ];
 const submenu: MenuItem[] = [

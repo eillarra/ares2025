@@ -8,10 +8,12 @@
           <div :class="{ 'q-pr-xl ': $q.screen.gt.sm }">
             <h3 class="ares__text-headline">{{ event?.full_name }}</h3>
             <p>{{ focusesText }}</p>
-            <div v-if="importantDates && importantDates.length" class="q-my-xl">
+            <div v-if="importantDates.length" class="q-my-xl">
               <h5><strong>Important dates</strong></h5>
               <ul>
-                <li v-for="date in importantDates" :key="date.id">{{ date.formatted }}: {{ date.label }}</li>
+                <li v-for="(date, idx) in importantDates" :key="idx">
+                  <span :class="{ 'text-strike': date.is_past }">{{ date.formatted }}: {{ date.label }}</span>
+                </li>
               </ul>
             </div>
           </div>
@@ -54,7 +56,7 @@ import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 
 import { useEventStore } from 'src/evan/stores/event';
-import { dateRange, formatImportantDate } from 'src/evan/utils/dates';
+import { dateRange, formatImportantDate, passedImportantDate } from 'src/evan/utils/dates';
 
 import { iconVenue } from 'src/icons';
 
@@ -75,11 +77,14 @@ const aboutAresIntroText = computed<MarkdownText | null>(
 const aboutAresText = computed<MarkdownText | null>(
   () => (contentsDict.value['ares.about']?.value as MarkdownText) || null,
 );
-const importantDates =
-  computed<ImportantDate[]>(() =>
-    event.value?.custom_data.dates.map((d) => ({
+const importantDates = computed<ImportantDate[]>(() => {
+  return (
+    event.value?.extra_data.important_dates?.map((d) => ({
       ...d,
+      label: d.aoe ? `${d.label} (AoE)` : d.label,
       formatted: formatImportantDate(d),
-    })),
-  ) || [];
+      is_past: passedImportantDate(d),
+    })) || []
+  );
+});
 </script>
