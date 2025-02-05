@@ -1,8 +1,6 @@
 import { register } from 'register-service-worker';
 
-import { Notify } from 'quasar';
-
-import { iconCached } from 'src/icons';
+import { notify } from 'src/utils/notify';
 
 // The ready(), registered(), cached(), updatefound() and updated()
 // events passes a ServiceWorkerRegistration instance in their arguments.
@@ -32,28 +30,7 @@ register(process.env.SERVICE_WORKER_FILE, {
   },
 
   updated() {
-    Notify.create({
-      color: 'dark',
-      icon: iconCached,
-      message: 'Updated content is available. Please refresh the page.',
-      timeout: 0,
-      multiLine: true,
-      position: 'bottom',
-      actions: [
-        {
-          label: 'Refresh',
-          color: 'yellow',
-          handler: () => {
-            window.location.reload();
-          },
-        },
-        {
-          label: 'Dismiss',
-          color: 'white',
-          handler: () => {},
-        },
-      ],
-    });
+    notify.reload();
   },
 
   offline() {
