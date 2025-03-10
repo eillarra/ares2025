@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 
-function dateRange(startDate: string, endDate: string | null, includeYear: boolean = true): string {
+function dateRange(startDate: string | Date, endDate: string | Date | null, includeYear: boolean = true): string {
   const start = new Date(startDate);
   const end = new Date(endDate);
   const startMonth = start.toLocaleString('default', { month: 'long' });
@@ -23,33 +23,49 @@ function dateRange(startDate: string, endDate: string | null, includeYear: boole
   return `${startMonth} ${startDay} - ${endMonth} ${endDay}`;
 }
 
-function _formatImportantDateRange(date: ImportantDate): string {
+function _formatImportantDateRange(date: ImportantDate, aoe?: boolean): string {
+  const startDate = new Date(date.start_date);
+  const endDate = new Date(date.end_date);
+
+  if (aoe) {
+    // AoE is UTC−12:00[4] (daylight saving time [DST] is not applicable)
+    startDate.setHours(startDate.getHours() + 12);
+    endDate.setHours(endDate.getHours() + 12);
+  }
+
   if (date.format === 'date') {
-    return dateRange(date.start_date, date.end_date);
+    return dateRange(startDate, endDate, true);
   }
 
   if (date.format === 'month') {
-    return new Date(date.start_date).toLocaleString('default', { month: 'long' });
+    return startDate.toLocaleString('default', { month: 'long' });
   }
 
   if (date.format === 'range') {
-    return dateRange(date.start_date, date.end_date, false);
+    return dateRange(startDate, endDate, false);
   }
 
   return '';
 }
 
-function formatImportantDate(date: ImportantDate): string {
+function formatImportantDate(date: ImportantDate, aoe?: boolean): string {
   if (date.end_date && date.start_date !== date.end_date) {
-    return _formatImportantDateRange(date);
+    return _formatImportantDateRange(date, aoe);
+  }
+
+  const dateToFormat = new Date(date.start_date);
+
+  if (aoe) {
+    // AoE is UTC−12:00[4] (daylight saving time [DST] is not applicable)
+    dateToFormat.setHours(dateToFormat.getHours() + 12);
   }
 
   if (date.format === 'date') {
-    return format(new Date(date.start_date), 'MMMM d, yyyy');
+    return format(dateToFormat, 'MMMM d, yyyy');
   }
 
   if (date.format === 'month') {
-    return format(new Date(date.start_date), 'MMMM yyyy');
+    return format(dateToFormat, 'MMMM yyyy');
   }
 
   return '';

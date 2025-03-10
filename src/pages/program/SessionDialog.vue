@@ -124,7 +124,7 @@ const importantDates = computed<ImportantDate[]>(() => {
     props.session.extra_data?.important_dates?.map((d) => ({
       ...d,
       label: d.aoe ? `${d.label} (AoE)` : d.label,
-      formatted: formatImportantDate(d),
+      formatted: formatImportantDate(d, d.aoe),
       is_past: passedImportantDate(d),
     })) || []
   );
