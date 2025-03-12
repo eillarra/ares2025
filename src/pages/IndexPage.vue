@@ -33,7 +33,7 @@
         </div>
       </div>
     </div>
-    <div v-if="aboutAresText" class="ares__bg-yellow">
+    <div v-if="aboutAresText" class="ares__bg-yellow q-mt-xl">
       <q-separator class="q-ma-none" />
       <div class="container q-py-xl">
         <div class="row q-col-gutter-y-lg q-col-gutter-x-xl justify-between" :class="{ 'q-py-xl': $q.screen.gt.sm }">
