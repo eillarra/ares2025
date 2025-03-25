@@ -25,6 +25,12 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/conference/CallForWorkshopsPage.vue'),
       },
       {
+        path: '/call-for-workshop-papers/',
+        name: 'callForWorkshopPapers',
+        strict: true,
+        component: () => import('pages/conference/CallForWorkshopPapersPage.vue'),
+      },
+      {
         path: '/call-for-eu-workshops/',
         name: 'callForEUWorkshops',
         strict: true,

@@ -198,9 +198,10 @@ const menu: MenuItem[] = [
     label: 'Calls for participation',
     icon: iconSend,
     children: [
-      { route: 'callForPapers', label: 'Call for Papers' },
-      { route: 'callForWorkshops', label: 'Call for Workshops' },
-      { route: 'callForEUWorkshops', label: 'Call for EU Workshops' },
+      { route: 'callForWorkshopPapers', label: 'Call for Workshop Papers' },
+      { route: 'callForPapers', label: 'Call for Papers (closed)' },
+      { route: 'callForEUWorkshops', label: 'Call for EU Workshops (closed)' },
+      { route: 'callForWorkshops', label: 'Call for Workshops (closed)' },
     ],
   },
   {
