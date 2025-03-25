@@ -4,6 +4,7 @@ import {
   ionCalendarOutline,
   ionCheckmarkOutline,
   ionCloseOutline,
+  ionDuplicateOutline,
   ionEaselOutline,
   ionInformationCircleOutline,
   ionLayersOutline,
@@ -29,6 +30,7 @@ export const iconMap = ionMapOutline;
 export const iconMenu = ionMenuOutline;
 export const iconPerson = ionPersonOutline;
 export const iconProgram = ionCalendarOutline;
+export const iconRegister = ionDuplicateOutline;
 export const iconSend = ionSendOutline;
 export const iconSession = ionEaselOutline;
 export const iconSubmissions = ionLayersOutline;

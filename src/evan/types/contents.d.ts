@@ -1,4 +1,4 @@
 interface EvanContent {
-  key: string;
-  value: string | MarkdownText;
+  readonly key: string;
+  readonly value: string | MarkdownText;
 }
