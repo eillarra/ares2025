@@ -27,13 +27,21 @@
             </q-btn>
           </template>
         </q-btn-group>
+        <q-space />
+        <ares-btn
+          :icon="iconRegister"
+          label="Register"
+          type="router-link"
+          :to="{ name: 'registration' }"
+          class="q-ml-xl"
+        />
         <q-btn
           outline
           round
           v-show="$q.screen.lt.md"
           @click="rightDrawer = !rightDrawer"
           :icon="iconMenu"
-          class="q-mr-sm"
+          class="q-mx-sm"
         />
       </q-toolbar>
       <q-separator />
@@ -185,7 +193,17 @@ import { dateRange } from 'src/evan/utils/dates';
 import UgentLogo from 'components/logos/UgentLogo.vue';
 import SbaLogo from 'components/logos/SbaLogo.vue';
 
-import { iconClose, iconCommittees, iconEasyChair, iconMenu, iconProgram, iconSend, iconVenue, iconX } from 'src/icons';
+import {
+  iconClose,
+  iconCommittees,
+  iconEasyChair,
+  iconMenu,
+  iconProgram,
+  iconRegister,
+  iconSend,
+  iconVenue,
+  iconX,
+} from 'src/icons';
 
 const eventStore = useEventStore();
 

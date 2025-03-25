@@ -1,5 +1,17 @@
+interface EvanFeeConfig {
+  included_social_events: number[];
+}
+
+interface EvanFee {
+  type: string;
+  notes: string;
+  early_value: number;
+  value: number;
+  config: EvanFeeConfig;
+}
+
 interface EvanTrack {
-  id: number;
+  readonly id: number;
   name: string;
   position: number;
 }
@@ -16,8 +28,10 @@ interface EvanEvent {
   start_date: string;
   end_date: string;
   registration_start_date: string;
+  registration_early_deadline: string;
   registration_deadline: string;
   registration_url: Url;
+  fees: EvanFee[];
   sessions: EvanSession[];
   tracks: EvanTrack[];
   venues: EvanVenue[];
