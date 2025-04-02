@@ -6,8 +6,23 @@
           <h2 class="ares__text-title">Workshop Paper Submission</h2>
           <q-separator />
           <h6 class="ares__text-red">
-            Take a look at the schedule and program of <span class="text-no-wrap">{{ event.name }}.</span>
+            Authors are invited to submit workshop papers for
+            <span class="text-no-wrap">{{ event.name }}</span> workshops. The submission guidelines can be found in the
+            <router-link :to="{ name: 'callForPapers' }">main conference submission guidelines</router-link>.
           </h6>
+          <div class="q-mb-lg">
+            <ares-btn
+              v-if="submissionsUrl"
+              :icon="iconSend"
+              label="Submit your paper"
+              type="a"
+              :href="submissionsUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="ares__bg-yellow"
+              :class="{ 'full-width': $q.screen.lt.sm }"
+            />
+          </div>
         </div>
         <div class="col-12 col-md-7">
           <template v-for="(ts, idx) in tracksAndSessions" :key="idx">
@@ -45,6 +60,8 @@ import { formatImportantDate, passedImportantDate } from 'src/evan/utils/dates';
 
 import SessionDialog from '../program/SessionDialog.vue';
 
+import { iconSend } from 'src/icons';
+
 interface TrackWithSessions {
   track: EvanTrack | null;
   sessions: EvanSession[];
@@ -54,10 +71,14 @@ const eventStore = useEventStore();
 const route = useRoute();
 const router = useRouter();
 
-const { event } = storeToRefs(eventStore);
+const { contentsDict, event } = storeToRefs(eventStore);
 
 const sessionSlug = computed<string | string[] | null>(() => (route.params.sessionSlug as string) || null);
 const selectedSession = ref(null);
+
+const submissionsUrl = computed<string | null>(
+  () => (contentsDict.value['call_for_papers.url']?.value as string) || null,
+);
 
 const dialogVisible = computed<boolean>({
   get() {
