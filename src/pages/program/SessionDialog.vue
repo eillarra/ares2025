@@ -1,5 +1,5 @@
 <template>
-  <ares-dialog-content :title="$q.screen.gt.sm ? `${session.code}: ${session.title}` : session.code" hide-drawer>
+  <ares-dialog-content :title="$q.screen.gt.sm ? titles[0] : titles[1]" hide-drawer>
     <template #tabs>
       <q-tabs v-model="tab" shrink inline-label no-caps>
         <q-tab name="info" label="General information" />
@@ -112,6 +112,11 @@ const props = defineProps<{
 
 const tab = ref<string>('info');
 
+const titles = computed<[string, string]>(() => {
+  return props.session.track == 53
+    ? [props.session.title, 'Keynote'] // TODO: improve when bio is structured
+    : [`${props.session.code}: ${props.session.title}`, props.session.code];
+});
 const mainCommittees = computed<Committee[]>(
   () => props.session.extra_data.committees?.filter((c) => c.display === 'full') || [],
 );

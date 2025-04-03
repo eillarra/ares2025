@@ -19,7 +19,8 @@
                 <ul class="q-mb-xl">
                   <li v-for="session in ts.sessions" :key="session.code">
                     <router-link :to="{ name: 'program', params: { sessionSlug: session.slug } }">
-                      <strong>{{ session.code }}:&nbsp;</strong><span>{{ session.title }}</span>
+                      <strong v-if="ts.track.name.toLocaleLowerCase() != 'keynotes'">{{ session.code }}:&nbsp;</strong>
+                      <span>{{ session.title }}</span>
                     </router-link>
                   </li>
                 </ul>
