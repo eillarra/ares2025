@@ -213,7 +213,15 @@ const menu: MenuItem[] = [
       { route: 'programCommittee', label: 'Program Committee' },
     ],
   },
-  { route: 'program', label: 'Program', icon: iconProgram },
+  {
+    route: 'program',
+    label: 'Conference',
+    icon: iconProgram,
+    children: [
+      { route: 'program', label: 'Program' },
+      { route: 'acceptedPapers', label: 'Accepted Papers' },
+    ],
+  },
   { route: 'venue', label: 'Venue and location', icon: iconVenue },
 ];
 const submenu: MenuItem[] = [

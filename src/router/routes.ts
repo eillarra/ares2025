@@ -43,6 +43,12 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/CodeOfConductPage.vue'),
       },
       {
+        path: '/conference/accepted-papers/',
+        name: 'acceptedPapers',
+        strict: true,
+        component: () => import('pages/program/AcceptedPapersPage.vue'),
+      },
+      {
         path: '/conference/committee/',
         redirect: {
           name: 'committees',
