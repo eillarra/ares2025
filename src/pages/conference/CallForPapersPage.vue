@@ -54,9 +54,7 @@ const submissionsText = computed<MarkdownText | null>(
   () => (contentsDict.value['call_for_papers']?.value as MarkdownText) || null,
 );
 
-const submissionsUrl = computed<string | null>(
-  () => (contentsDict.value['call_for_papers.url']?.value as string) || null,
-);
+const submissionsUrl = computed<Url | null>(() => (contentsDict.value['call_for_papers.url']?.value as string) || null);
 
 useMeta(() => {
   return {

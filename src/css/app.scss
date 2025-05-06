@@ -21,11 +21,13 @@ $separator-color: #343c3f !default;
   background-color: $ares-red !important;
 }
 
-.ares__text-yellow {
+.ares__text-yellow,
+.text-ares-yellow {
   color: $ares-yellow !important;
 }
 
-.ares__bg-yellow {
+.ares__bg-yellow,
+.bg-ares-yellow {
   background-color: $ares-yellow !important;
 }
 
@@ -145,7 +147,10 @@ samp {
 .ares__text-subtitle2,
 .ares__text-subtitle3 {
   font-size: 1em !important;
-  margin-top: 0;
+
+  &:first-child {
+    margin-top: 0;
+  }
 }
 
 .ares__text-subtitle2 {

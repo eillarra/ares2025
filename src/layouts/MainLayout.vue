@@ -27,13 +27,21 @@
             </q-btn>
           </template>
         </q-btn-group>
+        <q-space />
+        <ares-btn
+          :icon="iconRegister"
+          label="Register"
+          type="router-link"
+          :to="{ name: 'registration' }"
+          class="q-ml-xl"
+        />
         <q-btn
           outline
           round
           v-show="$q.screen.lt.md"
           @click="rightDrawer = !rightDrawer"
           :icon="iconMenu"
-          class="q-mr-sm"
+          class="q-mx-sm"
         />
       </q-toolbar>
       <q-separator />
@@ -192,6 +200,7 @@ import {
   iconEasyChair,
   iconMenu,
   iconProgram,
+  iconRegister,
   iconSend,
   iconVenue,
   iconX,
@@ -248,7 +257,5 @@ const footerText = computed<string>(() => {
   return `The ${event.value.full_name} (${event.value.name}), will be held ${dates} in ${event.value.city}, ${event.value.country.name}.`;
 });
 
-const submissionsUrl = computed<string | null>(
-  () => (contentsDict.value['call_for_papers.url']?.value as string) || null,
-);
+const submissionsUrl = computed<Url | null>(() => (contentsDict.value['call_for_papers.url']?.value as string) || null);
 </script>
