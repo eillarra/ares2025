@@ -185,7 +185,17 @@ import { dateRange } from 'src/evan/utils/dates';
 import UgentLogo from 'components/logos/UgentLogo.vue';
 import SbaLogo from 'components/logos/SbaLogo.vue';
 
-import { iconClose, iconCommittees, iconEasyChair, iconMenu, iconProgram, iconSend, iconVenue, iconX } from 'src/icons';
+import {
+  iconAccommodation,
+  iconClose,
+  iconCommittees,
+  iconEasyChair,
+  iconMenu,
+  iconProgram,
+  iconSend,
+  iconVenue,
+  iconX,
+} from 'src/icons';
 
 const eventStore = useEventStore();
 
@@ -223,6 +233,7 @@ const menu: MenuItem[] = [
     ],
   },
   { route: 'venue', label: 'Venue and location', icon: iconVenue },
+  { route: 'accommodation', label: 'Accommodation', icon: iconAccommodation },
 ];
 const submenu: MenuItem[] = [
   { route: 'contact', label: 'Contact' },

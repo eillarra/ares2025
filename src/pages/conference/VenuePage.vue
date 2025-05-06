@@ -5,6 +5,19 @@
         <div class="col-12 col-md-4 flex column">
           <h2 class="ares__text-title">Venue and location</h2>
           <q-separator />
+          <h6 class="ares__text-red">
+            {{ footerText }}
+          </h6>
+          <div class="q-mb-lg">
+            <ares-btn
+              :icon="iconAccommodation"
+              label="Check accommodation options"
+              type="a"
+              :to="{ name: 'accommodation' }"
+              class="ares__bg-yellow"
+              :class="{ 'full-width': $q.screen.lt.sm }"
+            />
+          </div>
         </div>
         <div v-if="mainVenue" class="col-12 col-md-7">
           <marked-div :text="mainVenue.presentation" class="q-mb-lg" />
@@ -55,12 +68,13 @@ import { storeToRefs } from 'pinia';
 import { useMeta } from 'quasar';
 
 import { useEventStore } from 'src/evan/stores/event';
+import { dateRange } from 'src/evan/utils/dates';
 
-import { iconMap } from 'src/icons';
+import { iconAccommodation, iconMap } from 'src/icons';
 
 const eventStore = useEventStore();
 
-const { contentsDict, mainVenue } = storeToRefs(eventStore);
+const { event, contentsDict, mainVenue } = storeToRefs(eventStore);
 
 const aboutGhentIntroText = computed<MarkdownText | null>(
   () => (contentsDict.value['ghent.intro']?.value as MarkdownText) || null,
@@ -79,6 +93,12 @@ const videoIds = [
   'f1evP2DBGB4',
   'Bc39fjh6hnM',
 ];
+
+const footerText = computed<string>(() => {
+  if (!event.value) return '';
+  const dates = dateRange(event.value.start_date, event.value.end_date);
+  return `The ${event.value.full_name} (${event.value.name}), will be held ${dates} in ${event.value.city}, ${event.value.country.name}.`;
+});
 
 useMeta(() => {
   return {

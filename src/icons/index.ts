@@ -1,6 +1,7 @@
 import { fabLinkedin, fabTwitter, fabYoutube, fabXTwitter, fabGithub } from '@quasar/extras/fontawesome-v6';
 import {
   ionAlertCircleOutline,
+  ionBedOutline,
   ionCalendarOutline,
   ionCheckmarkOutline,
   ionCloseOutline,
@@ -18,6 +19,7 @@ import {
   ionWarningOutline,
 } from '@quasar/extras/ionicons-v6';
 
+export const iconAccommodation = ionBedOutline;
 export const iconCached = ionReloadOutline;
 export const iconCheck = ionCheckmarkOutline;
 export const iconClose = ionCloseOutline;
