@@ -76,9 +76,7 @@ const { contentsDict, event } = storeToRefs(eventStore);
 const sessionSlug = computed<string | string[] | null>(() => (route.params.sessionSlug as string) || null);
 const selectedSession = ref(null);
 
-const submissionsUrl = computed<string | null>(
-  () => (contentsDict.value['call_for_papers.url']?.value as string) || null,
-);
+const submissionsUrl = computed<Url | null>(() => (contentsDict.value['call_for_papers.url']?.value as string) || null);
 
 const dialogVisible = computed<boolean>({
   get() {

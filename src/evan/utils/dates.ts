@@ -86,4 +86,4 @@ function passedImportantDate(date: ImportantDate): boolean {
   return dateToCheckDate < new Date();
 }
 
-export { dateRange, formatImportantDate, passedImportantDate };
+export { format, dateRange, formatImportantDate, passedImportantDate };

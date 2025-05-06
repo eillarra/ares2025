@@ -5,6 +5,7 @@ import {
   ionCalendarOutline,
   ionCheckmarkOutline,
   ionCloseOutline,
+  ionDuplicateOutline,
   ionEaselOutline,
   ionInformationCircleOutline,
   ionLayersOutline,
@@ -12,7 +13,9 @@ import {
   ionMailOutline,
   ionMapOutline,
   ionMenuOutline,
+  ionPencilOutline,
   ionPersonOutline,
+  ionPersonAddOutline,
   ionPeopleOutline,
   ionReloadOutline,
   ionSendOutline,
@@ -24,6 +27,7 @@ export const iconCached = ionReloadOutline;
 export const iconCheck = ionCheckmarkOutline;
 export const iconClose = ionCloseOutline;
 export const iconCommittees = ionPeopleOutline;
+export const iconEdit = ionPencilOutline;
 export const iconEmail = ionMailOutline;
 export const iconError = ionAlertCircleOutline;
 export const iconInfo = ionInformationCircleOutline;
@@ -31,6 +35,8 @@ export const iconMap = ionMapOutline;
 export const iconMenu = ionMenuOutline;
 export const iconPerson = ionPersonOutline;
 export const iconProgram = ionCalendarOutline;
+export const iconRegister = ionDuplicateOutline;
+export const iconRegistration = ionPersonAddOutline;
 export const iconSend = ionSendOutline;
 export const iconSession = ionEaselOutline;
 export const iconSubmissions = ionLayersOutline;

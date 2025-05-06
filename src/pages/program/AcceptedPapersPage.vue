@@ -6,7 +6,9 @@
           <h2 class="ares__text-title">Accepted Papers</h2>
           <q-separator />
           <h6 class="ares__text-red">
-            All accepted Papers at <span class="text-no-wrap">{{ event.name }}</span>: Full Papers, Short Papers, System of Knowledge. ARES papers are listed in no particular order, followed by workshops organized alphabetically, with their accepted papers, as well as ICS-CSR.
+            All accepted Papers at <span class="text-no-wrap">{{ event.name }}</span
+            >: Full Papers, Short Papers, System of Knowledge. ARES papers are listed in no particular order, followed
+            by workshops organized alphabetically, with their accepted papers, as well as ICS-CSR.
           </h6>
         </div>
         <div class="col-12 col-md-7">
@@ -28,7 +30,9 @@ const eventStore = useEventStore();
 
 const { contentsDict, event } = storeToRefs(eventStore);
 
-const papersText = computed<MarkdownText | null>(() => (contentsDict.value['program.accepted_papers']?.value as MarkdownText) || null);
+const papersText = computed<MarkdownText | null>(
+  () => (contentsDict.value['program.accepted_papers']?.value as MarkdownText) || null,
+);
 
 useMeta(() => {
   return {

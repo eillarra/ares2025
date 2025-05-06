@@ -55,7 +55,7 @@
     <div class="container q-py-xl">
       <div class="row q-col-gutter-y-lg q-col-gutter-x-lg justify-center" :class="{ 'q-py-xl': $q.screen.gt.sm }">
         <div class="col-12 col-md-4" v-for="vId in videoIds" :key="vId">
-          <q-video :src="'https://www.youtube.com/embed/' + vId" :ratio="16/9" />
+          <q-video :src="'https://www.youtube.com/embed/' + vId" :ratio="16 / 9" />
         </div>
       </div>
     </div>
@@ -86,13 +86,7 @@ const howToReachGhent = computed<MarkdownText | null>(
   () => (contentsDict.value['ghent.how_to_reach']?.value as MarkdownText) || null,
 );
 
-const videoIds = [
-  'JRd6PVK6E9k',
-  'IH0r296JzPc',
-  'BWY8vIF5gls',
-  'f1evP2DBGB4',
-  'Bc39fjh6hnM',
-];
+const videoIds = ['JRd6PVK6E9k', 'IH0r296JzPc', 'BWY8vIF5gls', 'f1evP2DBGB4', 'Bc39fjh6hnM'];
 
 const footerText = computed<string>(() => {
   if (!event.value) return '';
