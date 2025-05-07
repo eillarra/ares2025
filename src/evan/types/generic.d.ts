@@ -4,6 +4,6 @@ type MarkdownText = string;
 type EmptyString = '';
 
 interface EvanCountry {
-  code: string;
-  name: string;
+  readonly code: string;
+  readonly name: string;
 }

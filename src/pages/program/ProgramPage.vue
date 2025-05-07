@@ -1,6 +1,19 @@
 <template>
-  <div class="q-my-xl q-pb-xl">
-    <div v-if="event" class="container">
+  <div class="q-mb-xl q-pb-xl">
+    <div v-if="scheduleText" class="ares__bg-yellow q-pt-xl q-mb-xl">
+      <div class="container">
+        <div class="row q-col-gutter-y-lg q-col-gutter-x-xl justify-between q-mb-xl">
+          <div class="col-12 col-md-4 flex column">
+            <h2 class="ares__text-title">Schedule</h2>
+            <q-separator />
+          </div>
+          <div class="col-12 col-md-7">
+            <marked-div :text="scheduleText" class="q-mb-xl" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-if="event" class="container q-pt-lg">
       <div class="row q-col-gutter-y-lg q-col-gutter-x-xl justify-between">
         <div class="col-12 col-md-4 flex column">
           <h2 class="ares__text-title">Program</h2>
@@ -55,7 +68,11 @@ const eventStore = useEventStore();
 const route = useRoute();
 const router = useRouter();
 
-const { event } = storeToRefs(eventStore);
+const { contentsDict, event } = storeToRefs(eventStore);
+
+const scheduleText = computed<MarkdownText | null>(
+  () => (contentsDict.value['program.schedule']?.value as MarkdownText) || null,
+);
 
 const sessionSlug = computed<string | string[] | null>(() => (route.params.sessionSlug as string) || null);
 const selectedSession = ref(null);
@@ -75,7 +92,7 @@ const dialogVisible = computed<boolean>({
 const orderedSessions = computed<EvanSession[]>(() => {
   return [...(event.value?.sessions || [])]
     .filter((s) => !s.is_social_event && s.track !== null)
-    .sort((a, b) => a.code.localeCompare(b.code));
+    .sort((a, b) => (a.code || '').localeCompare(b.code || ''));
 });
 
 const tracksAndSessions = computed<TrackWithSessions[]>(() => {
@@ -92,6 +109,10 @@ const tracksAndSessions = computed<TrackWithSessions[]>(() => {
 
   return tracksWithSessions.sort((a, b) => a.track.position - b.track.position);
 });
+
+const loadData = async () => {
+  await Promise.all([eventStore.init(), eventStore.fetchProgramData()]);
+};
 
 const fetchSessionInfo = async () => {
   if (route.params.sessionSlug) {
@@ -119,7 +140,8 @@ watch(sessionSlug, (newSlug) => {
   }
 });
 
-onMounted(() => {
+onMounted(async () => {
+  await loadData();
   if (route.params.sessionSlug) {
     fetchSessionInfo();
   }

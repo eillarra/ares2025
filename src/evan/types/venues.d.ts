@@ -1,11 +1,14 @@
 interface EvanVenueRoom {
-  name: string;
+  readonly id: number;
+  readonly name: string;
+  readonly position: number;
+  readonly venue?: number | null;
 }
 
 interface EvanVenue {
-  is_main: boolean;
-  name: string;
-  presentation: MarkdownText | EmptyString;
-  rooms: EvanVenueRoom[];
-  gmaps: Url | EmptyString;
+  readonly is_main: boolean;
+  readonly name: string;
+  readonly presentation: MarkdownText | EmptyString;
+  readonly rooms: EvanVenueRoom[];
+  readonly gmaps: Url | EmptyString;
 }

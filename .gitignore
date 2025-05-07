@@ -2,6 +2,9 @@
 .thumbs.db
 node_modules
 
+# Copilot helper files
+.copilot
+
 # Quasar core related directories
 .quasar
 /dist

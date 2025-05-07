@@ -97,6 +97,12 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/program/ProgramPage.vue'),
       },
       {
+        path: '/test-program/:sessionSlug?/',
+        name: 'testProgram',
+        strict: true,
+        component: () => import('pages/program/TestProgramPage.vue'),
+      },
+      {
         path: '/registration/',
         name: 'registration',
         strict: true,

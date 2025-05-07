@@ -7,8 +7,8 @@
           <q-separator />
           <template v-if="event.is_open_for_registration">
             <h6 class="ares__text-red">
-              You can register for <span class="text-no-wrap">{{ event.name }}</span> using UGent's event manager,
-              Evan, using the link below. <br /><br />
+              You can register for <span class="text-no-wrap">{{ event.name }}</span> using UGent's event manager, Evan,
+              using the link below.<br /><br />
               <template v-if="isEarly">
                 Early registration deadline:<br />
                 <strong>{{ format(event.registration_early_deadline, 'PPPPpppp') }}.</strong>

@@ -12,17 +12,23 @@
   }
 }
 
-.ares__full-dialog-layout.small {
-  height: 695px;
+.ares__full-dialog-layout__small {
+  height: 710px;
 
   .q-dialog__inner--minimized > & {
+    width: 100% !important;
     max-width: 800px;
   }
 }
 </style>
 
 <template>
-  <q-layout view="hHh LpR lFf" container class="bg-white ares__full-dialog-layout">
+  <q-layout
+    view="hHh LpR lFf"
+    container
+    class="bg-white"
+    :class="{ 'ares__full-dialog-layout': !compact, 'ares__full-dialog-layout__small': compact }"
+  >
     <q-header class="bg-white q-pt-sm" :class="{ 'q-pa-md': $q.screen.gt.sm }">
       <q-toolbar class="text-primary q-pl-lg q-pr-sm use-default-q-btn">
         <q-toolbar-title v-if="title" class="col-10">
@@ -32,7 +38,7 @@
         <q-space />
         <q-btn flat round v-close-popup :icon="iconClose" color="ares-red" />
       </q-toolbar>
-      <q-toolbar class="text-dark text-body1 q-px-lg q-pb-md" style="min-height: auto">
+      <q-toolbar class="text-dark text-body1 q-px-lg" style="min-height: auto">
         <slot name="tabs"></slot>
       </q-toolbar>
     </q-header>
@@ -63,6 +69,7 @@ defineProps<{
   title: string | undefined;
   subtitle?: string | undefined;
   hideDrawer?: boolean;
+  compact?: boolean;
 }>();
 
 const drawer = ref(true);

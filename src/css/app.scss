@@ -323,4 +323,12 @@ a {
     font-size: 1.35em;
     margin-right: 0.4em;
   }
+
+  &.no-label {
+    padding: 0.45em 0.65em !important;
+
+    .q-icon {
+      margin-right: 0 !important;
+    }
+  }
 }

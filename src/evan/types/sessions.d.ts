@@ -5,11 +5,17 @@ interface EvanSession {
   readonly code: string;
   readonly title: string;
   readonly description: MarkdownText | EmptyString;
+  readonly program: MarkdownText | EmptyString;
   readonly is_social_event: boolean;
   readonly extra_attendees_fee: number;
   readonly start_at: string;
   readonly end_at: string;
   readonly track: number | null;
+  readonly room: number | null;
+  readonly topics: number[];
+  readonly subsessions: EvanSubsession[];
+  readonly papers: EvanPaper[];
+  readonly files: EvanFile[];
   readonly extra_data: {
     committees: Committee[];
     important_dates: ImportantDate[];
