@@ -111,7 +111,7 @@ const orderedSessions = computed<EvanSession[]>(() => {
     .sort(
       (a, b) =>
         a.submission_deadline.start_date.localeCompare(b.submission_deadline.start_date) ||
-        a.code.localeCompare(b.code),
+        (a.code || '').localeCompare(b.code || ''),
     );
 });
 

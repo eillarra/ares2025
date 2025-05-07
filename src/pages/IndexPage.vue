@@ -78,13 +78,12 @@ const aboutAresText = computed<MarkdownText | null>(
   () => (contentsDict.value['ares.about']?.value as MarkdownText) || null,
 );
 const importantDates = computed<ImportantDate[]>(() => {
-  return (
-    event.value?.extra_data.important_dates?.map((d) => ({
-      ...d,
-      label: d.aoe ? `${d.label} (AoE)` : d.label,
-      formatted: formatImportantDate(d, d.aoe),
-      is_past: passedImportantDate(d),
-    })) || []
-  );
+  if (!event.value) return [];
+  return event.value.extra_data.important_dates.map((d) => ({
+    ...d,
+    label: d.aoe ? `${d.label} (AoE)` : d.label,
+    formatted: formatImportantDate(d, d.aoe),
+    is_past: passedImportantDate(d),
+  }));
 });
 </script>

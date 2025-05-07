@@ -75,7 +75,7 @@ const dialogVisible = computed<boolean>({
 const orderedSessions = computed<EvanSession[]>(() => {
   return [...(event.value?.sessions || [])]
     .filter((s) => !s.is_social_event && s.track !== null)
-    .sort((a, b) => a.code.localeCompare(b.code));
+    .sort((a, b) => (a.code || '').localeCompare(b.code || ''));
 });
 
 const tracksAndSessions = computed<TrackWithSessions[]>(() => {
