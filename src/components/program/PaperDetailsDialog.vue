@@ -90,6 +90,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useQuasar } from 'quasar';
+
 import { useEventStore } from 'src/evan/stores/event';
 import { useFavorites } from 'src/composables/useFavorites';
 import {
@@ -98,8 +99,10 @@ import {
   formatProgramTime,
   getProgramRoomDisplay,
 } from 'src/utils/program';
+
 import AresDialogContent from 'src/components/AresDialogContent.vue';
 import MarkedDiv from 'src/evan/components/MarkedDiv.vue';
+
 import { iconCalendar, iconOpenInNew, iconStar, iconStarBorder } from 'src/icons';
 
 const props = withDefaults(

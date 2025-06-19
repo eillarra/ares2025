@@ -19,13 +19,14 @@ import {
   ionCalendarOutline,
   ionCheckmarkOutline,
   ionCloseOutline,
+  ionCodeOutline,
   ionDocumentTextOutline,
   ionDuplicateOutline,
   ionEaselOutline,
   ionEyeOutline,
   ionFilterOutline,
   ionGridOutline,
-  ionInformationCircle,
+  ionAddCircleOutline,
   ionInformationCircleOutline,
   ionLayersOutline,
   ionLinkOutline,
@@ -33,6 +34,7 @@ import {
   ionLocationOutline,
   ionMailOutline,
   ionMapOutline,
+  ionMegaphoneOutline,
   ionMenuOutline,
   ionNavigateOutline,
   ionOptionsOutline,
@@ -49,6 +51,7 @@ import {
   ionStarHalfOutline,
   ionSettingsOutline,
   ionTimeOutline,
+  ionTrailSignOutline,
   ionWarningOutline,
 } from '@quasar/extras/ionicons-v6';
 
@@ -60,6 +63,7 @@ export const iconCached = ionReloadOutline;
 export const iconCheck = ionCheckmarkOutline;
 export const iconClear = ionCloseOutline;
 export const iconClose = ionCloseOutline;
+export const iconCode = ionCodeOutline;
 export const iconCommittees = ionPeopleOutline;
 export const iconEdit = ionPencilOutline;
 export const iconEmail = ionMailOutline;
@@ -71,11 +75,12 @@ export const iconFilterList = ionOptionsOutline;
 export const iconGrid = ionGridOutline;
 export const iconGridView = matGridView;
 export const iconInfo = ionInformationCircleOutline;
-export const iconInfoFilled = ionInformationCircle;
+export const iconInfoFilled = ionAddCircleOutline;
 export const iconLink = ionLinkOutline;
 export const iconList = ionListOutline;
 export const iconMap = ionMapOutline;
 export const iconMenu = ionMenuOutline;
+export const iconMic = ionMegaphoneOutline;
 export const iconNavigation = ionNavigateOutline;
 export const iconPdf = ionDocumentTextOutline;
 export const iconPictureAsPdf = matPictureAsPdf;
@@ -94,6 +99,7 @@ export const iconStar = ionStar;
 export const iconStarBorder = ionStarOutline;
 export const iconStarHalf = ionStarHalfOutline;
 export const iconSubmissions = ionLayersOutline;
+export const iconTrack = ionTrailSignOutline;
 export const iconTune = matTune;
 export const iconVenue = ionLocationOutline;
 export const iconViewList = ionListOutline;

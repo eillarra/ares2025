@@ -9,6 +9,7 @@ export const useEventStore = defineStore('evanEvent', () => {
   const _contents = ref<EvanContent[] | undefined>(undefined);
   const _sessions = ref<EvanSession[]>([]);
   const _papers = ref<EvanPaper[]>([]);
+  const _keynotes = ref<EvanKeynote[]>([]);
   const _loading = ref(false);
   const _error = ref<string | null>(null);
 
@@ -38,6 +39,7 @@ export const useEventStore = defineStore('evanEvent', () => {
 
   const sessions = computed(() => _sessions.value);
   const papers = computed(() => _papers.value);
+  const keynotes = computed(() => _keynotes.value);
   const tracks = computed(() => _event.value?.tracks || []);
   const rooms = computed(() => {
     if (!_event.value?.venues) return [];
@@ -79,8 +81,18 @@ export const useEventStore = defineStore('evanEvent', () => {
     }
   }
 
+  async function fetchKeynotes() {
+    try {
+      const response = await eventApi.get('keynotes/');
+      _keynotes.value = response.data.results || response.data;
+    } catch (err) {
+      console.error('Error loading keynotes:', err);
+      _keynotes.value = [];
+    }
+  }
+
   async function fetchProgramData() {
-    await Promise.all([fetchSessions(), fetchPapers()]);
+    await Promise.all([fetchSessions(), fetchPapers(), fetchKeynotes()]);
   }
 
   async function init() {
@@ -107,6 +119,7 @@ export const useEventStore = defineStore('evanEvent', () => {
     mainVenue,
     sessions,
     papers,
+    keynotes,
     tracks,
     rooms,
     loading,

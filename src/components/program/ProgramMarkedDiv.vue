@@ -17,6 +17,22 @@
         />
       </teleport>
     </template>
+    <template v-for="keynoteData in keynoteRefs" :key="keynoteData.id">
+      <teleport :to="`#keynote-ref-${keynoteData.id}`" v-if="keynoteData.mounted">
+        <keynote-details-dialog
+          :keynote="keynoteData.keynote"
+          button-label="More info"
+          :button-icon="iconInfoFilled"
+          button-color="ares-red"
+          button-size="sm"
+          :button-flat="true"
+          :button-dense="true"
+          :hide-footer="hideFooter"
+          inline
+          class="q-ml-sm"
+        />
+      </teleport>
+    </template>
   </div>
 </template>
 
@@ -27,6 +43,7 @@ import { useEventStore } from 'src/evan/stores/event';
 import { render } from 'src/evan/utils/markdown';
 
 import PaperDetailsDialog from './PaperDetailsDialog.vue';
+import KeynoteDetailsDialog from './KeynoteDetailsDialog.vue';
 
 import { iconInfoFilled } from 'src/icons';
 
@@ -36,10 +53,19 @@ const props = defineProps<{
 }>();
 
 const eventStore = useEventStore();
+
 const paperRefs = ref<
   Array<{
     id: number;
     paper: EvanPaper;
+    mounted: boolean;
+  }>
+>([]);
+
+const keynoteRefs = ref<
+  Array<{
+    id: number;
+    keynote: EvanKeynote;
     mounted: boolean;
   }>
 >([]);
@@ -59,6 +85,15 @@ const enhancedHtml = computed(() => {
     return match;
   });
 
+  // Replace [keynote:CODE] references with keynote-ref elements and display text
+  html = html.replace(/\[keynote:([^\]]+)\]/g, (match, code) => {
+    const keynote = eventStore.keynotes.find((k) => k.code === code);
+    if (keynote) {
+      return `Keynote: “${keynote.title}” by ${keynote.speaker}<keynote-ref data-keynote-id="${keynote.id}"></keynote-ref><span class="keynote-ref-target" id="keynote-ref-${keynote.id}"></span>`;
+    }
+    return match;
+  });
+
   return html;
 });
 
@@ -72,6 +107,42 @@ function extractPaperData(attributes: string): { id: number; paper: EvanPaper } 
   if (!paper) return null;
 
   return { id: paperId, paper };
+}
+
+function updateKeynoteRefs() {
+  const newKeynoteRefs: Array<{ id: number; keynote: EvanKeynote; mounted: boolean }> = [];
+
+  // Extract keynote references from the original text using regex
+  const keynoteMatches = props.text.match(/\[keynote:([^\]]+)\]/g);
+
+  if (keynoteMatches) {
+    for (const match of keynoteMatches) {
+      const codeMatch = match.match(/\[keynote:([^\]]+)\]/);
+      if (codeMatch) {
+        const keynoteCode = codeMatch[1];
+        const keynote = eventStore.keynotes.find((k) => k.code === keynoteCode);
+        if (keynote) {
+          newKeynoteRefs.push({
+            id: keynote.id,
+            keynote,
+            mounted: false,
+          });
+        }
+      }
+    }
+  }
+
+  keynoteRefs.value = newKeynoteRefs;
+
+  // Mount the teleport targets after DOM update
+  nextTick(() => {
+    keynoteRefs.value.forEach((keynoteRef) => {
+      const target = document.getElementById(`keynote-ref-${keynoteRef.id}`);
+      if (target) {
+        keynoteRef.mounted = true;
+      }
+    });
+  });
 }
 
 function updatePaperRefs() {
@@ -108,10 +179,15 @@ function updatePaperRefs() {
   });
 }
 
-// Watch for text changes and update paper refs
-watch(() => props.text, updatePaperRefs, { immediate: true });
+function updateAllRefs() {
+  updatePaperRefs();
+  updateKeynoteRefs();
+}
+
+// Watch for text changes and update all refs
+watch(() => props.text, updateAllRefs, { immediate: true });
 
 onMounted(() => {
-  updatePaperRefs();
+  updateAllRefs();
 });
 </script>

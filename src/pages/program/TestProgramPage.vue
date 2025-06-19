@@ -46,6 +46,20 @@
           />
         </div>
 
+        <!-- Content Type Filter -->
+        <div class="col-12 col-sm-auto">
+          <q-select
+            v-model="selectedContentType"
+            :options="contentTypeOptions"
+            outlined
+            dense
+            emit-value
+            map-options
+            class="bg-white"
+            style="min-width: 150px"
+          />
+        </div>
+
         <!-- Date Filter -->
         <div class="col-12 col-sm-auto">
           <q-select
@@ -126,39 +140,77 @@
     <div v-else-if="eventStore.sessions.length > 0">
       <!-- Sessions List View -->
       <div v-if="viewMode === 'sessions'" class="sessions-view">
-        <!-- Grouped by day (when no specific day is selected) -->
-        <div v-if="groupedSessions">
-          <div v-for="group in groupedSessions" :key="group.date" class="day-group q-mb-lg">
-            <!-- Day Header -->
-            <ares-separator :label="group.dateLabel" color="primary" size="md" />
-            <!-- Sessions for this day -->
+        <!-- Sessions Content -->
+        <div v-if="selectedContentType === 'all' || selectedContentType === 'sessions'">
+          <!-- Grouped by day (when no specific day is selected) -->
+          <div v-if="groupedSessions && (selectedContentType === 'all' || selectedContentType === 'sessions')">
+            <div v-for="group in groupedSessions" :key="group.date" class="day-group q-mb-lg">
+              <!-- Day Header -->
+              <ares-separator :label="group.dateLabel" color="primary" size="md" />
+              <!-- Sessions for this day -->
+              <div class="row q-col-gutter-md">
+                <div v-for="session in group.sessions" :key="session.id" class="col-12 col-md-6 col-lg-4">
+                  <session-card
+                    :session="session"
+                    :show-time="true"
+                    :show-end-time="true"
+                    :get-track-name="getTrackNameForSession"
+                    :get-room-name="getRoomNameForSession"
+                    :favorite-state="favorites.getSessionFavoriteState(session)"
+                    @click="openSessionDetails(session)"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Ungrouped sessions (when specific day is selected) -->
+          <div v-else-if="selectedContentType === 'sessions'" class="row q-col-gutter-md">
+            <div v-for="session in filteredSessions" :key="session.id" class="col-12 col-md-6 col-lg-4">
+              <session-card
+                :session="session"
+                :show-time="true"
+                :show-end-time="true"
+                :get-track-name="getTrackNameForSession"
+                :get-room-name="getRoomNameForSession"
+                :favorite-state="favorites.getSessionFavoriteState(session)"
+                @click="openSessionDetails(session)"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Keynotes Content -->
+        <div v-if="selectedContentType === 'all' || selectedContentType === 'keynotes'">
+          <div
+            v-if="selectedContentType === 'keynotes' || (selectedContentType === 'all' && filteredKeynotes.length > 0)"
+            class="keynotes-section"
+          >
+            <ares-separator
+              v-if="selectedContentType === 'all'"
+              label="Keynotes"
+              color="secondary"
+              size="md"
+              class="q-mb-lg"
+            />
             <div class="row q-col-gutter-md">
-              <div v-for="session in group.sessions" :key="session.id" class="col-12 col-md-6 col-lg-4">
-                <session-card
-                  :session="session"
-                  :show-time="true"
-                  :show-end-time="true"
+              <div v-for="keynote in filteredKeynotes" :key="keynote.id" class="col-12 col-md-6 col-lg-4">
+                <keynote-card
+                  :keynote="keynote"
                   :get-track-name="getTrackNameForSession"
-                  :get-room-name="getRoomNameForSession"
-                  :favorite-state="favorites.getSessionFavoriteState(session)"
-                  @click="openSessionDetails(session)"
+                  :session-data="eventStore.sessions"
+                  @click="openKeynoteDetails(keynote)"
                 />
               </div>
             </div>
           </div>
         </div>
-        <!-- Ungrouped (when specific day is selected) -->
-        <div v-else class="row q-col-gutter-md">
-          <div v-for="session in filteredSessions" :key="session.id" class="col-12 col-md-6 col-lg-4">
-            <session-card
-              :session="session"
-              :show-time="true"
-              :show-end-time="true"
-              :get-track-name="getTrackNameForSession"
-              :get-room-name="getRoomNameForSession"
-              :favorite-state="favorites.getSessionFavoriteState(session)"
-              @click="openSessionDetails(session)"
-            />
+
+        <!-- Papers Content (placeholder for future implementation) -->
+        <div v-if="selectedContentType === 'papers'">
+          <div class="text-center q-py-xl">
+            <q-icon :name="iconArticle" size="64px" color="grey-5" />
+            <h5 class="text-grey-5 q-mt-md">Paper search coming soon</h5>
+            <p class="text-grey-6">This feature will be available in a future update.</p>
           </div>
         </div>
       </div>
@@ -244,6 +296,16 @@
     <SessionDialog v-if="selectedSession" :session="selectedSession" />
   </q-dialog>
 
+  <!-- Hidden KeynoteDetailsDialog for programmatic opening -->
+  <KeynoteDetailsDialog
+    v-if="selectedKeynote"
+    ref="keynoteDetailsRef"
+    :keynote="selectedKeynote"
+    button-label="Open"
+    :inline="false"
+    style="display: none;"
+  />
+
   <!-- Paper Search Dialog -->
   <q-dialog v-model="paperSearchDialog" square position="bottom" class="ares__dialog">
     <PaperSearchDialog />
@@ -301,14 +363,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, computed, onMounted, watch, nextTick } from 'vue';
 import { useQuasar } from 'quasar';
 import { useRoute, useRouter } from 'vue-router';
 
 import { api } from 'boot/axios';
 
 import SessionCard from 'src/components/program/SessionCard.vue';
+import KeynoteCard from 'src/components/program/KeynoteCard.vue';
 import SessionDialog from './SessionDialog.vue';
+import KeynoteDetailsDialog from 'src/components/program/KeynoteDetailsDialog.vue';
 import PaperSearchDialog from 'src/components/program/PaperSearchDialog.vue';
 import AresSeparator from 'src/components/AresSeparator.vue';
 import { useEventStore } from 'src/evan/stores/event';
@@ -346,15 +410,20 @@ const eventStore = useEventStore();
 const favorites = useFavorites();
 const personalCalendar = usePersonalCalendar();
 
+// Template refs
+const keynoteDetailsRef = ref<InstanceType<typeof KeynoteDetailsDialog> | null>(null);
+
 // State
 const searchQuery = ref('');
 const viewMode = ref('sessions');
+const selectedContentType = ref('all');
 const selectedDay = ref('all');
 const selectedTrack = ref<number | 'all'>('all');
 const speakerSearch = ref('');
 const showFilters = ref(false);
 const showMobileFilters = ref(false);
 const selectedSession = ref<EvanSession | null>(null);
+const selectedKeynote = ref<EvanKeynote | null>(null);
 const paperSearchDialog = ref(false);
 
 const sessionSlug = computed<string | null>(() => (route.params.sessionSlug as string) || null);
@@ -390,11 +459,47 @@ const trackOptions = computed(() => {
   return [{ label: 'All tracks', value: 'all' }, ...tracks];
 });
 
+const contentTypeOptions = computed(() => [
+  { label: 'All Content', value: 'all' },
+  { label: 'Sessions', value: 'sessions' },
+  { label: 'Keynotes', value: 'keynotes' },
+  { label: 'Papers', value: 'papers' },
+]);
+
 const filteredSessions = computed(() => {
   const tracks = eventStore.event?.tracks || [];
   const selectedTracks = selectedTrack.value !== 'all' ? [selectedTrack.value] : [];
 
   return filterSessions(eventStore.sessions, searchQuery.value, selectedDay.value, selectedTracks, tracks);
+});
+
+const filteredKeynotes = computed(() => {
+  let keynotes = eventStore.keynotes;
+
+  // Filter by search query
+  if (searchQuery.value) {
+    const query = searchQuery.value.toLowerCase();
+    keynotes = keynotes.filter(
+      (keynote) =>
+        keynote.title.toLowerCase().includes(query) ||
+        keynote.speaker.toLowerCase().includes(query) ||
+        (keynote.abstract && keynote.abstract.toLowerCase().includes(query)),
+    );
+  }
+
+  // Filter by day (if keynote has session)
+  if (selectedDay.value !== 'all' && selectedDay.value) {
+    const targetDate = selectedDay.value;
+    keynotes = keynotes.filter((keynote) => {
+      if (!keynote.session) return false;
+      const session = eventStore.sessions.find((s) => s.id === keynote.session);
+      if (!session?.start_at) return false;
+      const sessionDate = new Date(session.start_at).toDateString();
+      return sessionDate === new Date(targetDate).toDateString();
+    });
+  }
+
+  return keynotes;
 });
 
 const personalCalendarEntries = computed(() => {
@@ -426,6 +531,13 @@ const openSessionDetails = async (session: EvanSession) => {
       position: 'bottom',
     });
   }
+};
+
+const openKeynoteDetails = (keynote: EvanKeynote) => {
+  selectedKeynote.value = keynote;
+  nextTick(() => {
+    keynoteDetailsRef.value?.openDialog();
+  });
 };
 
 const clearFilters = () => {

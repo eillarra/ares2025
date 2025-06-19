@@ -174,7 +174,6 @@ import {
 } from 'src/utils/program';
 
 import AresDialogContent from 'src/components/AresDialogContent.vue';
-import AresBtn from 'src/components/AresBtn.vue';
 import MarkedDiv from 'src/evan/components/MarkedDiv.vue';
 import ProgramMarkedDiv from 'src/components/program/ProgramMarkedDiv.vue';
 
