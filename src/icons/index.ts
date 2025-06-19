@@ -8,7 +8,6 @@ import {
   matEventBusy,
   matGridView,
   matHourglassEmpty,
-  matOpenInNew,
   matPictureAsPdf,
   matRoom,
   matTune,
@@ -37,6 +36,7 @@ import {
   ionMegaphoneOutline,
   ionMenuOutline,
   ionNavigateOutline,
+  ionOpenOutline,
   ionOptionsOutline,
   ionPencilOutline,
   ionPersonOutline,
@@ -110,7 +110,7 @@ export const iconAttachment = matAttachment;
 export const iconCategory = matCategory;
 export const iconDescription = matDescription;
 export const iconHourglassEmpty = matHourglassEmpty;
-export const iconOpenInNew = matOpenInNew;
+export const iconOpenInNew = ionOpenOutline;
 export const iconRelatedContent = ionLayersOutline;
 
 export const iconEasyChair =

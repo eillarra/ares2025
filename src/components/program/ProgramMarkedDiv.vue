@@ -11,7 +11,7 @@
           button-size="sm"
           :button-flat="true"
           :button-dense="true"
-          :hide-footer="hideFooter"
+          :hide-favorite-btn="hideFavoriteBtn"
           inline
           class="q-ml-sm"
         />
@@ -27,7 +27,7 @@
           button-size="sm"
           :button-flat="true"
           :button-dense="true"
-          :hide-footer="hideFooter"
+          :hide-favorite-btn="hideFavoriteBtn"
           inline
           class="q-ml-sm"
         />
@@ -49,7 +49,7 @@ import { iconInfoFilled } from 'src/icons';
 
 const props = defineProps<{
   text: string;
-  hideFooter?: boolean;
+  hideFavoriteBtn?: boolean;
 }>();
 
 const eventStore = useEventStore();

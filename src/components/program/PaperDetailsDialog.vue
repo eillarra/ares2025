@@ -40,6 +40,10 @@
           </div>
           <div v-if="sessionDisplay || subsessionDisplay" class="q-mb-lg">
             <div class="text-subtitle2 text-grey-7 q-mb-sm">Presentation schedule</div>
+            <div v-if="!hideFavoriteBtn" class="float-right q-ml-xl">
+              <favorite-btn v-if="subsessionDisplay" type="subsession" :id="paper.subsession" />
+              <favorite-btn v-else-if="sessionDisplay" type="session" :id="paper.session" />
+            </div>
             <div v-if="subsessionDisplay">
               <strong>Session:</strong> {{ subsessionDisplay.title }}<br />
               <span v-if="subsessionDisplay.timeInfo"><strong>Time:</strong> {{ subsessionDisplay.timeInfo }}</span
@@ -59,40 +63,14 @@
           </div>
         </div>
       </template>
-      <template #footer v-if="!hideFooter">
-        <div class="full-width q-pa-md">
-          <div class="row q-gutter-sm justify-end">
-            <ares-btn
-              v-if="subsessionDisplay"
-              :icon="favorites.isSubsessionFavorited(paper.subsession) ? iconStar : iconStarBorder"
-              :label="favorites.isSubsessionFavorited(paper.subsession) ? 'Remove time slot' : 'Add time slot'"
-              outline
-              size="md"
-              :class="{ 'ares__bg-yellow': favorites.isSubsessionFavorited(paper.subsession) }"
-              @click="toggleSubsessionFavorite"
-            />
-            <ares-btn
-              v-else-if="sessionDisplay"
-              :icon="favorites.isSessionFavorited(paper.session) ? iconStar : iconStarBorder"
-              :label="favorites.isSessionFavorited(paper.session) ? 'Remove session' : 'Add session'"
-              outline
-              size="md"
-              :class="{ 'ares__bg-yellow': favorites.isSessionFavorited(paper.session) }"
-              @click="toggleSessionFavorite"
-            />
-          </div>
-        </div>
-      </template>
     </ares-dialog-content>
   </q-dialog>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { useQuasar } from 'quasar';
 
 import { useEventStore } from 'src/evan/stores/event';
-import { useFavorites } from 'src/composables/useFavorites';
 import {
   getSubsessionDisplayTitle,
   formatProgramDate,
@@ -101,9 +79,10 @@ import {
 } from 'src/utils/program';
 
 import AresDialogContent from 'src/components/AresDialogContent.vue';
+import FavoriteBtn from 'src/components/program/FavoriteBtn.vue';
 import MarkedDiv from 'src/evan/components/MarkedDiv.vue';
 
-import { iconCalendar, iconOpenInNew, iconStar, iconStarBorder } from 'src/icons';
+import { iconCalendar, iconOpenInNew } from 'src/icons';
 
 const props = withDefaults(
   defineProps<{
@@ -116,7 +95,7 @@ const props = withDefaults(
     buttonOutline?: boolean;
     buttonDense?: boolean;
     inline?: boolean;
-    hideFooter?: boolean;
+    hideFavoriteBtn?: boolean;
   }>(),
   {
     buttonLabel: 'More info',
@@ -127,13 +106,11 @@ const props = withDefaults(
     buttonOutline: false,
     buttonDense: true,
     inline: false,
-    hideFooter: false,
+    hideFavoriteBtn: false,
   },
 );
 
-const $q = useQuasar();
 const eventStore = useEventStore();
-const favorites = useFavorites();
 
 const dialogOpen = ref(false);
 
@@ -186,32 +163,6 @@ const subsessionDisplay = computed(() => {
     roomInfo: getProgramRoomDisplay(session.room, eventStore.rooms),
   };
 });
-
-const toggleSessionFavorite = () => {
-  if (!props.paper.session) return;
-  favorites.toggleSessionFavorite(props.paper.session);
-
-  const action = favorites.isSessionFavorited(props.paper.session) ? 'added to' : 'removed from';
-  $q.notify({
-    message: `Session ${action} your favorites`,
-    color: 'positive',
-    position: 'bottom',
-    timeout: 1500,
-  });
-};
-
-const toggleSubsessionFavorite = () => {
-  if (!props.paper.subsession) return;
-  favorites.toggleSubsessionFavorite(props.paper.subsession);
-
-  const action = favorites.isSubsessionFavorited(props.paper.subsession) ? 'added to' : 'removed from';
-  $q.notify({
-    message: `Time slot ${action} your favorites`,
-    color: 'positive',
-    position: 'bottom',
-    timeout: 1500,
-  });
-};
 </script>
 
 <style scoped>

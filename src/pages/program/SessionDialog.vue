@@ -59,19 +59,12 @@
         </q-tab-panel>
         <q-tab-panel name="program">
           <div class="q-mb-lg">
-            <ares-btn
-              :icon="favorites.isSessionFavorited(session.id) ? iconStar : iconStarBorder"
-              :label="
-                $q.screen.gt.sm
-                  ? favorites.isSessionFavorited(session.id)
-                    ? 'Remove full session'
-                    : 'Add full session'
-                  : undefined
-              "
-              outline
+            <favorite-btn
+              type="session"
+              :id="session.id"
+              :hide-label="!$q.screen.gt.sm"
+              size="lg"
               class="q-mt-sm float-right"
-              :class="{ 'ares__bg-yellow': favorites.isSessionFavorited(session.id) }"
-              @click="toggleSessionFavorite"
             />
             <h6 class="q-mt-none q-mb-md ares__text-red">{{ session.title }}.</h6>
             <div class="text-h6 text-weight-bold">
@@ -83,26 +76,17 @@
             <div class="text-body2 text-grey-7">{{ getProgramRoomDisplay(session.room, eventStore.rooms) }}</div>
           </div>
           <div v-if="sessionProgramContent && sessionProgramContent.trim()" class="q-mb-lg">
-            <program-marked-div :text="sessionProgramContent" hide-footer />
+            <program-marked-div :text="sessionProgramContent" hide-favorite-btn />
           </div>
           <div v-if="hasSubsessions" class="q-mb-lg">
             <h5 v-if="sessionProgramContent && sessionProgramContent.trim()" class="q-mt-xl q-mb-md">Time slots</h5>
             <div v-for="(subsession, index) in session.subsessions" :key="subsession.id" class="q-mb-md">
               <q-separator class="q-mt-lg q-mb-md" />
-              <ares-btn
-                :icon="favorites.isSubsessionFavorited(subsession.id) ? iconStar : iconStarBorder"
-                :label="
-                  $q.screen.gt.sm
-                    ? favorites.isSubsessionFavorited(subsession.id)
-                      ? 'Remove time slot'
-                      : 'Add time slot'
-                    : undefined
-                "
-                outline
-                size="md"
+              <favorite-btn
+                type="subsession"
+                :id="subsession.id"
+                :hide-label="!$q.screen.gt.sm"
                 class="q-mt-sm float-right"
-                :class="{ 'ares__bg-yellow': favorites.isSubsessionFavorited(subsession.id) }"
-                @click="toggleSubsessionFavorite(subsession.id)"
               />
               <h4 class="ares__text-subtitle3 q-mb-none">
                 {{ getSubsessionDisplayTitle(subsession, index, session.code) }}
@@ -111,7 +95,7 @@
                 </q-chip>
               </h4>
               <div v-if="subsessionProgramContent.get(subsession.id)" class="q-pb-xs">
-                <program-marked-div :text="subsessionProgramContent.get(subsession.id)" hide-footer />
+                <program-marked-div :text="subsessionProgramContent.get(subsession.id)" hide-favorite-btn />
               </div>
             </div>
           </div>
@@ -162,7 +146,6 @@ import { computed, ref, watchEffect } from 'vue';
 import { useQuasar } from 'quasar';
 
 import { formatImportantDate, passedImportantDate } from 'src/evan/utils/dates';
-import { useFavorites } from 'src/composables/useFavorites';
 import { useProgramTemplate } from 'src/evan/composables/useProgramTemplate';
 import { useEventStore } from 'src/evan/stores/event';
 import {
@@ -174,14 +157,14 @@ import {
 } from 'src/utils/program';
 
 import AresDialogContent from 'src/components/AresDialogContent.vue';
+import FavoriteBtn from 'src/components/program/FavoriteBtn.vue';
 import MarkedDiv from 'src/evan/components/MarkedDiv.vue';
 import ProgramMarkedDiv from 'src/components/program/ProgramMarkedDiv.vue';
 
-import { iconEmail, iconPerson, iconStar, iconStarBorder } from 'src/icons';
+import { iconEmail, iconPerson } from 'src/icons';
 
 const $q = useQuasar();
 const eventStore = useEventStore();
-const favorites = useFavorites();
 const { renderTemplate } = useProgramTemplate();
 
 const props = defineProps<{
@@ -274,28 +257,4 @@ const importantDates = computed<ImportantDate[]>(() => {
     })) || []
   );
 });
-
-const toggleSessionFavorite = () => {
-  favorites.toggleSessionWithSubsessions(props.session);
-
-  const action = favorites.isSessionFavorited(props.session.id) ? 'added to' : 'removed from';
-  $q.notify({
-    message: `Session ${action} your favorites`,
-    color: 'positive',
-    position: 'bottom',
-    timeout: 1500,
-  });
-};
-
-const toggleSubsessionFavorite = (subsessionId: number) => {
-  favorites.toggleSubsessionWithSync(subsessionId, props.session);
-
-  const action = favorites.isSubsessionFavorited(subsessionId) ? 'added to' : 'removed from';
-  $q.notify({
-    message: `Time slot ${action} your favorites`,
-    color: 'positive',
-    position: 'bottom',
-    timeout: 1500,
-  });
-};
 </script>

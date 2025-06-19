@@ -303,7 +303,7 @@
     :keynote="selectedKeynote"
     button-label="Open"
     :inline="false"
-    style="display: none;"
+    style="display: none"
   />
 
   <!-- Paper Search Dialog -->

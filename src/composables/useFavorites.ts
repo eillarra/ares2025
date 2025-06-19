@@ -1,4 +1,5 @@
 import { ref, computed, watch } from 'vue';
+import { useEventStore } from 'src/evan/stores/event';
 
 interface FavoritesStorage {
   sessions: number[];
@@ -103,26 +104,17 @@ export function useFavorites() {
   };
 
   const toggleSessionFavorite = (sessionId: number) => {
+    const eventStore = useEventStore();
+    const session = eventStore.sessions.find((s) => s.id === sessionId);
+
+    if (!session) {
+      console.warn(`Session ${sessionId} not found in event store`);
+      return;
+    }
+
     if (isSessionFavorited(sessionId)) {
       removeSessionFavorite(sessionId);
-    } else {
-      addSessionFavorite(sessionId);
-    }
-  };
-
-  const toggleSubsessionFavorite = (subsessionId: number) => {
-    if (isSubsessionFavorited(subsessionId)) {
-      removeSubsessionFavorite(subsessionId);
-    } else {
-      addSubsessionFavorite(subsessionId);
-    }
-  };
-
-  const toggleSessionWithSubsessions = (session: EvanSession) => {
-    const isCurrentlyFavorited = isSessionFavorited(session.id);
-
-    if (isCurrentlyFavorited) {
-      removeSessionFavorite(session.id);
+      // Remove all subsessions when removing session
       if (session.subsessions) {
         session.subsessions.forEach((subsession) => {
           if (isSubsessionFavorited(subsession.id)) {
@@ -131,7 +123,8 @@ export function useFavorites() {
         });
       }
     } else {
-      addSessionFavorite(session.id);
+      addSessionFavorite(sessionId);
+      // Add all subsessions when adding session
       if (session.subsessions) {
         session.subsessions.forEach((subsession) => {
           if (!isSubsessionFavorited(subsession.id)) {
@@ -142,25 +135,44 @@ export function useFavorites() {
     }
   };
 
-  const toggleSubsessionWithSync = (subsessionId: number, session: EvanSession) => {
-    toggleSubsessionFavorite(subsessionId);
+  const toggleSubsessionFavorite = (subsessionId: number) => {
+    const eventStore = useEventStore();
 
-    if (!session.subsessions) return;
+    // Find the session that contains this subsession
+    const parentSession = eventStore.sessions.find((session) =>
+      session.subsessions?.some((sub) => sub.id === subsessionId),
+    );
 
+    if (!parentSession) {
+      console.warn(`Parent session for subsession ${subsessionId} not found`);
+      // Fall back to simple toggle if we can't find the parent
+      if (isSubsessionFavorited(subsessionId)) {
+        removeSubsessionFavorite(subsessionId);
+      } else {
+        addSubsessionFavorite(subsessionId);
+      }
+      return;
+    }
+
+    // Toggle the subsession
     if (isSubsessionFavorited(subsessionId)) {
-      const allSubsessionsFavorited = session.subsessions.every((sub) => isSubsessionFavorited(sub.id));
-
-      if (allSubsessionsFavorited && !isSessionFavorited(session.id)) {
-        addSessionFavorite(session.id);
-      }
+      removeSubsessionFavorite(subsessionId);
     } else {
-      if (isSessionFavorited(session.id)) {
-        const allSubsessionsFavorited = session.subsessions.every((sub) => isSubsessionFavorited(sub.id));
+      addSubsessionFavorite(subsessionId);
+    }
 
-        if (!allSubsessionsFavorited) {
-          removeSessionFavorite(session.id);
-        }
-      }
+    // Sync parent session state
+    if (!parentSession.subsessions) return;
+
+    const allSubsessionsFavorited = parentSession.subsessions.every((sub) => isSubsessionFavorited(sub.id));
+
+    if (allSubsessionsFavorited && !isSessionFavorited(parentSession.id)) {
+      // All subsessions are favorited, so favorite the session
+      addSessionFavorite(parentSession.id);
+    } else if (!allSubsessionsFavorited && isSessionFavorited(parentSession.id)) {
+      // Not all subsessions are favorited, so unfavorite the session
+      // This covers both "no subsessions favorited" and "some but not all favorited"
+      removeSessionFavorite(parentSession.id);
     }
   };
 
@@ -227,9 +239,6 @@ export function useFavorites() {
 
     toggleSessionFavorite,
     toggleSubsessionFavorite,
-
-    toggleSessionWithSubsessions,
-    toggleSubsessionWithSync,
 
     clearAllFavorites,
     getFavoriteSessionsWithData,
