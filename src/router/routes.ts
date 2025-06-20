@@ -50,9 +50,9 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: '/conference/accepted-papers/',
-        name: 'acceptedPapers',
+        name: 'legacyAcceptedPapers',
         strict: true,
-        component: () => import('pages/program/AcceptedPapersPage.vue'),
+        redirect: { name: 'acceptedPapers' },
       },
       {
         path: '/conference/committee/',
@@ -91,16 +91,35 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/PrivacyPolicyPage.vue'),
       },
       {
-        path: '/program/:sessionSlug?/',
-        name: 'program',
-        strict: true,
-        component: () => import('pages/program/ProgramPage.vue'),
-      },
-      {
-        path: '/test-program/:sessionSlug?/',
-        name: 'testProgram',
-        strict: true,
-        component: () => import('pages/program/TestProgramPage.vue'),
+        path: '/program/',
+        component: () => import('pages/program/MainProgramPage.vue'),
+        children: [
+          {
+            path: '',
+            name: 'program',
+            component: () => import('pages/program/ProgramPage.vue'),
+          },
+          {
+            path: 'keynotes/',
+            name: 'keynotes',
+            component: () => import('pages/program/KeynotesPage.vue'),
+          },
+          {
+            path: 'accepted-papers/',
+            name: 'acceptedPapers',
+            component: () => import('pages/program/PapersPage.vue'),
+          },
+          {
+            path: 'my-calendar/',
+            name: 'userProgram',
+            component: () => import('pages/program/UserProgramPage.vue'),
+          },
+          {
+            path: ':sessionSlug?/',
+            name: 'session',
+            component: () => import('pages/program/ProgramPage.vue'),
+          },
+        ],
       },
       {
         path: '/registration/',

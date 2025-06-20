@@ -1,10 +1,11 @@
 <template>
   <ares-btn
     v-if="shouldShow"
-    :icon="isFavorited ? iconStar : iconStarBorder"
+    :icon="isFavorited ? iconStarFull : iconStar"
     :label="hideLabel ? undefined : favoriteLabel"
     :size="size == 'lg' ? undefined : 'md'"
     outline
+    class="q-ml-lg"
     :class="{ 'ares__bg-yellow': isFavorited }"
     @click="toggleFavorite"
   />
@@ -15,7 +16,7 @@ import { computed } from 'vue';
 import { useQuasar } from 'quasar';
 
 import { useFavorites } from 'src/composables/useFavorites';
-import { iconStar, iconStarBorder } from 'src/icons';
+import { iconStar, iconStarFull } from 'src/icons';
 
 type FavoriteType = 'session' | 'subsession';
 

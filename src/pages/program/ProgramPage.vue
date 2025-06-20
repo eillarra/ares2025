@@ -1,149 +1,236 @@
 <template>
   <div class="q-mb-xl q-pb-xl">
-    <div v-if="scheduleText" class="ares__bg-yellow q-pt-xl q-mb-xl">
-      <div class="container">
-        <div class="row q-col-gutter-y-lg q-col-gutter-x-xl justify-between q-mb-xl">
-          <div class="col-12 col-md-4 flex column">
-            <h2 class="ares__text-title">Schedule</h2>
-            <q-separator />
-          </div>
-          <div class="col-12 col-md-7">
-            <marked-div :text="scheduleText" class="q-mb-xl" />
-          </div>
-        </div>
-      </div>
-    </div>
-    <div v-if="event" class="container q-pt-lg">
-      <div class="row q-col-gutter-y-lg q-col-gutter-x-xl justify-between">
+    <div class="container">
+      <div class="row q-col-gutter-y-lg q-col-gutter-x-md justify-between q-mb-lg">
         <div class="col-12 col-md-4 flex column">
-          <h2 class="ares__text-title">Program</h2>
-          <q-separator />
-          <h6 class="ares__text-red">
-            Take a look at the schedule and program of <span class="text-no-wrap">{{ event.name }}.</span>
-          </h6>
+          <ares-separator label="Schedule" />
         </div>
         <div class="col-12 col-md-7">
-          <div v-if="!event.sessions.length">There are no sessions available yet. We will update the program soon.</div>
-          <template v-else>
-            <template v-for="(ts, idx) in tracksAndSessions" :key="idx">
-              <template v-if="ts.sessions.length">
-                <h4 v-if="ts.track" class="ares__text-subtitle2">{{ ts.track.name }}</h4>
-                <h4 v-else class="ares__text-subtitle2">No track</h4>
-                <ul class="q-mb-xl">
-                  <li v-for="session in ts.sessions" :key="session.code">
-                    <router-link :to="{ name: 'program', params: { sessionSlug: session.slug } }">
-                      <strong v-if="ts.track.name.toLocaleLowerCase() != 'keynotes'">{{ session.code }}:&nbsp;</strong>
-                      <span>{{ session.title }}</span>
-                    </router-link>
-                  </li>
-                </ul>
-              </template>
+          <ares-search-bar v-model="searchQuery" placeholder="Search sessions, speakers, or topics...">
+            <template #footer>
+              <span v-if="filteredSessions.length > 0"
+                >{{ filteredSessions.length }} session<span v-if="filteredSessions.length > 1">s</span> found</span
+              >
+              <span v-if="hasFiltersApplied"> (filtered)</span>
             </template>
-          </template>
+          </ares-search-bar>
+        </div>
+      </div>
+
+      <empty-state
+        v-if="!filteredSessions.length"
+        icon="event_busy"
+        title="No sessions found"
+        :description="
+          hasFiltersApplied ? 'Try adjusting your search or filters' : 'Sessions will appear here when available'
+        "
+      />
+
+      <div v-else>
+        <div v-if="groupedSessions">
+          <div v-for="group in groupedSessions" :key="group.date" class="day-group q-mb-xl">
+            <ares-separator :label="group.dateLabel" color="primary" size="md" />
+            <div class="row q-col-gutter-md">
+              <div v-for="session in group.sessions" :key="session.id" class="col-12 col-md-6 col-lg-4">
+                <program-card v-bind="getSessionCardProps(session)" @click="openSessionDetails(session)" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div v-else class="row q-col-gutter-md">
+          <div v-for="session in filteredSessions" :key="session.id" class="col-12 col-md-6 col-lg-4">
+            <program-card v-bind="getSessionCardProps(session)" @click="openSessionDetails(session)" />
+          </div>
         </div>
       </div>
     </div>
   </div>
-  <q-dialog v-model="dialogVisible" square position="bottom" class="ares__dialog">
-    <session-dialog :session="selectedSession" />
+
+  <q-dialog v-model="showSessionDialog" square position="bottom" class="ares__dialog">
+    <session-dialog v-if="selectedSession" :session="selectedSession" />
   </q-dialog>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue';
-import { storeToRefs } from 'pinia';
+import { ref, computed, inject, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { api } from 'boot/axios';
 import { useEventStore } from 'src/evan/stores/event';
+import { useFavorites } from 'src/composables/useFavorites';
+import {
+  filterSessions,
+  groupSessionsByDayAdvanced,
+  getSessionDisplayTitle,
+  sortSessionsAdvanced,
+} from 'src/utils/program';
 
+import AresSearchBar from 'src/components/AresSearchBar.vue';
+import AresSeparator from 'src/components/AresSeparator.vue';
+import EmptyState from 'src/components/program/EmptyState.vue';
+import ProgramCard from 'src/components/program/ProgramCard.vue';
 import SessionDialog from './SessionDialog.vue';
 
-interface TrackWithSessions {
-  track: EvanTrack | null;
-  sessions: EvanSession[];
-}
-
 const eventStore = useEventStore();
+const favorites = useFavorites();
 const route = useRoute();
 const router = useRouter();
 
-const { contentsDict, event } = storeToRefs(eventStore);
+const selectedDate = inject<{ value: string }>('selectedDate');
 
-const scheduleText = computed<MarkdownText | null>(
-  () => (contentsDict.value['program.schedule']?.value as MarkdownText) || null,
-);
+const searchQuery = ref('');
 
-const sessionSlug = computed<string | string[] | null>(() => (route.params.sessionSlug as string) || null);
-const selectedSession = ref(null);
-
-const dialogVisible = computed<boolean>({
+const selectedSession = ref<EvanSession | null>(null);
+const showSessionDialog = computed<boolean>({
   get() {
     return !!selectedSession.value;
   },
   set(value) {
     if (!value) {
       selectedSession.value = null;
-      router.push({ name: 'program' });
+
+      if (route.params.sessionSlug) {
+        window.history.replaceState({ ...window.history.state, preserveScroll: true }, '');
+        router.replace({
+          name: 'program',
+          query: route.query
+        });
+      }
     }
   },
 });
 
-const orderedSessions = computed<EvanSession[]>(() => {
-  return [...(event.value?.sessions || [])]
-    .filter((s) => !s.is_social_event && s.track !== null)
-    .sort((a, b) => (a.code || '').localeCompare(b.code || ''));
-});
+const filteredSessions = computed(() => {
+  const tracks = eventStore.event?.tracks || [];
+  const selectedDateValue = selectedDate?.value || 'all';
 
-const tracksAndSessions = computed<TrackWithSessions[]>(() => {
-  if (!event.value?.tracks.length) {
-    return [{ track: null, sessions: orderedSessions.value }];
+  const filtered = filterSessions(eventStore.sessions, searchQuery.value, selectedDateValue, [], tracks);
+
+  if (selectedDateValue !== 'all') {
+    return sortSessionsAdvanced(filtered, tracks);
   }
 
-  const tracksWithSessions = event.value.tracks.map((track) => {
-    return {
-      track,
-      sessions: orderedSessions.value.filter((session) => session.track === track.id),
-    };
-  });
-
-  return tracksWithSessions.sort((a, b) => a.track.position - b.track.position);
+  return filtered;
 });
 
-const loadData = async () => {
-  await Promise.all([eventStore.init(), eventStore.fetchProgramData()]);
+const groupedSessions = computed(() => {
+  const selectedDateValue = selectedDate?.value || 'all';
+  if (selectedDateValue !== 'all') {
+    return null;
+  }
+  const tracks = eventStore.event?.tracks || [];
+  return groupSessionsByDayAdvanced(filteredSessions.value, tracks);
+});
+
+const hasFiltersApplied = computed(() => {
+  const selectedDateValue = selectedDate?.value || 'all';
+  return searchQuery.value || selectedDateValue !== 'all';
+});
+
+const getSessionTrackInfo = (session: EvanSession) => {
+  if (!session.track) return undefined;
+  const tracks = eventStore.event?.tracks || [];
+  const track = tracks.find((t) => t.id === session.track);
+  return track ? { label: track.name, color: 'primary' } : undefined;
 };
 
-const fetchSessionInfo = async () => {
-  if (route.params.sessionSlug) {
-    if (!event.value) {
-      setTimeout(fetchSessionInfo, 100);
-      return;
-    }
+const getSessionLocationInfo = (session: EvanSession): string => {
+  if (!session.room) return 'TBA';
+  const rooms = eventStore.rooms || [];
+  const room = rooms.find((r) => r.id === session.room);
+  return room?.name || 'TBA';
+};
 
-    const session = event.value.sessions.find((s) => s.slug === route.params.sessionSlug);
+const getSessionPaperCount = (session: EvanSession): number | undefined => {
+  return session.papers?.length || undefined;
+};
 
-    if (!session) {
-      router.push({ name: 'program' });
-      return;
-    }
+const getSessionFavoriteState = (session: EvanSession) => {
+  const state = favorites.getSessionFavoriteState(session);
+  return {
+    isFavorite: state === 'full',
+    isPartial: state === 'partial',
+  };
+};
 
-    api.get(session.self).then((response) => {
-      selectedSession.value = response.data;
+const getSessionVariant = (session: EvanSession): 'session' | 'keynote' | 'paper' | 'social' => {
+  if (session.is_social_event) return 'social';
+  if (!session.track) return 'session';
+
+  const tracks = eventStore.event?.tracks || [];
+  const track = tracks.find((t) => t.id === session.track);
+  if (!track) return 'session';
+
+  const trackName = track.name.toLowerCase();
+  if (trackName.includes('keynote')) return 'keynote';
+  if (trackName.includes('paper')) return 'paper';
+  return 'session';
+};
+
+const getSessionCardProps = (session: EvanSession) => {
+  const tracks = eventStore.event?.tracks || [];
+
+  return {
+    title: getSessionDisplayTitle(session, tracks),
+    startTime: session.start_at,
+    endTime: session.end_at,
+    trackInfo: getSessionTrackInfo(session),
+    locationInfo: getSessionLocationInfo(session),
+    paperCount: getSessionPaperCount(session),
+    favoriteState: getSessionFavoriteState(session),
+    variant: getSessionVariant(session),
+  };
+};
+
+const openSessionDetails = async (session: EvanSession) => {
+  if (session.slug && route.params.sessionSlug !== session.slug) {
+    await router.push({
+      name: 'session',
+      params: { sessionSlug: session.slug },
+      query: route.query
     });
+  }
+
+  selectedSession.value = session;
+};
+
+const sessionSlug = computed<string | null>(() => (route.params.sessionSlug as string) || null);
+
+const fetchSessionBySlug = async (slug: string) => {
+  if (!eventStore.programDataLoaded) {
+    await eventStore.fetchProgramData();
+  }
+
+  const session = eventStore.sessions.find((s) => s.slug === slug);
+
+  if (!session) {
+    router.push({ name: 'program', query: route.query });
+    return;
+  }
+
+  try {
+    const response = await api.get(session.self);
+    selectedSession.value = response.data;
+  } catch (error) {
+    console.error('Failed to fetch session details:', error);
+    router.push({ name: 'program', query: route.query });
   }
 };
 
 watch(sessionSlug, (newSlug) => {
   if (newSlug) {
-    fetchSessionInfo();
+    if (!selectedSession.value || selectedSession.value.slug !== newSlug) {
+      fetchSessionBySlug(newSlug);
+    }
+  } else {
+    selectedSession.value = null;
   }
 });
 
-onMounted(async () => {
-  await loadData();
+onMounted(() => {
   if (route.params.sessionSlug) {
-    fetchSessionInfo();
+    fetchSessionBySlug(route.params.sessionSlug as string);
   }
 });
 </script>

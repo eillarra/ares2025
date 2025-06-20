@@ -1,12 +1,12 @@
 <template>
-  <div v-if="text" class="evan__marked">
+  <div v-if="text" class="evan__marked ares__marked-program">
     <div v-html="enhancedHtml"></div>
     <template v-for="paperData in paperRefs" :key="paperData.id">
       <teleport :to="`#paper-ref-${paperData.id}`" v-if="paperData.mounted">
         <paper-details-dialog
           :paper="paperData.paper"
           button-label="More info"
-          :button-icon="iconInfoFilled"
+          :button-icon="iconAddCircle"
           button-color="ares-red"
           button-size="sm"
           :button-flat="true"
@@ -22,7 +22,7 @@
         <keynote-details-dialog
           :keynote="keynoteData.keynote"
           button-label="More info"
-          :button-icon="iconInfoFilled"
+          :button-icon="iconAddCircle"
           button-color="ares-red"
           button-size="sm"
           :button-flat="true"
@@ -45,7 +45,7 @@ import { render } from 'src/evan/utils/markdown';
 import PaperDetailsDialog from './PaperDetailsDialog.vue';
 import KeynoteDetailsDialog from './KeynoteDetailsDialog.vue';
 
-import { iconInfoFilled } from 'src/icons';
+import { iconAddCircle } from 'src/icons';
 
 const props = defineProps<{
   text: string;

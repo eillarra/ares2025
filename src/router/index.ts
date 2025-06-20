@@ -19,7 +19,19 @@ export default route(function (/* { store, ssrContext } */) {
       : createWebHashHistory;
 
   const Router = createRouter({
-    scrollBehavior: () => ({ left: 0, top: 0 }),
+    scrollBehavior: (to, from, savedPosition) => {
+      if (savedPosition) {
+        return savedPosition;
+      }
+
+      if (history.state && history.state.preserveScroll) {
+        // Clear the flag immediately after using it
+        window.history.replaceState({ ...history.state, preserveScroll: undefined }, '');
+        return false;
+      }
+
+      return { left: 0, top: 0 };
+    },
     routes,
     history: createHistory(process.env.VUE_ROUTER_BASE),
   });

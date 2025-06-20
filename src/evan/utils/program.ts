@@ -1,4 +1,5 @@
 import { toRomanNumeral } from './numbers';
+import { searchInFields } from 'src/utils/search';
 
 /**
  * Time slot interface for grouping sessions by time
@@ -82,9 +83,13 @@ export function getAvailableDates(sessions: EvanSession[]): string[] {
  */
 export function groupSessionsByDay(sessions: EvanSession[]): SessionGroup[] {
   const groups = new Map<string, EvanSession[]>();
+  const undatedSessions: EvanSession[] = [];
 
   sessions.forEach((session) => {
-    if (!session.start_at) return;
+    if (!session.start_at) {
+      undatedSessions.push(session);
+      return;
+    }
 
     const date = new Date(session.start_at).toISOString().split('T')[0];
     if (!groups.has(date)) {
@@ -93,7 +98,7 @@ export function groupSessionsByDay(sessions: EvanSession[]): SessionGroup[] {
     groups.get(date)?.push(session);
   });
 
-  return Array.from(groups.entries())
+  const result = Array.from(groups.entries())
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([date, sessions]) => ({
       date,
@@ -104,6 +109,17 @@ export function groupSessionsByDay(sessions: EvanSession[]): SessionGroup[] {
       }),
       sessions: sessions.sort((a, b) => new Date(a.start_at || '').getTime() - new Date(b.start_at || '').getTime()),
     }));
+
+  // Add undated sessions as a separate group at the end
+  if (undatedSessions.length > 0) {
+    result.push({
+      date: 'undated',
+      dateLabel: 'TBA',
+      sessions: undatedSessions,
+    });
+  }
+
+  return result;
 }
 
 /**
@@ -123,10 +139,10 @@ export function getTrackName(tracks: EvanTrack[], trackId: number | null, fallba
  * Get room name by ID with fallback handling
  * @param rooms - Array of rooms to search
  * @param roomId - The room ID to look up
- * @param fallback - Custom fallback text (default: 'No Room')
+ * @param fallback - Custom fallback text (default: 'TBA')
  * @returns Room name or fallback text
  */
-export function getRoomName(rooms: EvanRoom[], roomId: number | null, fallback = 'No Room'): string {
+export function getRoomName(rooms: EvanRoom[], roomId: number | null, fallback = 'TBA'): string {
   if (!roomId) return fallback;
   const room = rooms.find((r) => r.id === roomId);
   return room?.name || 'Unknown room';
@@ -151,12 +167,8 @@ export function filterSessions(
   let filtered = sessions;
 
   if (searchQuery) {
-    const query = searchQuery.toLowerCase();
-    filtered = filtered.filter(
-      (session) =>
-        session.title.toLowerCase().includes(query) ||
-        session.description.toLowerCase().includes(query) ||
-        getTrackName(tracks, session.track).toLowerCase().includes(query),
+    filtered = filtered.filter((session) =>
+      searchInFields(searchQuery, session.code, session.title, getTrackName(tracks, session.track)),
     );
   }
 
@@ -211,9 +223,18 @@ export function createTrackOptions(tracks: EvanTrack[]) {
 /**
  * Generate display title for a session
  * @param session - The session object
+ * @param tracks - Optional array of tracks for keynote detection
  * @returns Formatted display title with optional code prefix
  */
-export function getSessionDisplayTitle(session: EvanSession): string {
+export function getSessionDisplayTitle(session: EvanSession, tracks?: EvanTrack[]): string {
+  // Hide code for keynote sessions
+  if (tracks && session.track && session.code) {
+    const track = tracks.find((t) => t.id === session.track);
+    if (track && track.name.toLowerCase() === 'keynotes') {
+      return session.title;
+    }
+  }
+
   if (session.code && session.code.trim()) {
     return `${session.code} - ${session.title}`;
   }
@@ -288,18 +309,186 @@ export function formatProgramTime(timeString?: string | null): string {
 }
 
 /**
- * Get room display string for program UI
- * Uses getRoomName internally for consistency
- * @param roomId - The room ID
- * @param rooms - Optional array of rooms to look up names from
- * @returns Room display string or 'No room assigned' if no room
+ * Extract numeric value from ARES roman numeral codes for proper sorting
+ * @param code - Session code that might contain ARES roman numerals
+ * @returns Numeric value for sorting, or 0 if no roman numeral found
  */
-export function getProgramRoomDisplay(roomId: number | null, rooms?: EvanRoom[]): string {
-  if (!roomId) return 'No room assigned';
+function extractAresRomanValue(code: string): number {
+  const match = code.match(/ARES\s+([IVXLCDM]+)/i);
+  if (!match) return 0;
 
-  if (rooms) {
-    return getRoomName(rooms, roomId, 'No room assigned');
+  const romanToArabic: Record<string, number> = {
+    I: 1,
+    II: 2,
+    III: 3,
+    IV: 4,
+    V: 5,
+    VI: 6,
+    VII: 7,
+    VIII: 8,
+    IX: 9,
+    X: 10,
+    XI: 11,
+    XII: 12,
+    XIII: 13,
+    XIV: 14,
+    XV: 15,
+    XVI: 16,
+    XVII: 17,
+    XVIII: 18,
+    XIX: 19,
+    XX: 20,
+  };
+
+  return romanToArabic[match[1].toUpperCase()] || 0;
+}
+
+/**
+ * Smart comparison function for session codes that handles ARES roman numerals properly
+ * @param codeA - First session code
+ * @param codeB - Second session code
+ * @returns Comparison result for sorting
+ */
+function compareSessionCodes(codeA: string | null, codeB: string | null): number {
+  if (!codeA && !codeB) return 0;
+  if (!codeA) return 1;
+  if (!codeB) return -1;
+
+  const aIsAres = codeA.toUpperCase().startsWith('ARES');
+  const bIsAres = codeB.toUpperCase().startsWith('ARES');
+
+  if (aIsAres && bIsAres) {
+    const aValue = extractAresRomanValue(codeA);
+    const bValue = extractAresRomanValue(codeB);
+    if (aValue !== bValue) {
+      return aValue - bValue;
+    }
   }
 
-  return `Room ${roomId}`;
+  return codeA.localeCompare(codeB);
+}
+
+/**
+ * Sort keynotes by subsession start_at (or session start_at if no subsession),
+ * then by session code with smart ARES roman numeral handling
+ * @param keynotes - Array of keynotes to sort
+ * @param sessions - Array of sessions for lookup
+ * @returns Sorted array of keynotes
+ */
+export function sortKeynotes(keynotes: EvanKeynote[], sessions: EvanSession[]): EvanKeynote[] {
+  return keynotes.sort((a, b) => {
+    const sessionA = sessions.find((s) => s.id === a.session);
+    const sessionB = sessions.find((s) => s.id === b.session);
+
+    // Get start times (prefer subsession over session)
+    let startTimeA: string | undefined;
+    let startTimeB: string | undefined;
+
+    if (a.subsession && sessionA) {
+      const subsessionA = sessionA.subsessions?.find((sub) => sub.id === a.subsession);
+      startTimeA = subsessionA?.start_at || sessionA.start_at;
+    } else {
+      startTimeA = sessionA?.start_at;
+    }
+
+    if (b.subsession && sessionB) {
+      const subsessionB = sessionB.subsessions?.find((sub) => sub.id === b.subsession);
+      startTimeB = subsessionB?.start_at || sessionB.start_at;
+    } else {
+      startTimeB = sessionB?.start_at;
+    }
+
+    // Sort by start time first
+    if (startTimeA && startTimeB) {
+      const timeComparison = new Date(startTimeA).getTime() - new Date(startTimeB).getTime();
+      if (timeComparison !== 0) {
+        return timeComparison;
+      }
+    } else if (startTimeA) {
+      return -1;
+    } else if (startTimeB) {
+      return 1;
+    }
+
+    // If times are equal, sort by session code
+    return compareSessionCodes(sessionA?.code || null, sessionB?.code || null);
+  });
+}
+
+/**
+ * Sort sessions by start_at, then by track priority (Keynotes first), then by session code
+ * @param sessions - Array of sessions to sort
+ * @param tracks - Array of tracks for priority lookup
+ * @returns Sorted array of sessions
+ */
+export function sortSessionsAdvanced(sessions: EvanSession[], tracks: EvanTrack[]): EvanSession[] {
+  return sessions.sort((a, b) => {
+    // Sort by start time first
+    const timeA = a.start_at ? new Date(a.start_at).getTime() : Number.MAX_SAFE_INTEGER;
+    const timeB = b.start_at ? new Date(b.start_at).getTime() : Number.MAX_SAFE_INTEGER;
+
+    if (timeA !== timeB) {
+      return timeA - timeB;
+    }
+
+    // If times are equal, prioritize Keynotes track
+    const trackA = tracks.find((t) => t.id === a.track);
+    const trackB = tracks.find((t) => t.id === b.track);
+
+    const isKeynoteA = trackA?.name.toLowerCase().includes('keynote') || false;
+    const isKeynoteB = trackB?.name.toLowerCase().includes('keynote') || false;
+
+    if (isKeynoteA && !isKeynoteB) return -1;
+    if (!isKeynoteA && isKeynoteB) return 1;
+
+    // If track priority is equal, sort by session code
+    return compareSessionCodes(a.code, b.code);
+  });
+}
+
+/**
+ * Group sessions by day with advanced sorting (prioritizing Keynotes and handling ARES codes)
+ * @param sessions - Array of sessions to group
+ * @param tracks - Array of tracks for priority sorting
+ * @returns Array of session groups sorted by date with advanced session sorting
+ */
+export function groupSessionsByDayAdvanced(sessions: EvanSession[], tracks: EvanTrack[]): SessionGroup[] {
+  const groups = new Map<string, EvanSession[]>();
+  const undatedSessions: EvanSession[] = [];
+
+  sessions.forEach((session) => {
+    if (!session.start_at) {
+      undatedSessions.push(session);
+      return;
+    }
+
+    const date = new Date(session.start_at).toISOString().split('T')[0];
+    if (!groups.has(date)) {
+      groups.set(date, []);
+    }
+    groups.get(date)?.push(session);
+  });
+
+  const result = Array.from(groups.entries())
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([date, sessions]) => ({
+      date,
+      dateLabel: new Date(date + 'T00:00:00').toLocaleDateString('en-US', {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+      }),
+      sessions: sortSessionsAdvanced(sessions, tracks),
+    }));
+
+  // Add undated sessions as a separate group at the end
+  if (undatedSessions.length > 0) {
+    result.push({
+      date: 'undated',
+      dateLabel: 'TBA',
+      sessions: sortSessionsAdvanced(undatedSessions, tracks),
+    });
+  }
+
+  return result;
 }

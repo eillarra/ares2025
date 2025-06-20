@@ -1,7 +1,7 @@
 <template>
   <div class="q-mt-xl">
     <div class="container">
-      <div class="row q-col-gutter-y-lg q-col-gutter-x-xl justify-between">
+      <div class="row q-col-gutter-y-lg q-col-gutter-x-md justify-between">
         <div class="col-12 col-md-4 flex column">
           <h2 class="ares__text-title">Accommodation</h2>
           <q-separator />
@@ -17,7 +17,7 @@
     <div v-if="aboutGhentText" class="ares__bg-yellow q-mt-xl">
       <q-separator class="q-ma-none" />
       <div class="container q-py-xl">
-        <div class="row q-col-gutter-y-lg q-col-gutter-x-xl justify-between" :class="{ 'q-py-xl': $q.screen.gt.sm }">
+        <div class="row q-col-gutter-y-lg q-col-gutter-x-md justify-between" :class="{ 'q-py-xl': $q.screen.gt.sm }">
           <div class="col-12 col-md-4">
             <h3 class="ares__text-title">About Ghent</h3>
             <q-separator />

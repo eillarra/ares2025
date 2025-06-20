@@ -73,9 +73,9 @@
                 {{ formatProgramTime(session.start_at) }} - {{ formatProgramTime(session.end_at) }}
               </q-chip>
             </div>
-            <div class="text-body2 text-grey-7">{{ getProgramRoomDisplay(session.room, eventStore.rooms) }}</div>
+            <div>Room: {{ getRoomName(eventStore.rooms, session.room) }}</div>
           </div>
-          <div v-if="sessionProgramContent && sessionProgramContent.trim()" class="q-mb-lg">
+          <div v-if="sessionProgramContent && sessionProgramContent.trim()" class="q-my-lg">
             <program-marked-div :text="sessionProgramContent" hide-favorite-btn />
           </div>
           <div v-if="hasSubsessions" class="q-mb-lg">
@@ -94,9 +94,12 @@
                   {{ formatProgramTime(subsession.start_at) }} - {{ formatProgramTime(subsession.end_at) }}
                 </q-chip>
               </h4>
-              <div v-if="subsessionProgramContent.get(subsession.id)" class="q-pb-xs">
-                <program-marked-div :text="subsessionProgramContent.get(subsession.id)" hide-favorite-btn />
-              </div>
+              <program-marked-div
+                v-if="subsessionProgramContent.get(subsession.id)"
+                :text="subsessionProgramContent.get(subsession.id)"
+                hide-favorite-btn
+                class="q-py-md"
+              />
             </div>
           </div>
         </q-tab-panel>
@@ -153,7 +156,7 @@ import {
   getSubsessionDisplayTitle,
   formatProgramDate,
   formatProgramTime,
-  getProgramRoomDisplay,
+  getRoomName,
 } from 'src/utils/program';
 
 import AresDialogContent from 'src/components/AresDialogContent.vue';
@@ -176,7 +179,7 @@ const sessionProgramContent = ref<string>('');
 const subsessionProgramContent = ref<Map<number, string>>(new Map());
 
 watchEffect(async () => {
-  if (props.session.program) {
+  if (props.session.program && eventStore.programDataLoaded) {
     sessionProgramContent.value = await renderTemplate(props.session.program);
   } else {
     sessionProgramContent.value = '';
@@ -186,7 +189,7 @@ watchEffect(async () => {
 watchEffect(async () => {
   const contentMap = new Map<number, string>();
 
-  if (props.session.subsessions) {
+  if (props.session.subsessions && eventStore.programDataLoaded) {
     for (const subsession of props.session.subsessions) {
       if (subsession.program) {
         contentMap.set(subsession.id, await renderTemplate(subsession.program));
@@ -216,9 +219,10 @@ const hasGeneralInfo = computed(() => {
 });
 
 const titles = computed<[string, string]>(() => {
+  const tracks = eventStore.event?.tracks || [];
   return props.session.track == 53
     ? [props.session.title, 'Keynote']
-    : [getSessionDisplayTitle(props.session), props.session.code || props.session.title];
+    : [getSessionDisplayTitle(props.session, tracks), props.session.code || props.session.title];
 });
 
 const mainCommittees = computed<Committee[]>(

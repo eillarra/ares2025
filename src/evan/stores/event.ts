@@ -12,8 +12,11 @@ export const useEventStore = defineStore('evanEvent', () => {
   const _keynotes = ref<EvanKeynote[]>([]);
   const _loading = ref(false);
   const _error = ref<string | null>(null);
+  const _programDataLoaded = ref(false);
+  const _programDataLoading = ref(false);
 
   const _loaded = computed(() => _event.value && _contents.value);
+  const programDataLoaded = computed(() => _programDataLoaded.value);
 
   const contactEmail = computed(() => {
     if (_event.value) return _event.value.email;
@@ -92,7 +95,16 @@ export const useEventStore = defineStore('evanEvent', () => {
   }
 
   async function fetchProgramData() {
-    await Promise.all([fetchSessions(), fetchPapers(), fetchKeynotes()]);
+    if (_programDataLoaded.value || _programDataLoading.value) {
+      return;
+    }
+    _programDataLoading.value = true;
+    try {
+      await Promise.all([fetchSessions(), fetchPapers(), fetchKeynotes()]);
+      _programDataLoaded.value = true;
+    } finally {
+      _programDataLoading.value = false;
+    }
   }
 
   async function init() {
@@ -113,6 +125,7 @@ export const useEventStore = defineStore('evanEvent', () => {
   return {
     init,
     _loaded,
+    programDataLoaded,
     contactEmail,
     contentsDict,
     event,

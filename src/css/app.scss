@@ -195,6 +195,10 @@ samp {
   text-decoration: line-through;
 }
 
+.text-wrap-balance {
+  text-wrap: balance;
+}
+
 samp,
 .text-mono {
   .text-body2 &,
@@ -287,6 +291,22 @@ a {
     font-size: 0.85em;
     margin-bottom: 0.5em;
     color: $separator-color;
+  }
+}
+
+.ares__marked-program {
+  h2 {
+    font-size: 0.9em;
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+
+    + h2 {
+      margin-top: 0.5em;
+    }
+
+    + ul {
+      margin-top: 0.6em;
+    }
   }
 }
 

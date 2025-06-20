@@ -1,5 +1,6 @@
 <template>
   <q-btn
+    v-if="!hideButton"
     :label="inline ? undefined : buttonLabel"
     :icon="buttonIcon"
     :color="buttonColor"
@@ -7,20 +8,20 @@
     :flat="buttonFlat"
     :outline="buttonOutline"
     :dense="buttonDense"
-    :round="inline"
+    :round="inline || buttonRound"
     :class="{ 'flex-inline': inline }"
     @click="openDialog"
   />
   <q-dialog v-model="dialogOpen" square position="bottom" class="ares__dialog">
     <ares-dialog-content title="Paper details" hide-drawer compact>
       <template #tabs>
-        <h6 class="q-mt-none q-mb-md ares__text-red">{{ paper.title }}</h6>
+        <h6 class="q-mt-none q-mb-md ares__text-red text-wrap-balance">{{ paper.title }}</h6>
       </template>
       <template #page>
-        <div class="q-px-lg q-mb-xl">
+        <div class="q-px-lg q-pb-xl">
           <div v-if="authorsDisplay" class="q-mb-md">
             <div class="text-subtitle2 text-grey-7 q-mb-xs">Authors</div>
-            <p>
+            <p class="text-wrap-balance">
               <em>{{ authorsDisplay }}</em>
             </p>
           </div>
@@ -71,12 +72,7 @@
 import { ref, computed } from 'vue';
 
 import { useEventStore } from 'src/evan/stores/event';
-import {
-  getSubsessionDisplayTitle,
-  formatProgramDate,
-  formatProgramTime,
-  getProgramRoomDisplay,
-} from 'src/utils/program';
+import { createSessionDisplayInfo, createSubsessionDisplayInfo } from 'src/utils/program';
 
 import AresDialogContent from 'src/components/AresDialogContent.vue';
 import FavoriteBtn from 'src/components/program/FavoriteBtn.vue';
@@ -93,12 +89,13 @@ const props = withDefaults(
     buttonSize?: string;
     buttonFlat?: boolean;
     buttonOutline?: boolean;
+    buttonRound?: boolean;
     buttonDense?: boolean;
     inline?: boolean;
     hideFavoriteBtn?: boolean;
+    hideButton?: boolean;
   }>(),
   {
-    buttonLabel: 'More info',
     buttonIcon: iconCalendar,
     buttonColor: 'primary',
     buttonSize: 'sm',
@@ -107,6 +104,7 @@ const props = withDefaults(
     buttonDense: true,
     inline: false,
     hideFavoriteBtn: false,
+    hideButton: false,
   },
 );
 
@@ -133,14 +131,7 @@ const sessionDisplay = computed(() => {
   const session = eventStore.sessions.find((s) => s.id === props.paper.session);
   if (!session) return null;
 
-  return {
-    title: `${session.code ? session.code + ': ' : ''}${session.title}`,
-    timeInfo:
-      session.start_at && session.end_at
-        ? `${formatProgramDate(session.start_at)}, ${formatProgramTime(session.start_at)} - ${formatProgramTime(session.end_at)}`
-        : null,
-    roomInfo: getProgramRoomDisplay(session.room, eventStore.rooms),
-  };
+  return createSessionDisplayInfo(session, eventStore.rooms);
 });
 
 const subsessionDisplay = computed(() => {
@@ -150,18 +141,8 @@ const subsessionDisplay = computed(() => {
   const subsession = session.subsessions.find((sub) => sub.id === props.paper.subsession);
   if (!subsession) return null;
 
-  // Find the index of this subsession to generate the proper title
   const subsessionIndex = session.subsessions.findIndex((sub) => sub.id === props.paper.subsession);
-  const displayTitle = getSubsessionDisplayTitle(subsession, subsessionIndex, session.code);
-
-  return {
-    title: displayTitle,
-    timeInfo:
-      subsession.start_at && subsession.end_at
-        ? `${formatProgramDate(subsession.start_at)}, ${formatProgramTime(subsession.start_at)} - ${formatProgramTime(subsession.end_at)}`
-        : null,
-    roomInfo: getProgramRoomDisplay(session.room, eventStore.rooms),
-  };
+  return createSubsessionDisplayInfo(subsession, subsessionIndex, session.code, session.room, eventStore.rooms);
 });
 </script>
 

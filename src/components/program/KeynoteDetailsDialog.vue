@@ -1,5 +1,6 @@
 <template>
   <q-btn
+    v-if="!hideButton"
     :label="inline ? undefined : buttonLabel"
     :icon="buttonIcon"
     :color="buttonColor"
@@ -14,10 +15,10 @@
   <q-dialog v-model="dialogOpen" square position="bottom" class="ares__dialog">
     <ares-dialog-content title="Keynote details" hide-drawer compact>
       <template #tabs>
-        <h6 class="q-mt-none q-mb-md ares__text-red">{{ keynote.title }}</h6>
+        <h6 class="q-mt-none q-mb-md ares__text-red text-wrap-balance">{{ keynote.title }}</h6>
       </template>
       <template #page>
-        <div class="q-px-lg q-mb-xl">
+        <div class="q-px-lg q-pb-xl">
           <div v-if="keynote.speaker" class="q-mb-md">
             <div class="text-subtitle2 text-grey-7 q-mb-xs">Speaker</div>
             <ares-btn
@@ -85,12 +86,7 @@
 import { ref, computed } from 'vue';
 
 import { useEventStore } from 'src/evan/stores/event';
-import {
-  formatProgramDate,
-  formatProgramTime,
-  getProgramRoomDisplay,
-  getSubsessionDisplayTitle,
-} from 'src/utils/program';
+import { createSessionDisplayInfo, createSubsessionDisplayInfo } from 'src/utils/program';
 
 import AresDialogContent from 'src/components/AresDialogContent.vue';
 import FavoriteBtn from 'src/components/program/FavoriteBtn.vue';
@@ -109,6 +105,7 @@ interface Props {
   buttonDense?: boolean;
   hideFavoriteBtn?: boolean;
   inline?: boolean;
+  hideButton?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -121,6 +118,7 @@ const props = withDefaults(defineProps<Props>(), {
   buttonDense: false,
   hideFavoriteBtn: false,
   inline: false,
+  hideButton: false,
 });
 
 const eventStore = useEventStore();
@@ -133,28 +131,7 @@ const sessionDisplay = computed(() => {
   const session = eventStore.sessions.find((s) => s.id === props.keynote.session);
   if (!session) return null;
 
-  const startTime = session.start_at ? formatProgramTime(session.start_at) : null;
-  const endTime = session.end_at ? formatProgramTime(session.end_at) : null;
-  const date = session.start_at ? formatProgramDate(session.start_at) : null;
-
-  let timeInfo = '';
-  if (date) {
-    timeInfo = date;
-    if (startTime) {
-      timeInfo += ` at ${startTime}`;
-      if (endTime) {
-        timeInfo += ` - ${endTime}`;
-      }
-    }
-  }
-
-  const roomInfo = session.room ? getProgramRoomDisplay(session.room, eventStore.rooms) : null;
-
-  return {
-    title: `${session.code ? session.code + ': ' : ''}${session.title}`,
-    timeInfo,
-    roomInfo,
-  };
+  return createSessionDisplayInfo(session, eventStore.rooms);
 });
 
 const subsessionDisplay = computed(() => {
@@ -164,18 +141,8 @@ const subsessionDisplay = computed(() => {
   const subsession = session.subsessions.find((sub) => sub.id === props.keynote.subsession);
   if (!subsession) return null;
 
-  // Find the index of this subsession to generate the proper title
   const subsessionIndex = session.subsessions.findIndex((sub) => sub.id === props.keynote.subsession);
-  const displayTitle = getSubsessionDisplayTitle(subsession, subsessionIndex, session.code);
-
-  return {
-    title: displayTitle,
-    timeInfo:
-      subsession.start_at && subsession.end_at
-        ? `${formatProgramDate(subsession.start_at)}, ${formatProgramTime(subsession.start_at)} - ${formatProgramTime(subsession.end_at)}`
-        : null,
-    roomInfo: getProgramRoomDisplay(session.room, eventStore.rooms),
-  };
+  return createSubsessionDisplayInfo(subsession, subsessionIndex, session.code, session.room, eventStore.rooms);
 });
 
 const openDialog = () => {

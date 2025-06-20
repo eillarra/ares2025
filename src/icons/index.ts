@@ -1,6 +1,5 @@
 import { fabLinkedin, fabTwitter, fabYoutube, fabXTwitter, fabGithub } from '@quasar/extras/fontawesome-v6';
 import {
-  matArticle,
   matAttachment,
   matCalendarToday,
   matCategory,
@@ -24,6 +23,7 @@ import {
   ionEaselOutline,
   ionEyeOutline,
   ionFilterOutline,
+  ionFlashOffOutline,
   ionGridOutline,
   ionAddCircleOutline,
   ionInformationCircleOutline,
@@ -56,7 +56,8 @@ import {
 } from '@quasar/extras/ionicons-v6';
 
 export const iconAccommodation = ionBedOutline;
-export const iconArticle = matArticle;
+export const iconAddCircle = ionAddCircleOutline;
+export const iconArticle = ionDocumentTextOutline;
 export const iconCalendar = ionCalendarOutline;
 export const iconCalendarToday = matCalendarToday;
 export const iconCached = ionReloadOutline;
@@ -75,13 +76,14 @@ export const iconFilterList = ionOptionsOutline;
 export const iconGrid = ionGridOutline;
 export const iconGridView = matGridView;
 export const iconInfo = ionInformationCircleOutline;
-export const iconInfoFilled = ionAddCircleOutline;
 export const iconLink = ionLinkOutline;
 export const iconList = ionListOutline;
 export const iconMap = ionMapOutline;
 export const iconMenu = ionMenuOutline;
 export const iconMic = ionMegaphoneOutline;
 export const iconNavigation = ionNavigateOutline;
+export const iconNotFound = ionFlashOffOutline;
+export const iconPaper = ionDocumentTextOutline;
 export const iconPdf = ionDocumentTextOutline;
 export const iconPictureAsPdf = matPictureAsPdf;
 export const iconPerson = ionPersonOutline;
@@ -95,8 +97,8 @@ export const iconSend = ionSendOutline;
 export const iconSession = ionEaselOutline;
 export const iconSettings = ionSettingsOutline;
 export const iconShare = ionShareOutline;
-export const iconStar = ionStar;
-export const iconStarBorder = ionStarOutline;
+export const iconStar = ionStarOutline;
+export const iconStarFull = ionStar;
 export const iconStarHalf = ionStarHalfOutline;
 export const iconSubmissions = ionLayersOutline;
 export const iconTrack = ionTrailSignOutline;
