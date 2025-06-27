@@ -8,6 +8,10 @@
           <div :class="{ 'q-pr-xl ': $q.screen.gt.sm }">
             <h3 class="ares__text-headline">{{ event?.full_name }}</h3>
             <p>{{ focusesText }}</p>
+            <p>
+              Co-located Conference
+              <router-link :to="{ name: 'session', params: { sessionSlug: 'ics-csr' } }">ICS-CSR</router-link>.
+            </p>
             <div v-if="importantDates.length" class="q-my-xl">
               <h5><strong>Important dates</strong></h5>
               <ul>

@@ -110,7 +110,7 @@ import { useRouter, useRoute } from 'vue-router';
 import { useEventStore } from '@evan/stores/event';
 import { getAvailableDates } from '@/utils/program';
 
-import { iconViewList, iconMic, iconArticle, iconStar } from '@/icons';
+import { iconArticle, iconMic, iconProgram, iconStar, iconViewList } from '@/icons';
 
 import LoadingState from '@/components/program/LoadingState.vue';
 import ErrorState from '@/components/program/ErrorState.vue';
@@ -189,12 +189,17 @@ const navigationItems = computed((): NavigationItem[] => [
   {
     route: 'program',
     title: 'Schedule',
-    icon: iconViewList,
+    icon: iconProgram,
   },
   {
     route: 'keynotes',
     title: 'Keynotes',
     icon: iconMic,
+  },
+  {
+    route: 'workshops',
+    title: 'Workshops',
+    icon: iconViewList,
   },
   {
     route: 'acceptedPapers',
