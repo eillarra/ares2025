@@ -1,5 +1,7 @@
 /* eslint-env node */
 
+import path from 'path';
+
 // Configuration for your app
 // https://quasar.dev/quasar-cli-vite/quasar-config-js
 
@@ -64,8 +66,8 @@ export default configure((/* ctx */) => {
 
         viteConf.resolve.alias = {
           ...viteConf.resolve.alias,
-          '@': '/src',
-          '@evan': '/evan-kit/src',
+          '@': path.resolve(__dirname, 'src'),
+          '@evan': path.resolve(__dirname, 'evan-kit/src'),
         };
       },
       // viteVuePluginOptions: {},
