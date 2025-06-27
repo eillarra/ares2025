@@ -62,17 +62,17 @@
 <script setup lang="ts">
 import { ref, computed, inject } from 'vue';
 
-import { useEventStore } from 'src/evan/stores/event';
-import { useFavorites } from 'src/composables/useFavorites';
-import { usePersonalCalendar } from 'src/composables/usePersonalCalendar';
-import { groupSessionsByDay, getTrackName, getRoomName, getSessionDisplayTitle } from 'src/utils/program';
-import { searchInFields } from 'src/utils/search';
+import { useEventStore } from '@evan/stores/event';
+import { usePersonalCalendar } from '@evan/composables/usePersonalCalendar';
+import { useFavorites } from '@/composables/useFavorites';
+import { groupSessionsByDay, getTrackName, getRoomName, getSessionDisplayTitle } from '@/utils/program';
+import { searchInFields } from '@/utils/search';
 
-import ProgramCard from 'src/components/program/ProgramCard.vue';
+import AresSeparator from '@/components/AresSeparator.vue';
+import AresSearchBar from '@/components/AresSearchBar.vue';
+import EmptyState from '@/components/program/EmptyState.vue';
+import ProgramCard from '@/components/program/ProgramCard.vue';
 import SessionDialog from './SessionDialog.vue';
-import AresSeparator from 'src/components/AresSeparator.vue';
-import AresSearchBar from 'src/components/AresSearchBar.vue';
-import EmptyState from 'src/components/program/EmptyState.vue';
 
 const eventStore = useEventStore();
 const favorites = useFavorites();

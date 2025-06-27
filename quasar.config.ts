@@ -57,7 +57,17 @@ export default configure((/* ctx */) => {
       polyfillModulePreload: true, // CHECK: https://github.com/quasarframework/quasar/issues/12866
       // distDir
 
-      // extendViteConf (viteConf) {},
+      extendViteConf(viteConf) {
+        // Add path aliases
+        if (!viteConf.resolve) viteConf.resolve = {};
+        if (!viteConf.resolve.alias) viteConf.resolve.alias = {};
+
+        viteConf.resolve.alias = {
+          ...viteConf.resolve.alias,
+          '@': '/src',
+          '@evan': '/evan-kit/src',
+        };
+      },
       // viteVuePluginOptions: {},
 
       vitePlugins: [

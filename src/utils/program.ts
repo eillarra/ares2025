@@ -1,5 +1,5 @@
 // Re-export types
-export type { TimeSlot, SessionGroup } from 'src/evan/utils/program';
+export type { TimeSlot, SessionGroup } from '@evan/utils/program';
 
 // Re-export all generic program utilities from evan utils
 export {
@@ -19,10 +19,10 @@ export {
   formatProgramTime,
   sortKeynotes,
   sortSessionsAdvanced,
-} from 'src/evan/utils/program';
+} from '@evan/utils/program';
 
 // Import utilities for our new functions
-import { formatProgramDate, formatProgramTime, getRoomName, getSubsessionDisplayTitle } from 'src/evan/utils/program';
+import { formatProgramDate, formatProgramTime, getRoomName, getSubsessionDisplayTitle } from '@evan/utils/program';
 
 // Session display utilities for details dialogs
 export interface SessionDisplayInfo {

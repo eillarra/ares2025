@@ -50,8 +50,8 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { formatProgramTime, formatProgramDate } from 'src/utils/program';
-import { iconPerson, iconRoom, iconStar, iconStarFull, iconStarHalf } from 'src/icons';
+import { formatProgramTime, formatProgramDate } from '@/utils/program';
+import { iconPerson, iconRoom, iconStar, iconStarFull, iconStarHalf } from '@/icons';
 
 interface TrackInfo {
   label: string;

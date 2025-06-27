@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import { iconSearch, iconClear } from 'src/icons';
+import { iconSearch, iconClear } from '@/icons';
 
 interface Props {
   modelValue: string;

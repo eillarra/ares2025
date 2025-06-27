@@ -55,10 +55,10 @@
 import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 
-import { useEventStore } from 'src/evan/stores/event';
-import { dateRange, formatImportantDate, passedImportantDate } from 'src/evan/utils/dates';
+import { useEventStore } from '@evan/stores/event';
+import { dateRange, formatImportantDate, passedImportantDate } from '@evan/utils/dates';
 
-import { iconVenue } from 'src/icons';
+import { iconVenue } from '@/icons';
 
 const eventStore = useEventStore();
 

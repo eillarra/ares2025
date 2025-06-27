@@ -67,10 +67,10 @@ import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useMeta } from 'quasar';
 
-import { useEventStore } from 'src/evan/stores/event';
-import { dateRange } from 'src/evan/utils/dates';
+import { useEventStore } from '@evan/stores/event';
+import { dateRange } from '@evan/utils/dates';
 
-import { iconAccommodation, iconMap } from 'src/icons';
+import { iconAccommodation, iconMap } from '@/icons';
 
 const eventStore = useEventStore();
 

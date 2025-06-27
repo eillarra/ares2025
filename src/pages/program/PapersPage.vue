@@ -75,16 +75,16 @@
 <script setup lang="ts">
 import { computed, ref, inject } from 'vue';
 
-import { useEventStore } from 'src/evan/stores/event';
-import { getSessionDisplayTitle } from 'src/utils/program';
-import { searchInFields } from 'src/utils/search';
+import { useEventStore } from '@evan/stores/event';
+import { getSessionDisplayTitle } from '@/utils/program';
+import { searchInFields } from '@/utils/search';
 
-import AresSearchBar from 'src/components/AresSearchBar.vue';
-import AresSeparator from 'src/components/AresSeparator.vue';
-import PaperDetailsDialog from 'src/components/program/PaperDetailsDialog.vue';
-import EmptyState from 'src/components/program/EmptyState.vue';
+import AresSearchBar from '@/components/AresSearchBar.vue';
+import AresSeparator from '@/components/AresSeparator.vue';
+import PaperDetailsDialog from '@/components/program/PaperDetailsDialog.vue';
+import EmptyState from '@/components/program/EmptyState.vue';
 
-import { iconAddCircle } from 'src/icons';
+import { iconAddCircle } from '@/icons';
 
 const eventStore = useEventStore();
 

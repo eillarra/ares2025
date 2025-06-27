@@ -3,7 +3,7 @@ import type { QNotifyCreateOptions } from 'quasar';
 
 import { Notify as QuasarNotify } from 'quasar';
 
-import { iconCached, iconCheck, iconError, iconInfo, iconWarning } from 'src/icons';
+import { iconCached, iconCheck, iconError, iconInfo, iconWarning } from '@/icons';
 
 type StatusMap = { [key: number]: string };
 

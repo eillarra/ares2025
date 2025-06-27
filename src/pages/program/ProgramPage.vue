@@ -56,20 +56,21 @@
 import { ref, computed, inject, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import { api } from 'boot/axios';
-import { useEventStore } from 'src/evan/stores/event';
-import { useFavorites } from 'src/composables/useFavorites';
+import { useEventStore } from '@evan/stores/event';
+
+import { api } from '@/boot/axios';
+import { useFavorites } from '@/composables/useFavorites';
 import {
   filterSessions,
   groupSessionsByDayAdvanced,
   getSessionDisplayTitle,
   sortSessionsAdvanced,
-} from 'src/utils/program';
+} from '@/utils/program';
 
-import AresSearchBar from 'src/components/AresSearchBar.vue';
-import AresSeparator from 'src/components/AresSeparator.vue';
-import EmptyState from 'src/components/program/EmptyState.vue';
-import ProgramCard from 'src/components/program/ProgramCard.vue';
+import AresSearchBar from '@/components/AresSearchBar.vue';
+import AresSeparator from '@/components/AresSeparator.vue';
+import EmptyState from '@/components/program/EmptyState.vue';
+import ProgramCard from '@/components/program/ProgramCard.vue';
 import SessionDialog from './SessionDialog.vue';
 
 const eventStore = useEventStore();
@@ -94,7 +95,7 @@ const showSessionDialog = computed<boolean>({
         window.history.replaceState({ ...window.history.state, preserveScroll: true }, '');
         router.replace({
           name: 'program',
-          query: route.query
+          query: route.query,
         });
       }
     }
@@ -188,7 +189,7 @@ const openSessionDetails = async (session: EvanSession) => {
     await router.push({
       name: 'session',
       params: { sessionSlug: session.slug },
-      query: route.query
+      query: route.query,
     });
   }
 

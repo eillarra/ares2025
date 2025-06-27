@@ -54,13 +54,13 @@ import { ref, computed, onMounted, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useRoute, useRouter } from 'vue-router';
 
-import { api } from 'boot/axios';
-import { useEventStore } from 'src/evan/stores/event';
-import { formatImportantDate, passedImportantDate } from 'src/evan/utils/dates';
+import { api } from '@/boot/axios';
+import { useEventStore } from '@evan/stores/event';
+import { formatImportantDate, passedImportantDate } from '@evan/utils/dates';
 
-import SessionDialog from '../program/SessionDialog.vue';
+import SessionDialog from '@/pages/program/SessionDialog.vue';
 
-import { iconSend } from 'src/icons';
+import { iconSend } from '@/icons';
 
 interface TrackWithSessions {
   track: EvanTrack | null;

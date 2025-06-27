@@ -39,13 +39,13 @@
 <script setup lang="ts">
 import { computed, ref, nextTick, onMounted, watch } from 'vue';
 
-import { useEventStore } from 'src/evan/stores/event';
-import { render } from 'src/evan/utils/markdown';
+import { useEventStore } from '@evan/stores/event';
+import { render } from '@evan/utils/markdown';
 
 import PaperDetailsDialog from './PaperDetailsDialog.vue';
 import KeynoteDetailsDialog from './KeynoteDetailsDialog.vue';
 
-import { iconAddCircle } from 'src/icons';
+import { iconAddCircle } from '@/icons';
 
 const props = defineProps<{
   text: string;

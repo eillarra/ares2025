@@ -63,7 +63,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-import { iconClose } from 'src/icons';
+import { iconClose } from '@/icons';
 
 defineProps<{
   title: string | undefined;

@@ -9,19 +9,19 @@
         <q-btn-group square flat v-if="$q.screen.gt.sm" class="q-ml-xl">
           <template v-for="(item, idx) in menu" :key="idx">
             <q-btn v-if="!item.children" no-caps :to="{ name: item.route }" size="lg">
-              <apan
+              <span
                 >{{ item.label
                 }}<q-chip v-if="item.closed" color="grey-4" size="sm" class="q-ml-sm q-mb-xs text-dark"
                   >CLOSED</q-chip
-                ></apan
+                ></span
               >
             </q-btn>
             <q-btn v-else no-caps size="lg" :menu="true" :items="item.children">
-              <apan
+              <span
                 >{{ item.label
                 }}<q-chip v-if="item.closed" color="grey-4" size="sm" class="q-ml-sm q-mb-xs text-dark"
                   >CLOSED</q-chip
-                ></apan
+                ></span
               >
               <q-menu class="ares__bg-yellow">
                 <q-list style="min-width: 150px">
@@ -48,12 +48,24 @@
           :to="{ name: 'registration' }"
           class="q-ml-xl"
         />
+        <!-- PWA Install Button -->
+        <q-btn
+          v-if="pwaInstall.isInstallable.value"
+          flat
+          round
+          icon="get_app"
+          aria-label="Install app"
+          @click="pwaInstall.showInstallPrompt()"
+          class="q-ml-sm"
+        />
         <q-btn
           outline
           round
           v-show="$q.screen.lt.md"
           @click="rightDrawer = !rightDrawer"
           :icon="iconMenu"
+          aria-label="Open navigation menu"
+          :aria-expanded="rightDrawer"
           class="q-mx-sm"
         />
       </q-toolbar>
@@ -70,6 +82,7 @@
           v-show="$q.screen.lt.md"
           @click="rightDrawer = !rightDrawer"
           :icon="iconClose"
+          aria-label="Close navigation menu"
           class="q-mr-sm"
         />
       </q-toolbar>
@@ -210,11 +223,12 @@
 import { computed, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 
-import { useEventStore } from 'src/evan/stores/event';
-import { dateRange } from 'src/evan/utils/dates';
+import { usePWAInstall } from '@evan/composables/usePWAInstall';
+import { useEventStore } from '@evan/stores/event';
+import { dateRange } from '@evan/utils/dates';
 
-import UgentLogo from 'components/logos/UgentLogo.vue';
-import SbaLogo from 'components/logos/SbaLogo.vue';
+import UgentLogo from '@/components/logos/UgentLogo.vue';
+import SbaLogo from '@/components/logos/SbaLogo.vue';
 
 import {
   iconAccommodation,
@@ -227,9 +241,18 @@ import {
   iconSend,
   iconVenue,
   iconX,
-} from 'src/icons';
+} from '@/icons';
+
+interface MenuItem {
+  route: string;
+  label: string;
+  icon?: string;
+  children?: MenuItem[];
+  closed?: boolean;
+}
 
 const eventStore = useEventStore();
+const pwaInstall = usePWAInstall();
 
 const { _loaded, event, contentsDict } = storeToRefs(eventStore);
 

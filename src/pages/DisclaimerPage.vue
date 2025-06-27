@@ -19,7 +19,7 @@ import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useMeta } from 'quasar';
 
-import { useEventStore } from 'src/evan/stores/event';
+import { useEventStore } from '@evan/stores/event';
 
 const eventStore = useEventStore();
 

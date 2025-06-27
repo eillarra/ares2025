@@ -28,6 +28,23 @@ registerRoute(
     plugins: [
       new ExpirationPlugin({
         maxAgeSeconds: 7 * 60 * 60 * 24, // 1 week
+        maxEntries: 50,
+        purgeOnQuotaError: true,
+      }),
+    ],
+    networkTimeoutSeconds: 3,
+  }),
+);
+
+// Add runtime caching for images
+registerRoute(
+  ({ request }) => request.destination === 'image',
+  new NetworkFirst({
+    cacheName: 'images-cache',
+    plugins: [
+      new ExpirationPlugin({
+        maxEntries: 60,
+        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
       }),
     ],
   }),

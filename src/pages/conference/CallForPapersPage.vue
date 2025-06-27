@@ -42,9 +42,9 @@ import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useMeta } from 'quasar';
 
-import { useEventStore } from 'src/evan/stores/event';
+import { useEventStore } from '@evan/stores/event';
 
-import { iconEmail, iconSend } from 'src/icons';
+import { iconEmail, iconSend } from '@/icons';
 
 const eventStore = useEventStore();
 

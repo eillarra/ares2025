@@ -1,7 +1,8 @@
 import { boot } from 'quasar/wrappers';
 import axios, { AxiosInstance } from 'axios';
 
-import { EVAN_API_ENDPOINT, EVAN_EVENT_CODE } from 'src/constants';
+import { EVAN_API_ENDPOINT, EVAN_EVENT_CODE } from '@/constants';
+import { useEventStore, type EvanApiClient } from '@evan/stores/event';
 
 declare module 'vue' {
   interface ComponentCustomProperties {
@@ -19,9 +20,20 @@ declare module 'vue' {
 const api = axios.create({ baseURL: EVAN_API_ENDPOINT });
 const eventApi = axios.create({ baseURL: `${EVAN_API_ENDPOINT}events/${EVAN_EVENT_CODE}/` });
 
-export default boot(({ app }) => {
+export default boot(async ({ app }) => {
   app.config.globalProperties.$axios = axios;
   app.config.globalProperties.$api = api;
+
+  // Initialize the Evan event store with the API client
+  const eventStore = useEventStore();
+  eventStore.setApiClient(eventApi as EvanApiClient);
+
+  // Initialize the event store data
+  try {
+    await eventStore.init();
+  } catch (error) {
+    console.error('Failed to initialize event store:', error);
+  }
 });
 
 export { axios, api, eventApi };

@@ -15,8 +15,9 @@
 import { computed } from 'vue';
 import { useQuasar } from 'quasar';
 
-import { useFavorites } from 'src/composables/useFavorites';
-import { iconStar, iconStarFull } from 'src/icons';
+import { useFavorites } from '@/composables/useFavorites';
+
+import { iconStar, iconStarFull } from '@/icons';
 
 type FavoriteType = 'session' | 'subsession';
 

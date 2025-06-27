@@ -105,10 +105,10 @@ import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useMeta } from 'quasar';
 
-import { useEventStore } from 'src/evan/stores/event';
-import { format } from 'src/evan/utils/dates';
+import { useEventStore } from '@evan/stores/event';
+import { format } from '@evan/utils/dates';
 
-import { iconRegistration } from 'src/icons';
+import { iconRegistration } from '@/icons';
 
 const eventStore = useEventStore();
 

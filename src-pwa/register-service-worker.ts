@@ -1,6 +1,6 @@
 import { register } from 'register-service-worker';
 
-import { notify } from 'src/utils/notify';
+import { notify } from '@/utils/notify';
 
 // The ready(), registered(), cached(), updatefound() and updated()
 // events passes a ServiceWorkerRegistration instance in their arguments.

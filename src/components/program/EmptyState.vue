@@ -12,7 +12,7 @@
 import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import { iconNotFound } from 'src/icons';
+import { iconNotFound } from '@/icons';
 
 interface Props {
   title: string;

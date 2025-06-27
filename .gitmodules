@@ -1,0 +1,3 @@
+[submodule "evan-kit"]
+	path = evan-kit
+	url = git@github.com:eillarra/evan-kit.git

@@ -71,14 +71,14 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 
-import { useEventStore } from 'src/evan/stores/event';
-import { createSessionDisplayInfo, createSubsessionDisplayInfo } from 'src/utils/program';
+import { useEventStore } from '@evan/stores/event';
+import { createSessionDisplayInfo, createSubsessionDisplayInfo } from '@/utils/program';
 
-import AresDialogContent from 'src/components/AresDialogContent.vue';
-import FavoriteBtn from 'src/components/program/FavoriteBtn.vue';
-import MarkedDiv from 'src/evan/components/MarkedDiv.vue';
+import AresDialogContent from '@/components/AresDialogContent.vue';
+import FavoriteBtn from '@/components/program/FavoriteBtn.vue';
+import MarkedDiv from '@evan/components/MarkedDiv.vue';
 
-import { iconCalendar, iconOpenInNew } from 'src/icons';
+import { iconCalendar, iconOpenInNew } from '@/icons';
 
 const props = withDefaults(
   defineProps<{

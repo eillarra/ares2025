@@ -107,14 +107,14 @@
 import { computed, onMounted, ref, provide, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
-import { useEventStore } from 'src/evan/stores/event';
-import { getAvailableDates } from 'src/utils/program';
+import { useEventStore } from '@evan/stores/event';
+import { getAvailableDates } from '@/utils/program';
 
-import { iconViewList, iconMic, iconArticle, iconStar } from 'src/icons';
+import { iconViewList, iconMic, iconArticle, iconStar } from '@/icons';
 
-import LoadingState from 'src/components/program/LoadingState.vue';
-import ErrorState from 'src/components/program/ErrorState.vue';
-import EmptyState from 'src/components/program/EmptyState.vue';
+import LoadingState from '@/components/program/LoadingState.vue';
+import ErrorState from '@/components/program/ErrorState.vue';
+import EmptyState from '@/components/program/EmptyState.vue';
 
 interface NavigationItem {
   route: string;

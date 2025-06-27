@@ -145,26 +145,28 @@
 </template>
 
 <script setup lang="ts">
+// Types are now globally available - no import needed!
+
 import { computed, ref, watchEffect } from 'vue';
 import { useQuasar } from 'quasar';
 
-import { formatImportantDate, passedImportantDate } from 'src/evan/utils/dates';
-import { useProgramTemplate } from 'src/evan/composables/useProgramTemplate';
-import { useEventStore } from 'src/evan/stores/event';
+import { formatImportantDate, passedImportantDate } from '@evan/utils/dates';
+import { useProgramTemplate } from '@evan/composables/useProgramTemplate';
+import { useEventStore } from '@evan/stores/event';
 import {
   getSessionDisplayTitle,
   getSubsessionDisplayTitle,
   formatProgramDate,
   formatProgramTime,
   getRoomName,
-} from 'src/utils/program';
+} from '@/utils/program';
 
-import AresDialogContent from 'src/components/AresDialogContent.vue';
-import FavoriteBtn from 'src/components/program/FavoriteBtn.vue';
-import MarkedDiv from 'src/evan/components/MarkedDiv.vue';
-import ProgramMarkedDiv from 'src/components/program/ProgramMarkedDiv.vue';
+import AresDialogContent from '@/components/AresDialogContent.vue';
+import FavoriteBtn from '@/components/program/FavoriteBtn.vue';
+import MarkedDiv from '@evan/components/MarkedDiv.vue';
+import ProgramMarkedDiv from '@/components/program/ProgramMarkedDiv.vue';
 
-import { iconEmail, iconPerson } from 'src/icons';
+import { iconEmail, iconPerson } from '@/icons';
 
 const $q = useQuasar();
 const eventStore = useEventStore();

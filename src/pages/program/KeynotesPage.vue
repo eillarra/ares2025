@@ -71,15 +71,15 @@
 <script setup lang="ts">
 import { ref, computed, nextTick, inject } from 'vue';
 
-import { useEventStore } from 'src/evan/stores/event';
-import { formatProgramTime, getRoomName, sortKeynotes } from 'src/utils/program';
+import { useEventStore } from '@evan/stores/event';
+import { formatProgramTime, getRoomName, sortKeynotes } from '@/utils/program';
 
-import AresSeparator from 'src/components/AresSeparator.vue';
-import KeynoteDetailsDialog from 'src/components/program/KeynoteDetailsDialog.vue';
-import LoadingState from 'src/components/program/LoadingState.vue';
-import ErrorState from 'src/components/program/ErrorState.vue';
-import EmptyState from 'src/components/program/EmptyState.vue';
-import ProgramCard from 'src/components/program/ProgramCard.vue';
+import AresSeparator from '@/components/AresSeparator.vue';
+import KeynoteDetailsDialog from '@/components/program/KeynoteDetailsDialog.vue';
+import LoadingState from '@/components/program/LoadingState.vue';
+import ErrorState from '@/components/program/ErrorState.vue';
+import EmptyState from '@/components/program/EmptyState.vue';
+import ProgramCard from '@/components/program/ProgramCard.vue';
 
 const eventStore = useEventStore();
 

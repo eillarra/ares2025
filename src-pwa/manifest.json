@@ -1,9 +1,15 @@
 {
   "name": "ARES 2025",
   "short_name": "ARES 2025",
+  "description": "ARES Conference 2025 - International Conference on Availability, Reliability and Security",
   "orientation": "portrait",
+  "display": "standalone",
+  "start_url": "/",
+  "scope": "/",
   "background_color": "#fce275",
   "theme_color": "#bf0303",
+  "categories": ["education", "productivity"],
+  "lang": "en",
   "icons": [
     {
       "src": "icons/icon-128x128.png",
@@ -13,7 +19,8 @@
     {
       "src": "icons/icon-192x192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "icons/icon-256x256.png",
@@ -28,7 +35,24 @@
     {
       "src": "icons/icon-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Program",
+      "short_name": "Program",
+      "description": "View conference program",
+      "url": "/program/",
+      "icons": [{ "src": "icons/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "My Calendar",
+      "short_name": "Calendar",
+      "description": "View personal calendar",
+      "url": "/program/my-calendar/",
+      "icons": [{ "src": "icons/icon-192x192.png", "sizes": "192x192" }]
     }
   ]
 }
