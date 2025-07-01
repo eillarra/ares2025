@@ -20,26 +20,42 @@
       <template #page>
         <div class="q-px-lg q-pb-xl">
           <div v-if="keynote.speaker" class="q-mb-md">
-            <div class="text-subtitle2 text-grey-7 q-mb-xs">Speaker</div>
-            <ares-btn
-              v-if="keynote.extra_data?.speaker_website"
-              :href="keynote.extra_data.speaker_website"
-              target="_blank"
-              :icon="iconOpenInNew"
-              label="Visit website"
-              size="md"
-              class="float-right q-ml-xl"
-            />
-            <p>
-              <strong>{{ keynote.speaker }}</strong>
-              <span v-if="keynote.extra_data?.speaker_affiliation" class="text-grey-8">
-                <br />{{ keynote.extra_data.speaker_affiliation }}
-              </span>
-            </p>
+            <div class="text-subtitle2 text-grey-7 q-mb-sm">Speaker</div>
+            <div class="row items-start q-col-gutter-lg q-mb-lg">
+              <div class="col-shrink">
+                <avatar-display :file="keynoteAvatar" size="128px" :alt-text="keynote.speaker" />
+              </div>
+              <div class="col">
+                <p class="q-mb-none text-wrap-balance">
+                  <strong>{{ keynote.speaker }}</strong>
+                  <span v-if="keynote.extra_data?.speaker_affiliation" class="text-grey-8">
+                    <br />{{ keynote.extra_data.speaker_affiliation }}
+                  </span>
+                </p>
+                <div v-if="keynote.extra_data?.speaker_website" class="float-right q-mt-md lt-md">
+                  <ares-btn
+                    :href="keynote.extra_data.speaker_website"
+                    target="_blank"
+                    :icon="iconOpenInNew"
+                    label="Visit website"
+                    size="md"
+                  />
+                </div>
+              </div>
+              <div v-if="keynote.extra_data?.speaker_website" class="col-auto gt-sm">
+                <ares-btn
+                  :href="keynote.extra_data.speaker_website"
+                  target="_blank"
+                  :icon="iconOpenInNew"
+                  label="Visit website"
+                  size="md"
+                />
+              </div>
+            </div>
           </div>
           <div v-if="sessionDisplay || subsessionDisplay" class="q-mb-lg">
             <div class="text-subtitle2 text-grey-7 q-mb-sm">Presentation schedule</div>
-            <div v-if="!hideFavoriteBtn" class="float-right q-ml-xl">
+            <div v-if="!hideFavoriteBtn" class="float-right q-ml-lg">
               <favorite-btn v-if="subsessionDisplay" type="subsession" :id="keynote.subsession" />
               <favorite-btn v-else-if="sessionDisplay" type="session" :id="keynote.session" />
             </div>
@@ -86,11 +102,12 @@
 import { ref, computed } from 'vue';
 
 import { useEventStore } from '@evan/stores/event';
-import { createSessionDisplayInfo, createSubsessionDisplayInfo } from '@/utils/program';
+import { createSessionDisplayInfo, createSubsessionDisplayInfo, getKeynoteAvatar } from '@/utils/program';
 
+import MarkedDiv from '@evan/components/MarkedDiv.vue';
 import AresDialogContent from '@/components/AresDialogContent.vue';
 import FavoriteBtn from '@/components/program/FavoriteBtn.vue';
-import MarkedDiv from '@evan/components/MarkedDiv.vue';
+import AvatarDisplay from '@/components/AvatarDisplay.vue';
 
 import { iconOpenInNew } from '@/icons';
 
@@ -124,6 +141,8 @@ const props = withDefaults(defineProps<Props>(), {
 const eventStore = useEventStore();
 
 const dialogOpen = ref(false);
+
+const keynoteAvatar = computed(() => getKeynoteAvatar(props.keynote));
 
 const sessionDisplay = computed(() => {
   if (!props.keynote.session) return null;

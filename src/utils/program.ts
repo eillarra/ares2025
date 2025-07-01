@@ -19,6 +19,7 @@ export {
   formatProgramTime,
   sortKeynotes,
   sortSessionsAdvanced,
+  getKeynoteAvatar,
 } from '@evan/utils/program';
 
 // Import utilities for our new functions

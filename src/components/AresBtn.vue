@@ -1,5 +1,12 @@
 <template>
-  <q-btn outline rounded no-caps :color="color || 'dark'" class="ares__q-btn shadow-10" :class="{ 'no-label': !label }">
+  <q-btn
+    outline
+    rounded
+    no-caps
+    :color="color || 'dark'"
+    class="ares__q-btn shadow-10 ares-hover-lift--btn"
+    :class="{ 'no-label': !label }"
+  >
     <template v-if="label">{{ label }}</template>
     <slot />
   </q-btn>

@@ -65,6 +65,7 @@ import {
   groupSessionsByDayAdvanced,
   getSessionDisplayTitle,
   sortSessionsAdvanced,
+  getKeynoteAvatar,
 } from '@/utils/program';
 
 import AresSearchBar from '@/components/AresSearchBar.vue';
@@ -169,18 +170,36 @@ const getSessionVariant = (session: EvanSession): 'session' | 'keynote' | 'paper
   return 'session';
 };
 
+const getKeynoteSpeakerInfo = (session: EvanSession) => {
+  // Find keynote that corresponds to this session
+  const keynote = eventStore.keynotes.find((k) => k.session === session.id);
+  if (!keynote) return undefined;
+
+  const avatar = getKeynoteAvatar(keynote);
+  return {
+    name: keynote.speaker,
+    affiliation: keynote.extra_data?.speaker_affiliation,
+    avatar,
+  };
+};
+
 const getSessionCardProps = (session: EvanSession) => {
   const tracks = eventStore.event?.tracks || [];
+  const variant = getSessionVariant(session);
+
+  // Add speaker info for keynote sessions
+  const speakerInfo = variant === 'keynote' ? getKeynoteSpeakerInfo(session) : undefined;
 
   return {
     title: getSessionDisplayTitle(session, tracks),
     startTime: session.start_at,
     endTime: session.end_at,
     trackInfo: getSessionTrackInfo(session),
+    speakerInfo,
     locationInfo: getSessionLocationInfo(session),
     paperCount: getSessionPaperCount(session),
     favoriteState: getSessionFavoriteState(session),
-    variant: getSessionVariant(session),
+    variant,
   };
 };
 

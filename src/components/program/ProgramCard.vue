@@ -21,16 +21,20 @@
       </div>
     </q-card-section>
     <q-card-section>
-      <h6 class="q-mt-none q-mb-sm">
+      <avatar-display
+        v-if="speakerInfo"
+        :file="speakerInfo.avatar"
+        :size="$q.screen.gt.md ? '112px' : '96px'"
+        :alt-text="speakerInfo.name"
+        class="float-right q-ml-lg"
+      />
+      <h6 class="q-mt-none q-mb-sm text-wrap-balance">
         {{ displayTitle }}
       </h6>
-
       <!-- Speaker/Presenter Info -->
       <div v-if="speakerInfo" class="row items-center q-mb-sm">
-        <q-icon :name="iconPerson" size="16px" class="q-mr-xs text-grey-6" />
         <span class="text-body2 text-grey-8 text-weight-medium">{{ speakerInfo.name }}</span>
       </div>
-
       <!-- Papers count -->
       <div v-if="paperCount" class="text-caption text-grey-6 q-mb-xs">
         {{ paperCount }} paper{{ paperCount !== 1 ? 's' : '' }}
@@ -51,7 +55,10 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { formatProgramTime, formatProgramDate } from '@/utils/program';
-import { iconPerson, iconRoom, iconStar, iconStarFull, iconStarHalf } from '@/icons';
+
+import AvatarDisplay from '@/components/AvatarDisplay.vue';
+
+import { iconRoom, iconStar, iconStarFull, iconStarHalf } from '@/icons';
 
 interface TrackInfo {
   label: string;
@@ -61,6 +68,7 @@ interface TrackInfo {
 interface SpeakerInfo {
   name: string;
   affiliation?: string;
+  avatar?: EvanFile;
 }
 
 interface FavoriteState {
@@ -103,6 +111,7 @@ const cardClasses = computed(() => [
   'full-height',
   'column',
   'program-card',
+  'ares-hover-lift',
   `program-card--${props.variant}`,
 ]);
 
@@ -124,10 +133,6 @@ const formatDate = (time?: string) => {
 </script>
 
 <style scoped>
-.program-card {
-  transition: box-shadow 0.2s ease;
-}
-
 .program-card--keynote {
   border-left: 5px solid var(--q-primary);
 }

@@ -72,7 +72,7 @@
 import { ref, computed, nextTick, inject } from 'vue';
 
 import { useEventStore } from '@evan/stores/event';
-import { formatProgramTime, getRoomName, sortKeynotes } from '@/utils/program';
+import { formatProgramTime, getRoomName, sortKeynotes, getKeynoteAvatar } from '@/utils/program';
 
 import AresSeparator from '@/components/AresSeparator.vue';
 import KeynoteDetailsDialog from '@/components/program/KeynoteDetailsDialog.vue';
@@ -167,9 +167,11 @@ const getKeynoteEndTime = (keynote: EvanKeynote): string | undefined => {
 };
 
 const getKeynoteSpeakerInfo = (keynote: EvanKeynote) => {
+  const avatar = getKeynoteAvatar(keynote);
   return {
     name: keynote.speaker,
     affiliation: keynote.extra_data?.speaker_affiliation,
+    avatar, // Pass the EvanFile directly
   };
 };
 
