@@ -67,6 +67,12 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/conference/CommitteesPage.vue'),
       },
       {
+        path: '/conference/presenter-info/',
+        name: 'presenterInfo',
+        strict: true,
+        component: () => import('pages/conference/PresenterInfoPage.vue'),
+      },
+      {
         path: '/conference/program-committee/',
         name: 'programCommittee',
         strict: true,
