@@ -127,7 +127,12 @@ const tracksAndSessions = computed<TrackWithSessions[]>(() => {
     };
   });
 
-  return tracksWithSessions.sort((a, b) => a.track.position - b.track.position);
+  return tracksWithSessions.sort((a, b) => {
+    // Handle null tracks by placing them at the end
+    if (!a.track) return 1;
+    if (!b.track) return -1;
+    return a.track.position - b.track.position;
+  });
 });
 
 const fetchSessionInfo = async () => {
