@@ -64,9 +64,15 @@ import { ref, computed, inject } from 'vue';
 
 import { useEventStore } from '@evan/stores/event';
 import { usePersonalCalendar } from '@evan/composables/usePersonalCalendar';
+import {
+  groupSessionsByDay as _groupSessionsByDay,
+  getTrackName,
+  getRoomName,
+  getSessionDisplayTitle,
+} from '@evan/utils/program';
 import { useFavorites } from '@/composables/useFavorites';
-import { groupSessionsByDay, getTrackName, getRoomName, getSessionDisplayTitle } from '@/utils/program';
 import { searchInFields } from '@/utils/search';
+import { EVAN_EVENT_TIMEZONE, EVAN_EVENT_IS_VIRTUAL } from '@/constants';
 
 import AresSeparator from '@/components/AresSeparator.vue';
 import AresSearchBar from '@/components/AresSearchBar.vue';
@@ -121,7 +127,7 @@ const groupedSessions = computed(() => {
   if (selectedDateValue !== 'all') {
     return null;
   }
-  return groupSessionsByDay(filteredSessions.value);
+  return _groupSessionsByDay(filteredSessions.value, EVAN_EVENT_TIMEZONE, EVAN_EVENT_IS_VIRTUAL);
 });
 
 // Helper functions

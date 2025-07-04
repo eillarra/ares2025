@@ -108,7 +108,7 @@ import { computed, onMounted, ref, provide, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 import { useEventStore } from '@evan/stores/event';
-import { getAvailableDates } from '@/utils/program';
+import { getAvailableDays } from '@/utils/program';
 
 import { iconArticle, iconMic, iconProgram, iconStar, iconViewList } from '@/icons';
 
@@ -129,29 +129,23 @@ const route = useRoute();
 // State
 const selectedDay = ref((route.query.day as string)?.toLowerCase() || 'all');
 
-// Helper functions for date/weekday conversion
-const getWeekdayFromDate = (dateString: string): string => {
-  const dateObj = new Date(dateString);
-  return dateObj.toLocaleDateString('en-US', { weekday: 'short' }).toLowerCase();
-};
-
+// Helper functions for date/weekday conversion using session groups
 const getDateFromWeekday = (weekday: string): string | null => {
   if (weekday === 'all') return null;
 
-  const available = availableDates.value;
-  return available.find((date) => getWeekdayFromDate(date) === weekday.toLowerCase()) || null;
+  const dayOptions = getAvailableDays(eventStore.sessions);
+  const option = dayOptions.find((opt) => opt.value === weekday.toLowerCase());
+
+  return option ? option.date : null;
 };
 
-// Custom day options with weekday as value
-const createCustomDayOptions = (availableDates: string[]) => {
+// Create day options from sessions (simple and guaranteed to match schedule)
+const createDayOptionsFromSessions = () => {
   const options = [{ label: 'All days', value: 'all' }];
+  const sessionDays = getAvailableDays(eventStore.sessions);
 
-  availableDates.forEach((date) => {
-    const dateObj = new Date(date);
-    const weekday = dateObj.toLocaleDateString('en-US', { weekday: 'short' });
-    const weekdayLower = weekday.toLowerCase();
-
-    options.push({ label: weekday, value: weekdayLower });
+  sessionDays.forEach((day) => {
+    options.push({ label: day.label, value: day.value });
   });
 
   return options;
@@ -160,12 +154,13 @@ const createCustomDayOptions = (availableDates: string[]) => {
 // Computed
 const availableDates = computed(() => {
   if (!eventStore.sessions.length) return [];
-  return getAvailableDates(eventStore.sessions);
+  const dayOptions = getAvailableDays(eventStore.sessions);
+  return dayOptions.map((day) => day.date);
 });
 
 const dayOptions = computed(() => {
-  if (!availableDates.value.length) return [{ label: 'All days', value: 'all' }];
-  return createCustomDayOptions(availableDates.value);
+  if (!eventStore.sessions.length) return [{ label: 'All days', value: 'all' }];
+  return createDayOptionsFromSessions();
 });
 
 const currentEventDay = computed(() => {
@@ -242,8 +237,11 @@ const selectDay = (day: string) => {
 const setInitialDaySelection = () => {
   // Auto-select current day if the event is happening today
   if (currentEventDay.value && availableDates.value.includes(currentEventDay.value)) {
-    const todayWeekday = getWeekdayFromDate(currentEventDay.value);
-    selectedDay.value = todayWeekday;
+    const dayOptions = getAvailableDays(eventStore.sessions);
+    const todayOption = dayOptions.find((opt) => opt.date === currentEventDay.value);
+    if (todayOption) {
+      selectedDay.value = todayOption.value;
+    }
   }
 };
 

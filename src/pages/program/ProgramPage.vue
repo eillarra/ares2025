@@ -62,11 +62,12 @@ import { api } from '@/boot/axios';
 import { useFavorites } from '@/composables/useFavorites';
 import {
   filterSessions,
-  groupSessionsByDayAdvanced,
+  groupSessionsByDayAdvanced as _groupSessionsByDayAdvanced,
   getSessionDisplayTitle,
   sortSessionsAdvanced,
   getKeynoteAvatar,
-} from '@/utils/program';
+} from '@evan/utils/program';
+import { EVAN_EVENT_TIMEZONE, EVAN_EVENT_IS_VIRTUAL } from '@/constants';
 
 import AresSearchBar from '@/components/AresSearchBar.vue';
 import AresSeparator from '@/components/AresSeparator.vue';
@@ -122,7 +123,7 @@ const groupedSessions = computed(() => {
     return null;
   }
   const tracks = eventStore.event?.tracks || [];
-  return groupSessionsByDayAdvanced(filteredSessions.value, tracks);
+  return _groupSessionsByDayAdvanced(filteredSessions.value, tracks, EVAN_EVENT_TIMEZONE, EVAN_EVENT_IS_VIRTUAL);
 });
 
 const hasFiltersApplied = computed(() => {

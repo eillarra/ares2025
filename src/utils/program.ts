@@ -1,29 +1,53 @@
-// Re-export types
-export type { TimeSlot, SessionGroup } from '@evan/utils/program';
+// Re-export types from evan-kit
+export type { TimeSlot, SessionGroup, EvanSession, EvanRoom, EvanSubsession } from '@evan/utils/program';
 
-// Re-export all generic program utilities from evan utils
+// Re-export all generic program utilities from evan-kit
 export {
   createTimeSlots,
   getSessionsByDate,
-  getAvailableDates,
   groupSessionsByDay,
   groupSessionsByDayAdvanced,
   getTrackName,
   getRoomName,
   filterSessions,
-  createDayOptions,
   createTrackOptions,
   getSessionDisplayTitle,
   getSubsessionDisplayTitle,
-  formatProgramDate,
-  formatProgramTime,
   sortKeynotes,
   sortSessionsAdvanced,
   getKeynoteAvatar,
 } from '@evan/utils/program';
 
-// Import utilities for our new functions
-import { formatProgramDate, formatProgramTime, getRoomName, getSubsessionDisplayTitle } from '@evan/utils/program';
+// Import utilities for our ARES-specific functions
+import {
+  formatProgramDate as _formatProgramDate,
+  formatProgramTime as _formatProgramTime,
+  createDayOptions as _createDayOptions,
+  getAvailableDays as _getAvailableDays,
+  getRoomName,
+  getSubsessionDisplayTitle,
+} from '@evan/utils/program';
+
+import type { EvanSession, EvanRoom, EvanSubsession } from '@evan/types';
+
+import { EVAN_EVENT_TIMEZONE, EVAN_EVENT_IS_VIRTUAL } from '@/constants';
+
+// ARES-specific timezone-aware formatting functions
+export const formatProgramDate = (dateString?: string | null, format: 'long' | 'short' = 'short'): string => {
+  return _formatProgramDate(dateString, format, EVAN_EVENT_TIMEZONE, EVAN_EVENT_IS_VIRTUAL);
+};
+
+export const formatProgramTime = (timeString?: string | null): string => {
+  return _formatProgramTime(timeString, EVAN_EVENT_TIMEZONE, EVAN_EVENT_IS_VIRTUAL);
+};
+
+export const createDayOptions = (availableDates: string[]) => {
+  return _createDayOptions(availableDates, EVAN_EVENT_TIMEZONE, EVAN_EVENT_IS_VIRTUAL);
+};
+
+export const getAvailableDays = (sessions: EvanSession[]) => {
+  return _getAvailableDays(sessions, EVAN_EVENT_TIMEZONE, EVAN_EVENT_IS_VIRTUAL, 'weekday-only');
+};
 
 // Session display utilities for details dialogs
 export interface SessionDisplayInfo {
