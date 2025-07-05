@@ -146,7 +146,8 @@ const getSessionLocationInfo = (session: EvanSession): string => {
 };
 
 const getSessionPaperCount = (session: EvanSession): number | undefined => {
-  return session.papers?.length || undefined;
+  const paperCount = eventStore.papers.filter(paper => paper.session === session.id).length;
+  return paperCount > 0 ? paperCount : undefined;
 };
 
 const getSessionFavoriteState = (session: EvanSession) => {
