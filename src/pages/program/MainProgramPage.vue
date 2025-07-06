@@ -7,22 +7,7 @@
             <h2 class="ares__text-title">Conference program</h2>
             <q-separator />
             <div class="q-mt-lg">
-              <div class="row q-col-gutter-sm">
-                <div v-for="dayOption in dayOptions" :key="dayOption.value" class="col-auto">
-                  <q-btn
-                    :label="dayOption.label"
-                    :color="selectedDay === dayOption.value ? 'ares-red' : undefined"
-                    :text-color="selectedDay === dayOption.value ? 'white' : 'dark'"
-                    :outline="selectedDay !== dayOption.value"
-                    rounded
-                    no-caps
-                    size="md"
-                    @click="selectDay(dayOption.value)"
-                    class="day-pill"
-                    :class="{ 'text-weight-bold': selectedDay === dayOption.value }"
-                  />
-                </div>
-              </div>
+              <day-pills :day-options="dayOptions" :selected-day="selectedDay" @day-select="selectDay" />
             </div>
           </div>
           <div class="col-12 col-md-7">
@@ -59,46 +44,27 @@
       />
     </div>
   </div>
-  <q-page-sticky v-show="$q.screen.lt.md" position="bottom" :offset="[0, 0]">
-    <div class="bg-ares-yellow text-dark full-width">
-      <div class="row items-center q-pa-sm">
-        <!-- Navigation buttons -->
-        <div class="col">
-          <div class="row justify-around">
-            <div v-for="item in navigationItems" :key="item.route" class="col-auto">
-              <q-btn
-                flat
-                :color="isActiveRoute(item.route) ? 'ares-red' : 'grey-7'"
-                :icon="item.icon"
-                :label="item.title"
-                no-caps
-                size="sm"
-                class="mobile-nav-btn"
-                @click="navigateTo(item.route)"
-              />
-            </div>
-          </div>
-        </div>
-        <div class="col-auto q-pl-sm">
-          <q-select
-            v-model="selectedDay"
-            :options="dayOptions"
-            emit-value
-            map-options
-            dense
-            outlined
-            class="mobile-day-select"
-            popup-content-class="mobile-day-popup"
-            @update:model-value="selectDay"
-          >
-            <template v-slot:selected>
-              <div class="text-caption text-weight-medium">
-                {{ dayOptions.find((opt) => opt.value === selectedDay)?.label || 'All' }}
-              </div>
-            </template>
-          </q-select>
-        </div>
-      </div>
+  <q-page-sticky v-show="$q.screen.lt.md" position="bottom" :offset="[0, 0]" expand class="z-top">
+    <div class="ares__mobile-q-tabs bg-white text-dark full-width">
+      <q-separator />
+      <day-pills
+        :day-options="dayOptions"
+        :selected-day="selectedDay"
+        :is-mobile="true"
+        @day-select="selectDay"
+        class="q-pb-sm justify-center q-mt-xs q-mb-sm"
+      />
+      <q-tabs dense no-caps class="bg-ares-yellow text-ares-red" indicator-color="transparent">
+        <q-tab
+          v-for="item in navigationItems"
+          :key="item.route"
+          @click="navigateTo(item.route)"
+          :icon="isActiveRoute(item.route) ? item.iconFilled : item.icon"
+          class="q-py-sm"
+        >
+          <small class="text-caption q-mt-xs">{{ item.title }}</small>
+        </q-tab>
+      </q-tabs>
     </div>
   </q-page-sticky>
 </template>
@@ -110,16 +76,29 @@ import { useRouter, useRoute } from 'vue-router';
 import { useEventStore } from '@evan/stores/event';
 import { getAvailableDays } from '@/utils/program';
 
-import { iconArticle, iconMic, iconProgram, iconStar, iconViewList } from '@/icons';
+import {
+  iconArticle,
+  iconArticleFilled,
+  iconKeynote,
+  iconKeynoteFilled,
+  iconProgram,
+  iconProgramFilled,
+  iconStar,
+  iconStarFilled,
+  iconWorkshop,
+  iconWorkshopFilled,
+} from '@/icons';
 
 import LoadingState from '@/components/program/LoadingState.vue';
 import ErrorState from '@/components/program/ErrorState.vue';
 import EmptyState from '@/components/program/EmptyState.vue';
+import DayPills from '@/components/program/DayPills.vue';
 
 interface NavigationItem {
   route: string;
   title: string;
   icon: string;
+  iconFilled: string;
 }
 
 const eventStore = useEventStore();
@@ -185,26 +164,31 @@ const navigationItems = computed((): NavigationItem[] => [
     route: 'program',
     title: 'Schedule',
     icon: iconProgram,
+    iconFilled: iconProgramFilled,
   },
   {
     route: 'keynotes',
     title: 'Keynotes',
-    icon: iconMic,
+    icon: iconKeynote,
+    iconFilled: iconKeynoteFilled,
   },
   {
     route: 'workshops',
     title: 'Workshops',
-    icon: iconViewList,
+    icon: iconWorkshop,
+    iconFilled: iconWorkshopFilled,
   },
   {
     route: 'acceptedPapers',
     title: 'Papers',
     icon: iconArticle,
+    iconFilled: iconArticleFilled,
   },
   {
     route: 'userProgram',
     title: 'My Calendar',
     icon: iconStar,
+    iconFilled: iconStarFilled,
   },
 ]);
 
@@ -280,58 +264,7 @@ watch(
 </script>
 
 <style scoped>
-.nav-avatar {
-  transition: all 0.3s ease;
-}
-
-.nav-avatar:hover {
-  transform: scale(1.1);
-}
-
-.nav-item {
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.day-pill {
-  transition: all 0.2s ease;
-}
-
-.day-pill:hover {
-  transform: translateY(-1px);
-}
-
-.mobile-nav-btn {
-  flex-direction: column;
-  min-width: 60px;
-  font-size: 10px;
-}
-
-.mobile-nav-btn :deep(.q-btn__content) {
-  flex-direction: column;
-  line-height: 1.2;
-}
-
-.mobile-nav-btn :deep(.q-icon) {
-  margin-bottom: 2px;
-  font-size: 18px;
-}
-
-.mobile-day-select {
-  min-width: 80px;
-}
-
-.mobile-day-select :deep(.q-field__control) {
-  height: 32px;
-  padding: 0 8px;
-}
-
-.mobile-day-select :deep(.q-field__native) {
-  text-align: center;
-  font-size: 11px;
-}
-
-.mobile-content-padding {
-  padding-bottom: 80px;
+.ares__mobile-q-tabs .text-caption {
+  font-size: 0.55rem;
 }
 </style>

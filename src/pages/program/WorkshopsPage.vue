@@ -65,10 +65,9 @@
     </div>
   </div>
 
-  <!-- Session Details Dialog -->
-  <q-dialog v-model="showSessionDialog" square position="bottom" class="ares__dialog">
-    <SessionDialog v-if="selectedSession" :session="selectedSession" />
-  </q-dialog>
+  <ares-dialog v-model="showSessionDialog">
+    <session-dialog-content v-if="selectedSession" :session="selectedSession" />
+  </ares-dialog>
 </template>
 
 <script setup lang="ts">
@@ -78,10 +77,11 @@ import { useEventStore } from '@evan/stores/event';
 import { getSessionDisplayTitle } from '@/utils/program';
 import { searchInFields } from '@/utils/search';
 
+import AresDialog from '@/components//AresDialog.vue';
 import AresSearchBar from '@/components/AresSearchBar.vue';
 import AresSeparator from '@/components/AresSeparator.vue';
 import EmptyState from '@/components/program/EmptyState.vue';
-import SessionDialog from './SessionDialog.vue';
+import SessionDialogContent from './SessionDialogContent.vue';
 
 import { iconAddCircle } from '@/icons';
 

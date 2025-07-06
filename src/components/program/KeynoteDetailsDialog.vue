@@ -1,38 +1,49 @@
 <template>
-  <q-btn
-    v-if="!hideButton"
-    :label="inline ? undefined : buttonLabel"
-    :icon="buttonIcon"
-    :color="buttonColor"
-    :size="inline ? '8px' : buttonSize"
-    :flat="buttonFlat"
-    :outline="buttonOutline"
-    :dense="buttonDense"
-    :round="inline"
-    :class="{ 'flex-inline': inline }"
-    @click="openDialog"
-  />
-  <q-dialog v-model="dialogOpen" square position="bottom" class="ares__dialog">
-    <ares-dialog-content title="Keynote details" hide-drawer compact>
-      <template #tabs>
-        <h6 class="q-mt-none q-mb-md ares__text-red text-wrap-balance">{{ keynote.title }}</h6>
-      </template>
-      <template #page>
-        <div class="q-px-lg q-pb-xl">
-          <div v-if="keynote.speaker" class="q-mb-md">
-            <div class="text-subtitle2 text-grey-7 q-mb-sm">Speaker</div>
-            <div class="row items-start q-col-gutter-lg q-mb-lg">
-              <div class="col-shrink">
-                <avatar-display :file="keynoteAvatar" size="128px" :alt-text="keynote.speaker" />
-              </div>
-              <div class="col">
-                <p class="q-mb-none text-wrap-balance">
-                  <strong>{{ keynote.speaker }}</strong>
-                  <span v-if="keynote.extra_data?.speaker_affiliation" class="text-grey-8">
-                    <br />{{ keynote.extra_data.speaker_affiliation }}
-                  </span>
-                </p>
-                <div v-if="keynote.extra_data?.speaker_website" class="float-right q-mt-md lt-md">
+  <div class="inline-flex">
+    <q-btn
+      v-if="!hideButton"
+      :label="inline ? undefined : buttonLabel"
+      :icon="buttonIcon"
+      :color="buttonColor"
+      :size="inline ? '8px' : buttonSize"
+      :flat="buttonFlat"
+      :outline="buttonOutline"
+      :dense="buttonDense"
+      :round="inline"
+      :class="{ 'flex-inline': inline }"
+      @click="openDialog"
+    />
+    <ares-dialog v-model="dialogOpen">
+      <ares-dialog-content title="Keynote details" hide-drawer compact>
+        <template #tabs>
+          <h6 class="q-mt-none q-mb-md ares__text-red text-wrap-balance">{{ keynote.title }}</h6>
+        </template>
+        <template #page>
+          <div class="q-px-lg q-pb-xl">
+            <div v-if="keynote.speaker" class="q-mb-md">
+              <div class="text-subtitle2 text-grey-7 q-mb-sm">Speaker</div>
+              <div class="row items-start q-col-gutter-lg q-mb-lg">
+                <div class="col-shrink">
+                  <avatar-display :file="keynoteAvatar" size="128px" :alt-text="keynote.speaker" />
+                </div>
+                <div class="col">
+                  <p class="q-mb-none text-wrap-balance">
+                    <strong>{{ keynote.speaker }}</strong>
+                    <span v-if="keynote.extra_data?.speaker_affiliation" class="text-grey-8">
+                      <br />{{ keynote.extra_data.speaker_affiliation }}
+                    </span>
+                  </p>
+                  <div v-if="keynote.extra_data?.speaker_website" class="float-right q-mt-md lt-md">
+                    <ares-btn
+                      :href="keynote.extra_data.speaker_website"
+                      target="_blank"
+                      :icon="iconOpenInNew"
+                      label="Visit website"
+                      size="md"
+                    />
+                  </div>
+                </div>
+                <div v-if="keynote.extra_data?.speaker_website" class="col-auto gt-sm">
                   <ares-btn
                     :href="keynote.extra_data.speaker_website"
                     target="_blank"
@@ -42,60 +53,51 @@
                   />
                 </div>
               </div>
-              <div v-if="keynote.extra_data?.speaker_website" class="col-auto gt-sm">
-                <ares-btn
-                  :href="keynote.extra_data.speaker_website"
-                  target="_blank"
-                  :icon="iconOpenInNew"
-                  label="Visit website"
-                  size="md"
-                />
+            </div>
+            <div v-if="sessionDisplay || subsessionDisplay" class="q-mb-lg">
+              <div class="text-subtitle2 text-grey-7 q-mb-sm">Presentation schedule</div>
+              <div v-if="!hideFavoriteBtn" class="float-right q-ml-lg">
+                <favorite-btn v-if="subsessionDisplay" type="subsession" :id="keynote.subsession" />
+                <favorite-btn v-else-if="sessionDisplay" type="session" :id="keynote.session" />
+              </div>
+              <div v-if="subsessionDisplay">
+                <strong>Session:</strong> {{ subsessionDisplay.title }}<br />
+                <span v-if="subsessionDisplay.timeInfo"><strong>Time:</strong> {{ subsessionDisplay.timeInfo }}</span
+                ><br />
+                <span v-if="subsessionDisplay.roomInfo"><strong>Room:</strong> {{ subsessionDisplay.roomInfo }}</span>
+              </div>
+              <div v-else-if="sessionDisplay">
+                <strong>Session:</strong> {{ sessionDisplay.title }}<br />
+                <span v-if="sessionDisplay.timeInfo"><strong>Time:</strong> {{ sessionDisplay.timeInfo }}</span
+                ><br />
+                <span v-if="sessionDisplay.roomInfo"><strong>Room:</strong> {{ sessionDisplay.roomInfo }}</span>
               </div>
             </div>
-          </div>
-          <div v-if="sessionDisplay || subsessionDisplay" class="q-mb-lg">
-            <div class="text-subtitle2 text-grey-7 q-mb-sm">Presentation schedule</div>
-            <div v-if="!hideFavoriteBtn" class="float-right q-ml-lg">
-              <favorite-btn v-if="subsessionDisplay" type="subsession" :id="keynote.subsession" />
-              <favorite-btn v-else-if="sessionDisplay" type="session" :id="keynote.session" />
+            <div v-else-if="keynote.session" class="q-mb-lg">
+              <div class="text-subtitle2 text-grey-7 q-mb-sm">Presentation schedule</div>
+              <div class="text-grey-6">
+                <em>Session {{ keynote.session }} not found or missing schedule information</em>
+              </div>
             </div>
-            <div v-if="subsessionDisplay">
-              <strong>Session:</strong> {{ subsessionDisplay.title }}<br />
-              <span v-if="subsessionDisplay.timeInfo"><strong>Time:</strong> {{ subsessionDisplay.timeInfo }}</span
-              ><br />
-              <span v-if="subsessionDisplay.roomInfo"><strong>Room:</strong> {{ subsessionDisplay.roomInfo }}</span>
+            <div v-else class="q-mb-lg">
+              <div class="text-subtitle2 text-grey-7 q-mb-sm">Presentation schedule</div>
+              <div class="text-grey-6">
+                <em>This keynote is not assigned to a session</em>
+              </div>
             </div>
-            <div v-else-if="sessionDisplay">
-              <strong>Session:</strong> {{ sessionDisplay.title }}<br />
-              <span v-if="sessionDisplay.timeInfo"><strong>Time:</strong> {{ sessionDisplay.timeInfo }}</span
-              ><br />
-              <span v-if="sessionDisplay.roomInfo"><strong>Room:</strong> {{ sessionDisplay.roomInfo }}</span>
+            <div v-if="keynote.abstract" class="q-mb-md">
+              <div class="text-subtitle2 text-grey-7 q-mb-xs">Abstract</div>
+              <marked-div :text="keynote.abstract" />
             </div>
-          </div>
-          <div v-else-if="keynote.session" class="q-mb-lg">
-            <div class="text-subtitle2 text-grey-7 q-mb-sm">Presentation schedule</div>
-            <div class="text-grey-6">
-              <em>Session {{ keynote.session }} not found or missing schedule information</em>
+            <div v-if="keynote.extra_data?.speaker_bio" class="q-mb-md">
+              <div class="text-subtitle2 text-grey-7 q-mb-xs">About the Speaker</div>
+              <marked-div :text="keynote.extra_data.speaker_bio" />
             </div>
           </div>
-          <div v-else class="q-mb-lg">
-            <div class="text-subtitle2 text-grey-7 q-mb-sm">Presentation schedule</div>
-            <div class="text-grey-6">
-              <em>This keynote is not assigned to a session</em>
-            </div>
-          </div>
-          <div v-if="keynote.abstract" class="q-mb-md">
-            <div class="text-subtitle2 text-grey-7 q-mb-xs">Abstract</div>
-            <marked-div :text="keynote.abstract" />
-          </div>
-          <div v-if="keynote.extra_data?.speaker_bio" class="q-mb-md">
-            <div class="text-subtitle2 text-grey-7 q-mb-xs">About the Speaker</div>
-            <marked-div :text="keynote.extra_data.speaker_bio" />
-          </div>
-        </div>
-      </template>
-    </ares-dialog-content>
-  </q-dialog>
+        </template>
+      </ares-dialog-content>
+    </ares-dialog>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -106,6 +108,7 @@ import { createSessionDisplayInfo, createSubsessionDisplayInfo, getKeynoteAvatar
 
 import MarkedDiv from '@evan/components/MarkedDiv.vue';
 import AresDialogContent from '@/components/AresDialogContent.vue';
+import AresDialog from '@/components/AresDialog.vue';
 import FavoriteBtn from '@/components/program/FavoriteBtn.vue';
 import AvatarDisplay from '@/components/AvatarDisplay.vue';
 

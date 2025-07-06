@@ -2,7 +2,7 @@
   <div class="q-mb-xl q-pb-xl">
     <div class="container">
       <div class="row q-col-gutter-y-lg q-col-gutter-x-md justify-between q-mb-lg">
-        <div class="col-12 col-md-4 flex column">
+        <div class="col-12 col-md-4 flex column" v-show="$q.screen.gt.xs">
           <ares-separator label="Schedule" />
         </div>
         <div class="col-12 col-md-7">
@@ -47,9 +47,9 @@
     </div>
   </div>
 
-  <q-dialog v-model="showSessionDialog" square position="bottom" class="ares__dialog">
-    <session-dialog v-if="selectedSession" :session="selectedSession" />
-  </q-dialog>
+  <ares-dialog v-model="showSessionDialog">
+    <session-dialog-content v-if="selectedSession" :session="selectedSession" />
+  </ares-dialog>
 </template>
 
 <script setup lang="ts">
@@ -57,6 +57,7 @@ import { ref, computed, inject, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { useEventStore } from '@evan/stores/event';
+import AresDialog from '@/components/AresDialog.vue';
 
 import { api } from '@/boot/axios';
 import { useFavorites } from '@/composables/useFavorites';
@@ -73,7 +74,7 @@ import AresSearchBar from '@/components/AresSearchBar.vue';
 import AresSeparator from '@/components/AresSeparator.vue';
 import EmptyState from '@/components/program/EmptyState.vue';
 import ProgramCard from '@/components/program/ProgramCard.vue';
-import SessionDialog from './SessionDialog.vue';
+import SessionDialogContent from './SessionDialogContent.vue';
 
 const eventStore = useEventStore();
 const favorites = useFavorites();
@@ -146,7 +147,7 @@ const getSessionLocationInfo = (session: EvanSession): string => {
 };
 
 const getSessionPaperCount = (session: EvanSession): number | undefined => {
-  const paperCount = eventStore.papers.filter(paper => paper.session === session.id).length;
+  const paperCount = eventStore.papers.filter((paper) => paper.session === session.id).length;
   return paperCount > 0 ? paperCount : undefined;
 };
 

@@ -44,9 +44,9 @@
       </div>
     </div>
   </div>
-  <q-dialog v-model="dialogVisible" square position="bottom" class="ares__dialog">
-    <session-dialog :session="selectedSession" />
-  </q-dialog>
+  <ares-dialog v-model="dialogVisible">
+    <session-dialog-content :session="selectedSession" />
+  </ares-dialog>
 </template>
 
 <script setup lang="ts">
@@ -58,7 +58,8 @@ import { api } from '@/boot/axios';
 import { useEventStore } from '@evan/stores/event';
 import { formatImportantDate, passedImportantDate } from '@evan/utils/dates';
 
-import SessionDialog from '@/pages/program/SessionDialog.vue';
+import AresDialog from '@/components//AresDialog.vue';
+import SessionDialogContent from '@/pages/program/SessionDialogContent.vue';
 
 import { iconSend } from '@/icons';
 

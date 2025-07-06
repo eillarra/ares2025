@@ -53,10 +53,9 @@
     </div>
   </div>
 
-  <!-- Session Details Dialog -->
-  <q-dialog v-model="showSessionDialog" square position="bottom" class="ares__dialog">
-    <SessionDialog v-if="selectedSession" :session="selectedSession" />
-  </q-dialog>
+  <ares-dialog v-model="showSessionDialog">
+    <session-dialog-content v-if="selectedSession" :session="selectedSession" />
+  </ares-dialog>
 </template>
 
 <script setup lang="ts">
@@ -74,11 +73,12 @@ import { useFavorites } from '@/composables/useFavorites';
 import { searchInFields } from '@/utils/search';
 import { EVAN_EVENT_TIMEZONE, EVAN_EVENT_IS_VIRTUAL } from '@/constants';
 
+import AresDialog from '@/components//AresDialog.vue';
 import AresSeparator from '@/components/AresSeparator.vue';
 import AresSearchBar from '@/components/AresSearchBar.vue';
 import EmptyState from '@/components/program/EmptyState.vue';
 import ProgramCard from '@/components/program/ProgramCard.vue';
-import SessionDialog from './SessionDialog.vue';
+import SessionDialogContent from './SessionDialogContent.vue';
 
 const eventStore = useEventStore();
 const favorites = useFavorites();

@@ -14,10 +14,12 @@ import {
 import {
   ionAlertCircleOutline,
   ionBedOutline,
+  ionCalendar,
   ionCalendarOutline,
   ionCheckmarkOutline,
   ionCloseOutline,
   ionCodeOutline,
+  ionDocumentText,
   ionDocumentTextOutline,
   ionDuplicateOutline,
   ionEaselOutline,
@@ -29,10 +31,12 @@ import {
   ionInformationCircleOutline,
   ionLayersOutline,
   ionLinkOutline,
+  ionList,
   ionListOutline,
   ionLocationOutline,
   ionMailOutline,
   ionMapOutline,
+  ionMegaphone,
   ionMegaphoneOutline,
   ionMenuOutline,
   ionNavigateOutline,
@@ -58,6 +62,7 @@ import {
 export const iconAccommodation = ionBedOutline;
 export const iconAddCircle = ionAddCircleOutline;
 export const iconArticle = ionDocumentTextOutline;
+export const iconArticleFilled = ionDocumentText;
 export const iconCalendar = ionCalendarOutline;
 export const iconCalendarToday = matCalendarToday;
 export const iconCached = ionReloadOutline;
@@ -76,6 +81,8 @@ export const iconFilterList = ionOptionsOutline;
 export const iconGrid = ionGridOutline;
 export const iconGridView = matGridView;
 export const iconInfo = ionInformationCircleOutline;
+export const iconKeynote = ionMegaphoneOutline;
+export const iconKeynoteFilled = ionMegaphone;
 export const iconLink = ionLinkOutline;
 export const iconList = ionListOutline;
 export const iconMap = ionMapOutline;
@@ -84,10 +91,12 @@ export const iconMic = ionMegaphoneOutline;
 export const iconNavigation = ionNavigateOutline;
 export const iconNotFound = ionFlashOffOutline;
 export const iconPaper = ionDocumentTextOutline;
+export const iconPaperFilled = ionDocumentText;
 export const iconPdf = ionDocumentTextOutline;
 export const iconPictureAsPdf = matPictureAsPdf;
 export const iconPerson = ionPersonOutline;
 export const iconProgram = ionCalendarOutline;
+export const iconProgramFilled = ionCalendar;
 export const iconRegister = ionDuplicateOutline;
 export const iconRegistration = ionPersonAddOutline;
 export const iconRoom = matRoom;
@@ -98,6 +107,7 @@ export const iconSession = ionEaselOutline;
 export const iconSettings = ionSettingsOutline;
 export const iconShare = ionShareOutline;
 export const iconStar = ionStarOutline;
+export const iconStarFilled = ionStar;
 export const iconStarFull = ionStar;
 export const iconStarHalf = ionStarHalfOutline;
 export const iconSubmissions = ionLayersOutline;
@@ -107,6 +117,8 @@ export const iconVenue = ionLocationOutline;
 export const iconViewList = ionListOutline;
 export const iconVisibility = ionEyeOutline;
 export const iconWarning = ionWarningOutline;
+export const iconWorkshop = ionListOutline;
+export const iconWorkshopFilled = ionList;
 
 export const iconAttachment = matAttachment;
 export const iconCategory = matCategory;

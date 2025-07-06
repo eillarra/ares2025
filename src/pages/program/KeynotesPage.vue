@@ -19,8 +19,8 @@
       <template v-else>
         <!-- Show keynotes sections or empty state when filtered by day -->
         <div v-if="filteredMainKeynotes.length > 0" class="q-mb-xl">
-          <ares-separator label="ARES Keynotes" />
-          <div class="row q-col-gutter-md q-mt-md">
+          <ares-separator label="ARES Keynotes" v-show="$q.screen.gt.xs" class="q-mb-md" />
+          <div class="row q-col-gutter-md" :class="{ 'q-mt-sm': $q.screen.gt.xs }">
             <div v-for="keynote in filteredMainKeynotes" :key="keynote.id" class="col-12 col-md-6">
               <program-card
                 :title="keynote.title"

@@ -1,6 +1,6 @@
 <template>
-  <div class="text-center text-grey-7 q-py-xl">
-    <q-icon :name="iconNotFound" size="64px" color="grey-5" />
+  <div class="text-center text-grey-7 q-my-xl q-py-xl">
+    <q-icon :name="iconNotFound" size="64px" color="grey-5" class="q-mt-xl" />
     <h5 class="q-my-sm">{{ title }}</h5>
     <p v-if="description" class="text-grey-6">{{ description }}</p>
     <ares-btn v-if="showViewAllDaysAction" label="View All Days" outline class="q-mt-md" @click="clearDayFilter" />
