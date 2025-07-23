@@ -85,6 +85,10 @@
                 <em>This keynote is not assigned to a session</em>
               </div>
             </div>
+            <div v-if="keynote.bio" class="q-mb-lg">
+              <div class="text-subtitle2 text-grey-7 q-mb-sm">Speaker Bio</div>
+              <marked-div :text="keynote.bio" />
+            </div>
             <div v-if="keynote.abstract" class="q-mb-md">
               <div class="text-subtitle2 text-grey-7 q-mb-xs">Abstract</div>
               <marked-div :text="keynote.abstract" />
