@@ -12,8 +12,18 @@
               Co-located Conference
               <router-link :to="{ name: 'session', params: { sessionSlug: 'ics-csr' } }">ICS-CSR</router-link>.
             </p>
+            <h4 class="ares__text-subtitle2 q-mt-xl">Attending ARES</h4>
+            <div class="q-gutter-sm q-mb-lg">
+              <ares-btn label="Program" type="router-link" :to="{ name: 'program' }" />
+              <ares-btn
+                label="Social events"
+                type="router-link"
+                :to="{ name: 'program', query: { q: 'social event' } }"
+              />
+              <ares-btn label="Presenter information" type="router-link" :to="{ name: 'presenterInfo' }" />
+            </div>
             <div v-if="importantDates.length" class="q-my-xl">
-              <h5><strong>Important dates</strong></h5>
+              <h4 class="ares__text-subtitle2 q-mt-xl">Important dates</h4>
               <ul>
                 <li v-for="(date, idx) in importantDates" :key="idx">
                   <span :class="{ 'text-strike': date.is_past }">{{ date.formatted }}: {{ date.label }}</span>

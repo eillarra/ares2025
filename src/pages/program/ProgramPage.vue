@@ -6,7 +6,10 @@
           <ares-separator label="Schedule" />
         </div>
         <div class="col-12 col-md-7">
-          <ares-search-bar v-model="searchQuery" placeholder="Search sessions, speakers, or topics...">
+          <ares-search-bar
+            placeholder="Search sessions, speakers, topics, or types (e.g. 'social event', 'keynote')..."
+            @search="searchQuery = $event"
+          >
             <template #footer>
               <span v-if="filteredSessions.length > 0"
                 >{{ filteredSessions.length }} session<span v-if="filteredSessions.length > 1">s</span> found</span
@@ -62,12 +65,13 @@ import AresDialog from '@/components/AresDialog.vue';
 import { api } from '@/boot/axios';
 import { useFavorites } from '@/composables/useFavorites';
 import {
-  filterSessions,
+  filterSessionsWithTypes,
   groupSessionsByDayAdvanced as _groupSessionsByDayAdvanced,
   getSessionDisplayTitle,
   sortSessionsAdvanced,
   getKeynoteAvatar,
-} from '@evan/utils/program';
+  type EvanSession,
+} from '@/utils/program';
 import { EVAN_EVENT_TIMEZONE, EVAN_EVENT_IS_VIRTUAL } from '@/constants';
 
 import AresSearchBar from '@/components/AresSearchBar.vue';
@@ -82,7 +86,6 @@ const route = useRoute();
 const router = useRouter();
 
 const selectedDate = inject<{ value: string }>('selectedDate');
-
 const searchQuery = ref('');
 
 const selectedSession = ref<EvanSession | null>(null);
@@ -109,7 +112,14 @@ const filteredSessions = computed(() => {
   const tracks = eventStore.event?.tracks || [];
   const selectedDateValue = selectedDate?.value || 'all';
 
-  const filtered = filterSessions(eventStore.sessions, searchQuery.value, selectedDateValue, [], tracks);
+  const filtered = filterSessionsWithTypes(
+    eventStore.sessions,
+    searchQuery.value,
+    selectedDateValue,
+    [],
+    tracks,
+    eventStore.keynotes,
+  );
 
   if (selectedDateValue !== 'all') {
     return sortSessionsAdvanced(filtered, tracks);

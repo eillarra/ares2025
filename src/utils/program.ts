@@ -26,9 +26,10 @@ import {
   getAvailableDays as _getAvailableDays,
   getRoomName,
   getSubsessionDisplayTitle,
+  getTrackName,
 } from '@evan/utils/program';
 
-import type { EvanSession, EvanRoom, EvanSubsession } from '@evan/types';
+import type { EvanSession, EvanRoom, EvanSubsession, EvanTrack, EvanKeynote } from '@evan/types';
 
 import { EVAN_EVENT_TIMEZONE, EVAN_EVENT_IS_VIRTUAL } from '@/constants';
 
@@ -47,6 +48,73 @@ export const createDayOptions = (availableDates: string[]) => {
 
 export const getAvailableDays = (sessions: EvanSession[]) => {
   return _getAvailableDays(sessions, EVAN_EVENT_TIMEZONE, EVAN_EVENT_IS_VIRTUAL, 'weekday-only');
+};
+
+// Enhanced session filtering with session type support
+export const filterSessionsWithTypes = (
+  sessions: EvanSession[],
+  searchQuery: string,
+  selectedDay: string,
+  selectedTracks: number[],
+  tracks: EvanTrack[],
+  keynotes: EvanKeynote[] = [],
+): EvanSession[] => {
+  let filtered = sessions;
+
+  if (searchQuery) {
+    const query = searchQuery.toLowerCase();
+
+    filtered = filtered.filter((session) => {
+      // Get session type
+      const sessionType = getSessionType(session, tracks);
+
+      // Search in multiple fields including session type
+      const searchFields = [
+        session.code,
+        session.title,
+        getTrackName(tracks, session.track),
+        sessionType, // Add session type to search
+      ];
+
+      // Add keynote speaker name if it's a keynote
+      if (sessionType === 'keynote') {
+        const keynote = keynotes.find((k) => k.session === session.id);
+        if (keynote?.speaker) {
+          searchFields.push(keynote.speaker);
+        }
+      }
+
+      return searchFields.some((field) => field && field.toLowerCase().includes(query));
+    });
+  }
+
+  if (selectedDay !== 'all') {
+    filtered = filtered.filter((session) => {
+      if (!session.start_at) return false;
+      const sessionDate = new Date(session.start_at).toISOString().split('T')[0];
+      return sessionDate === selectedDay;
+    });
+  }
+
+  if (selectedTracks.length > 0) {
+    filtered = filtered.filter((session) => session.track && selectedTracks.includes(session.track));
+  }
+
+  return filtered;
+};
+
+// Helper function to determine session type
+export const getSessionType = (session: EvanSession, tracks: EvanTrack[]): string => {
+  if (session.is_social_event) return 'social event';
+  if (!session.track) return 'session';
+
+  const track = tracks.find((t) => t.id === session.track);
+  if (!track) return 'session';
+
+  const trackName = track.name.toLowerCase();
+  if (trackName.includes('keynote')) return 'keynote';
+  if (trackName.includes('paper')) return 'paper';
+  return 'session';
 };
 
 // Session display utilities for details dialogs

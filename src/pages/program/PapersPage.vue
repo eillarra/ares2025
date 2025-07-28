@@ -12,9 +12,9 @@
         </div>
         <div class="col-12 col-md-7">
           <ares-search-bar
-            v-model="searchQuery"
             placeholder="Search papers by title, authors, session, or ID"
             class="q-mb-md"
+            @search="searchQuery = $event"
           >
             <template #footer>
               <span v-if="!searchQuery">{{ filteredPapers.length }} papers</span>

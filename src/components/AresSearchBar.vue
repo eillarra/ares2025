@@ -1,8 +1,8 @@
 <template>
   <div>
     <q-input
-      :model-value="modelValue"
-      @update:model-value="(value) => $emit('update:modelValue', String(value))"
+      :model-value="searchQuery"
+      @update:model-value="updateSearchQuery"
       outlined
       dense
       rounded
@@ -14,7 +14,7 @@
         <q-icon :name="iconSearch" />
       </template>
       <template v-slot:append>
-        <q-btn v-if="modelValue" flat round dense :icon="iconClear" @click="$emit('update:modelValue', '')" />
+        <q-btn v-if="searchQuery" flat round dense :icon="iconClear" @click="updateSearchQuery('')" />
       </template>
     </q-input>
     <div v-if="$slots.footer" class="flex row q-mt-sm text-caption text-grey-6">
@@ -25,15 +25,35 @@
 </template>
 
 <script setup lang="ts">
+import { watch } from 'vue';
 import { iconSearch, iconClear } from '@/icons';
+import { useSearchQuery } from '@/composables/useSearchQuery';
 
 interface Props {
-  modelValue: string;
   placeholder?: string;
+  queryParam?: string;
 }
 
-defineProps<Props>();
-defineEmits<{
-  'update:modelValue': [value: string];
+const props = withDefaults(defineProps<Props>(), {
+  queryParam: 'q',
+});
+
+const emit = defineEmits<{
+  search: [value: string];
 }>();
+
+const { searchQuery } = useSearchQuery(props.queryParam);
+
+// Emit search events to parent for reactivity
+watch(
+  searchQuery,
+  (newValue) => {
+    emit('search', newValue);
+  },
+  { immediate: true },
+);
+
+const updateSearchQuery = (value: string | number | null) => {
+  searchQuery.value = String(value || '');
+};
 </script>

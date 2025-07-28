@@ -10,7 +10,7 @@
           </h6>
         </div>
         <div class="col-12 col-md-7">
-          <ares-search-bar v-model="searchQuery" placeholder="Search workshops by name" class="q-mb-md">
+          <ares-search-bar placeholder="Search workshops by name" class="q-mb-md" @search="searchQuery = $event">
             <template #footer>
               <span v-if="!searchQuery">{{ filteredWorkshops.length }} workshop sessions</span>
               <span v-else-if="filteredWorkshops.length > 0"

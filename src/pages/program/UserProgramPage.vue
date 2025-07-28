@@ -6,7 +6,7 @@
         <div class="row">
           <!-- Search Input -->
           <div class="col-12">
-            <ares-search-bar v-model="searchQuery" placeholder="Search your favorited sessions..." />
+            <ares-search-bar placeholder="Search your favorited sessions..." @search="searchQuery = $event" />
           </div>
         </div>
       </div>
