@@ -1,5 +1,5 @@
 <template>
-  <div class="inline-flex">
+  <div style="display: inline">
     <q-btn
       v-if="!hideButton"
       :label="inline ? undefined : buttonLabel"

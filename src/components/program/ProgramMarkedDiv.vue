@@ -13,7 +13,7 @@
           :button-dense="true"
           :hide-favorite-btn="hideFavoriteBtn"
           inline
-          class="q-ml-sm"
+          class="q-ml-xs"
         />
       </teleport>
     </template>
@@ -29,7 +29,7 @@
           :button-dense="true"
           :hide-favorite-btn="hideFavoriteBtn"
           inline
-          class="q-ml-sm"
+          class="q-ml-xs"
         />
       </teleport>
     </template>
