@@ -7,7 +7,7 @@
         </div>
         <div class="col-12 col-md-7">
           <ares-search-bar
-            placeholder="Search sessions, speakers, topics, or types (e.g. 'social event', 'keynote')..."
+            placeholder="Search sessions, speakers, topics, track names, or types (e.g. 'social event', 'keynote')..."
             @search="searchQuery = $event"
           >
             <template #footer>
@@ -119,6 +119,7 @@ const filteredSessions = computed(() => {
     [],
     tracks,
     eventStore.keynotes,
+    eventStore.topics,
   );
 
   if (selectedDateValue !== 'all') {

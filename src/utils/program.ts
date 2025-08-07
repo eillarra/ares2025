@@ -8,6 +8,7 @@ export {
   groupSessionsByDay,
   groupSessionsByDayAdvanced,
   getTrackName,
+  getTopicName,
   getRoomName,
   filterSessions,
   createTrackOptions,
@@ -27,6 +28,7 @@ import {
   getRoomName,
   getSubsessionDisplayTitle,
   getTrackName,
+  getTopicName,
 } from '@evan/utils/program';
 
 import type { EvanSession, EvanRoom, EvanSubsession, EvanTrack, EvanKeynote } from '@evan/types';
@@ -58,6 +60,7 @@ export const filterSessionsWithTypes = (
   selectedTracks: number[],
   tracks: EvanTrack[],
   keynotes: EvanKeynote[] = [],
+  topics: EvanTopic[] = [],
 ): EvanSession[] => {
   let filtered = sessions;
 
@@ -68,15 +71,32 @@ export const filterSessionsWithTypes = (
       // Get session type
       const sessionType = getSessionType(session, tracks);
 
-      // Search in multiple fields including session type
+      // Check if this session has any keynotes associated with it
+      const hasKeynote = keynotes.some((keynote) => keynote.session === session.id);
+
+      // Search in multiple fields including session type and topics
       const searchFields = [
         session.code,
         session.title,
         getTrackName(tracks, session.track),
         sessionType, // Add session type to search
+        // Add topic names as searchable terms
+        ...session.topics.map((topicId) => getTopicName(topics, topicId)),
       ];
 
-      // Add keynote speaker name if it's a keynote
+      // If this session has a keynote, also add "keynote" as a searchable term
+      if (hasKeynote) {
+        searchFields.push('keynote');
+        // Add all keynote speakers for this session to search fields
+        const sessionKeynotes = keynotes.filter((keynote) => keynote.session === session.id);
+        sessionKeynotes.forEach((keynote) => {
+          if (keynote.speaker) {
+            searchFields.push(keynote.speaker);
+          }
+        });
+      }
+
+      // Add keynote speaker name if it's a keynote (this covers main keynotes)
       if (sessionType === 'keynote') {
         const keynote = keynotes.find((k) => k.session === session.id);
         if (keynote?.speaker) {

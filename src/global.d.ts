@@ -23,6 +23,7 @@ declare global {
   type EvanPaper = EvanTypes.EvanPaper;
   type EvanKeynote = EvanTypes.EvanKeynote;
   type EvanTrack = EvanTypes.EvanTrack;
+  type EvanTopic = EvanTypes.EvanTopic;
 
   type EvanVenue = EvanTypes.EvanVenue;
   type EvanVenueRoom = EvanTypes.EvanVenueRoom;

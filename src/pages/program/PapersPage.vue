@@ -107,6 +107,11 @@ const filteredPapers = computed(() => {
         getAuthorsDisplay(paper),
         getSessionDisplay(paper),
         paper.extra_data?.internal_id ? String(paper.extra_data.internal_id) : undefined,
+        // Add topic names as searchable terms
+        ...paper.topics.map((topicId) => {
+          const topic = eventStore.topics.find((t) => t.id === topicId);
+          return topic ? topic.name : topicId.toString();
+        }),
       );
     });
   }

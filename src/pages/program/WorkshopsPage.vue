@@ -119,7 +119,15 @@ const filteredWorkshops = computed(() => {
   // Filter by search query
   if (searchQuery.value) {
     workshops = workshops.filter((workshop) => {
-      return searchInFields(searchQuery.value, getSessionDisplayTitle(workshop, eventStore.event?.tracks));
+      return searchInFields(
+        searchQuery.value,
+        getSessionDisplayTitle(workshop, eventStore.event?.tracks),
+        // Add topic names as searchable terms
+        ...workshop.topics.map((topicId) => {
+          const topic = eventStore.topics.find((t) => t.id === topicId);
+          return topic ? topic.name : topicId.toString();
+        }),
+      );
     });
   }
 
