@@ -169,7 +169,7 @@ const getSessionFavoriteState = (session: EvanSession) => {
   };
 };
 
-const getSessionVariant = (session: EvanSession): 'session' | 'keynote' | 'paper' | 'social' => {
+const getSessionVariant = (session: EvanSession): 'catering' | 'session' | 'keynote' | 'paper' | 'social' => {
   if (session.is_social_event) return 'social';
   if (!session.track) return 'session';
 
@@ -178,6 +178,7 @@ const getSessionVariant = (session: EvanSession): 'session' | 'keynote' | 'paper
   if (!track) return 'session';
 
   const trackName = track.name.toLowerCase();
+  if (trackName.includes('catering')) return 'catering';
   if (trackName.includes('keynote')) return 'keynote';
   if (trackName.includes('paper')) return 'paper';
   return 'session';

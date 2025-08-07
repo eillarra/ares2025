@@ -133,6 +133,10 @@ const formatDate = (time?: string) => {
 </script>
 
 <style scoped>
+.program-card--catering {
+  border-left: 5px solid pink;
+}
+
 .program-card--keynote {
   border-left: 5px solid var(--q-primary);
 }
