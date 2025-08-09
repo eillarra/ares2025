@@ -31,7 +31,7 @@ import {
   getTopicName,
 } from '@evan/utils/program';
 
-import type { EvanSession, EvanRoom, EvanSubsession, EvanTrack, EvanKeynote } from '@evan/types';
+import type { EvanSession, EvanRoom, EvanSubsession, EvanTrack, EvanKeynote, EvanTopic, EvanPaper } from '@evan/types';
 
 import { EVAN_EVENT_TIMEZONE, EVAN_EVENT_IS_VIRTUAL } from '@/constants';
 
@@ -61,6 +61,7 @@ export const filterSessionsWithTypes = (
   tracks: EvanTrack[],
   keynotes: EvanKeynote[] = [],
   topics: EvanTopic[] = [],
+  papers: EvanPaper[] = [],
 ): EvanSession[] => {
   let filtered = sessions;
 
@@ -83,6 +84,17 @@ export const filterSessionsWithTypes = (
         // Add topic names as searchable terms
         ...session.topics.map((topicId) => getTopicName(topics, topicId)),
       ];
+
+      // Add paper topics for papers linked to this session
+      const sessionPapers = papers.filter((paper) => paper.session === session.id || paper.subsession === session.id);
+      sessionPapers.forEach((paper) => {
+        paper.topics.forEach((topicId) => {
+          const topicName = getTopicName(topics, topicId);
+          if (topicName) {
+            searchFields.push(topicName);
+          }
+        });
+      });
 
       // If this session has a keynote, also add "keynote" as a searchable term
       if (hasKeynote) {

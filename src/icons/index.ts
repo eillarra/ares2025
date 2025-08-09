@@ -47,6 +47,7 @@ import {
   ionPersonOutline,
   ionPersonAddOutline,
   ionPeopleOutline,
+  ionPricetagsOutline,
   ionReloadOutline,
   ionSearchOutline,
   ionSendOutline,
@@ -113,6 +114,7 @@ export const iconStarFilled = ionStar;
 export const iconStarFull = ionStar;
 export const iconStarHalf = ionStarHalfOutline;
 export const iconSubmissions = ionLayersOutline;
+export const iconTags = ionPricetagsOutline;
 export const iconTrack = ionTrailSignOutline;
 export const iconTune = matTune;
 export const iconVenue = ionLocationOutline;

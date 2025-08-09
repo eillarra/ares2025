@@ -120,6 +120,7 @@ const filteredSessions = computed(() => {
     tracks,
     eventStore.keynotes,
     eventStore.topics,
+    eventStore.papers,
   );
 
   if (selectedDateValue !== 'all') {
