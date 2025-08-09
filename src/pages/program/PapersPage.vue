@@ -9,6 +9,9 @@
             >: ARES papers are listed in no particular order, followed by workshops organized alphabetically, with their
             accepted papers, as well as ICS-CSR.
           </h6>
+          <div class="q-mb-lg">
+            <proceedings-dialog button-label="Online proceedings" :button-class="{ 'full-width': $q.screen.lt.sm }" />
+          </div>
         </div>
         <div class="col-12 col-md-7">
           <ares-search-bar
@@ -66,6 +69,16 @@
               </ul>
             </div>
           </template>
+          <q-card v-if="$q.screen.lt.sm" flat bordered square class="q-pa-sm q-mb-md">
+            <q-card-section>
+              <h6 class="ares__text-red q-mt-none">
+                All accepted Papers at <span class="text-no-wrap">{{ eventStore.event?.name }}</span
+                >: ARES papers are listed in no particular order, followed by workshops organized alphabetically, with
+                their accepted papers, as well as ICS-CSR.
+              </h6>
+              <proceedings-dialog button-label="Online proceedings" :button-class="{ 'full-width': $q.screen.lt.sm }" />
+            </q-card-section>
+          </q-card>
         </div>
       </div>
     </div>
@@ -83,6 +96,7 @@ import AresSearchBar from '@/components/AresSearchBar.vue';
 import AresSeparator from '@/components/AresSeparator.vue';
 import PaperDetailsDialog from '@/components/program/PaperDetailsDialog.vue';
 import EmptyState from '@/components/program/EmptyState.vue';
+import ProceedingsDialog from '@/components/program/ProceedingsDialog.vue';
 
 import { iconAddCircle } from '@/icons';
 

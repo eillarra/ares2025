@@ -19,7 +19,6 @@
               :href="submissionsUrl"
               target="_blank"
               rel="noopener noreferrer"
-              class="ares__bg-yellow"
               :class="{ 'full-width': $q.screen.lt.sm }"
             />
           </div>

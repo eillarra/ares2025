@@ -14,7 +14,6 @@
               label="Check accommodation options"
               type="a"
               :to="{ name: 'accommodation' }"
-              class="ares__bg-yellow"
               :class="{ 'full-width': $q.screen.lt.sm }"
             />
           </div>

@@ -14,6 +14,7 @@ import {
 import {
   ionAlertCircleOutline,
   ionBedOutline,
+  ionBookOutline,
   ionCalendar,
   ionCalendarOutline,
   ionCheckmarkOutline,
@@ -63,6 +64,7 @@ export const iconAccommodation = ionBedOutline;
 export const iconAddCircle = ionAddCircleOutline;
 export const iconArticle = ionDocumentTextOutline;
 export const iconArticleFilled = ionDocumentText;
+export const iconBook = ionBookOutline;
 export const iconCalendar = ionCalendarOutline;
 export const iconCalendarToday = matCalendarToday;
 export const iconCached = ionReloadOutline;
