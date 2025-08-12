@@ -42,10 +42,10 @@
         </q-btn-group>
         <q-space />
         <ares-btn
-          :icon="iconRegister"
-          label="Register"
+          :icon="iconProgram"
+          label="Program"
           type="router-link"
-          :to="{ name: 'registration' }"
+          :to="{ name: 'program' }"
           class="q-ml-xl"
         />
         <!-- PWA Install Button -->
@@ -284,6 +284,7 @@ const menu: MenuItem[] = [
   },
 ];
 const submenu: MenuItem[] = [
+  { route: 'registration', label: 'Registration', icon: iconRegister },
   { route: 'contact', label: 'Contact' },
   { route: 'codeOfConduct', label: 'Code of Conduct' },
   { route: 'privacyPolicy', label: 'Privacy Policy' },
