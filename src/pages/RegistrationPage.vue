@@ -52,7 +52,7 @@
                 <td class="text-center">€ {{ fee.value }}</td>
                 <td class="text-center">
                   <q-chip
-                    v-if="fee.config.included_social_events.length == socialEvents.length"
+                    v-if="socialEvents.length > 0 && fee.config.included_social_events.length == socialEvents.length"
                     label="All included"
                     color="positive"
                     class="text-white text-caption q-mb-xs"
@@ -101,7 +101,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useMeta } from 'quasar';
 
@@ -114,12 +114,26 @@ const eventStore = useEventStore();
 
 const { event } = storeToRefs(eventStore);
 
+// Load program data when component mounts
+onMounted(async () => {
+  if (!eventStore.programDataLoaded) {
+    await eventStore.fetchProgramData();
+  }
+});
+
 const isEarly = computed<boolean>(() => {
   return event.value.registration_early_deadline && new Date() < new Date(event.value.registration_early_deadline);
 });
 const socialEvents = computed<EvanSession[]>(() => {
-  if (!event.value.sessions) return [];
-  return event.value.sessions.filter((session) => session.is_social_event);
+  // First try event.sessions, then fall back to store sessions
+  const sessions = event.value?.sessions || eventStore.sessions;
+  if (!sessions || sessions.length === 0) {
+    return [];
+  }
+
+  const socialSessions = sessions.filter((session) => session.is_social_event);
+
+  return socialSessions;
 });
 
 useMeta(() => {
