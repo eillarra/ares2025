@@ -87,11 +87,12 @@ const eventStore = useEventStore();
 const selectedDate = inject<{ value: string }>('selectedDate');
 
 const selectedKeynote = ref<EvanKeynote | null>(null);
-const keynoteDialog = ref<InstanceType<typeof KeynoteDetailsDialog> | null>(null);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const keynoteDialog = ref<any>(null);
 
 const openKeynoteDetails = (keynote: EvanKeynote) => {
   selectedKeynote.value = keynote;
-  nextTick(() => {
+  void nextTick(() => {
     keynoteDialog.value?.openDialog();
   });
 };

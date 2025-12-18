@@ -67,7 +67,6 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { storeToRefs } from 'pinia';
 
 import { useEventStore } from '@evan/stores/event';
 import { dateRange, formatImportantDate, passedImportantDate } from '@evan/utils/dates';
@@ -76,21 +75,18 @@ import { iconVenue } from '@/icons';
 
 const eventStore = useEventStore();
 
-const { contentsDict, event } = storeToRefs(eventStore);
+const contentsDict = computed(() => eventStore.contentsDict);
+const event = computed(() => eventStore.event);
 
 const ghent = computed<string>(() => {
   if (!event.value) return '';
   return `${event.value.city}, ${event.value.country.name}, ${dateRange(event.value.start_date, event.value.end_date)}`;
 });
 
-const focusesText = computed<string | null>(() => (contentsDict.value['home.ares_focuses']?.value as string) || null);
-const welcomeText = computed<string | null>(() => (contentsDict.value['home.welcome']?.value as string) || null);
-const aboutAresIntroText = computed<MarkdownText | null>(
-  () => (contentsDict.value['ares.intro']?.value as MarkdownText) || null,
-);
-const aboutAresText = computed<MarkdownText | null>(
-  () => (contentsDict.value['ares.about']?.value as MarkdownText) || null,
-);
+const focusesText = computed<string | null>(() => contentsDict.value['home.ares_focuses']?.value || null);
+const welcomeText = computed<string | null>(() => contentsDict.value['home.welcome']?.value || null);
+const aboutAresIntroText = computed<MarkdownText | null>(() => contentsDict.value['ares.intro']?.value || null);
+const aboutAresText = computed<MarkdownText | null>(() => contentsDict.value['ares.about']?.value || null);
 const importantDates = computed<ImportantDate[]>(() => {
   if (!event.value) return [];
   return event.value.extra_data.important_dates.map((d) => ({

@@ -1,11 +1,8 @@
-import type { AxiosError, AxiosResponse } from 'axios';
 import type { QNotifyCreateOptions } from 'quasar';
 
 import { Notify as QuasarNotify } from 'quasar';
 
 import { iconCached, iconCheck, iconError, iconInfo, iconWarning } from '@/icons';
-
-type StatusMap = { [key: number]: string };
 
 class Notify {
   create(opts: QNotifyCreateOptions): void {
@@ -15,61 +12,22 @@ class Notify {
     });
   }
 
-  apiError(error: AxiosError): void {
-    const res: AxiosResponse | undefined = error.response;
-
-    if (res == undefined) return;
-
-    const types: StatusMap = {
-      400: 'warning',
-      401: 'warning',
-      403: 'warning',
-      500: 'negative',
-    };
-
-    const textColors: StatusMap = {
-      400: 'grey-8',
-      401: 'grey-8',
-      403: 'grey-8',
-      500: 'white',
-    };
-
-    const type = types[res.status] || 'warning';
-    const caption = `${res.status} ${res.statusText}`.toUpperCase() || '';
-    let msg = '';
-
-    // 400 Bad Request || 403 Forbidden
-    if (res.status == 400 || res.status == 403) {
-      const errors: string[] = [];
-      Object.keys(res.data).forEach((k) => {
-        if (typeof res.data[k] == 'string') {
-          errors.push(`<strong>${k}</strong>: ${res.data[k]}`);
-        } else {
-          res.data[k].forEach((v: string) => {
-            errors.push(`<strong>${k}</strong>: ${v}`);
-          });
-        }
-      });
-      msg = errors.join('<br>') || '';
-    }
-
-    // 500 Internal Server Error
-    if (res.status == 500) {
-      msg = res.data.detail || '';
-    }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  apiError(error: any): void {
+    // Handle fetch API errors or other errors
+    const msg = error instanceof Error ? error.message : String(error);
 
     this.create({
       timeout: 10000,
       progress: true,
       html: true,
       message: msg,
-      caption: caption,
-      type: type,
-      icon: type == 'negative' ? iconError : iconWarning,
+      type: 'negative',
+      icon: iconError,
       actions: [
         {
           label: '✕',
-          color: textColors[res.status] || 'grey-8',
+          color: 'white',
         },
       ],
       attrs: {

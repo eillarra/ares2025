@@ -57,8 +57,20 @@
             <div v-if="sessionDisplay || subsessionDisplay" class="q-mb-lg">
               <div class="text-subtitle2 text-grey-7 q-mb-sm">Presentation schedule</div>
               <div v-if="!hideFavoriteBtn" class="float-right q-ml-lg">
-                <favorite-btn v-if="subsessionDisplay" type="subsession" :id="keynote.subsession" :hide-label="!$q.screen.gt.sm" size="lg" />
-                <favorite-btn v-else-if="sessionDisplay" type="session" :id="keynote.session" :hide-label="!$q.screen.gt.sm" size="lg" />
+                <favorite-btn
+                  v-if="subsessionDisplay"
+                  type="subsession"
+                  :id="keynote.subsession"
+                  :hide-label="!$q.screen.gt.sm"
+                  size="lg"
+                />
+                <favorite-btn
+                  v-else-if="sessionDisplay"
+                  type="session"
+                  :id="keynote.session"
+                  :hide-label="!$q.screen.gt.sm"
+                  size="lg"
+                />
               </div>
               <div v-if="subsessionDisplay">
                 <strong>Session:</strong> {{ subsessionDisplay.title }}<br />
@@ -92,10 +104,6 @@
             <div v-if="keynote.abstract" class="q-mb-md">
               <div class="text-subtitle2 text-grey-7 q-mb-xs">Abstract</div>
               <marked-div :text="keynote.abstract" />
-            </div>
-            <div v-if="keynote.extra_data?.speaker_bio" class="q-mb-md">
-              <div class="text-subtitle2 text-grey-7 q-mb-xs">About the Speaker</div>
-              <marked-div :text="keynote.extra_data.speaker_bio" />
             </div>
           </div>
         </template>

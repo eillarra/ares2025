@@ -90,7 +90,7 @@ interface Props {
   mobile?: boolean;
   showEndTime?: boolean;
   showFavorite?: boolean;
-  variant?: 'session' | 'keynote' | 'paper' | 'social';
+  variant?: 'session' | 'keynote' | 'paper' | 'social' | 'catering';
 }
 
 const props = withDefaults(defineProps<Props>(), {

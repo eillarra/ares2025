@@ -186,7 +186,7 @@ const papersBySession = computed(() => {
       });
     }
 
-    grouped.get(key)!.papers.push(paper);
+    grouped.get(key)?.papers.push(paper);
   });
 
   const result = Array.from(grouped.values());

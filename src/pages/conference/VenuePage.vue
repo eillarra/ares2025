@@ -63,7 +63,6 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { storeToRefs } from 'pinia';
 import { useMeta } from 'quasar';
 
 import { useEventStore } from '@evan/stores/event';
@@ -73,17 +72,13 @@ import { iconAccommodation, iconMap } from '@/icons';
 
 const eventStore = useEventStore();
 
-const { event, contentsDict, mainVenue } = storeToRefs(eventStore);
+const event = computed(() => eventStore.event);
+const contentsDict = computed(() => eventStore.contentsDict);
+const mainVenue = computed(() => eventStore.mainVenue);
 
-const aboutGhentIntroText = computed<MarkdownText | null>(
-  () => (contentsDict.value['ghent.intro']?.value as MarkdownText) || null,
-);
-const aboutGhentText = computed<MarkdownText | null>(
-  () => (contentsDict.value['ghent.about']?.value as MarkdownText) || null,
-);
-const howToReachGhent = computed<MarkdownText | null>(
-  () => (contentsDict.value['ghent.how_to_reach']?.value as MarkdownText) || null,
-);
+const aboutGhentIntroText = computed<MarkdownText | null>(() => contentsDict.value['ghent.intro']?.value || null);
+const aboutGhentText = computed<MarkdownText | null>(() => contentsDict.value['ghent.about']?.value || null);
+const howToReachGhent = computed<MarkdownText | null>(() => contentsDict.value['ghent.how_to_reach']?.value || null);
 
 const videoIds = ['JRd6PVK6E9k', 'IH0r296JzPc', 'BWY8vIF5gls', 'f1evP2DBGB4', 'Bc39fjh6hnM'];
 

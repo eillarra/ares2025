@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-input
-      :model-value="searchQuery"
+      :model-value="searchQuery as unknown as string"
       @update:model-value="updateSearchQuery"
       outlined
       dense
@@ -53,7 +53,6 @@
 
 <script setup lang="ts">
 import { watch, computed } from 'vue';
-import { storeToRefs } from 'pinia';
 
 import { useSearchQuery } from '@/composables/useSearchQuery';
 import { useEventStore } from '@evan/stores/event';
@@ -77,7 +76,7 @@ const { searchQuery } = useSearchQuery(props.queryParam);
 
 // Get available topics from the event store
 const eventStore = useEventStore();
-const { topics } = storeToRefs(eventStore);
+const topics = computed(() => eventStore.topics);
 
 const availableTopics = computed(() => {
   return topics.value.slice().sort((a, b) => a.name.localeCompare(b.name));
@@ -87,7 +86,7 @@ const availableTopics = computed(() => {
 watch(
   searchQuery,
   (newValue) => {
-    emit('search', newValue);
+    emit('search', newValue as unknown as string);
   },
   { immediate: true },
 );

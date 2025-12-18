@@ -27,7 +27,6 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { storeToRefs } from 'pinia';
 import { useMeta } from 'quasar';
 
 import { useEventStore } from '@evan/stores/event';
@@ -36,13 +35,12 @@ import { iconEmail } from '@/icons';
 
 const eventStore = useEventStore();
 
-const { contactEmail, contentsDict } = storeToRefs(eventStore);
+const contactEmail = computed(() => eventStore.contactEmail);
+const contentsDict = computed(() => eventStore.contentsDict);
 
-const codeOfConductText = computed<MarkdownText | null>(
-  () => (contentsDict.value['code_of_conduct']?.value as MarkdownText) || null,
-);
+const codeOfConductText = computed<MarkdownText | null>(() => contentsDict.value['code_of_conduct']?.value || null);
 const reportingText = computed<MarkdownText | null>(
-  () => (contentsDict.value['code_of_conduct.reporting']?.value as MarkdownText) || null,
+  () => contentsDict.value['code_of_conduct.reporting']?.value || null,
 );
 
 useMeta(() => {

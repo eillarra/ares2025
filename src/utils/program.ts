@@ -1,5 +1,6 @@
 // Re-export types from evan-kit
-export type { TimeSlot, SessionGroup, EvanSession, EvanRoom, EvanSubsession } from '@evan/utils/program';
+export type { TimeSlot, SessionGroup } from '@evan/utils/program';
+export type { EvanSession, EvanRoom, EvanSubsession } from '@evan/types';
 
 // Re-export all generic program utilities from evan-kit
 export {

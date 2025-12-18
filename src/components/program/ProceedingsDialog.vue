@@ -20,7 +20,6 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { storeToRefs } from 'pinia';
 
 import { useEventStore } from '@evan/stores/event';
 
@@ -48,11 +47,9 @@ const eventStore = useEventStore();
 
 const dialogOpen = ref(false);
 
-const { contentsDict } = storeToRefs(eventStore);
+const contentsDict = computed(() => eventStore.contentsDict);
 
-const springerText = computed<MarkdownText | null>(
-  () => (contentsDict.value['springer']?.value as MarkdownText) || null,
-);
+const springerText = computed<MarkdownText | null>(() => contentsDict.value['springer']?.value || null);
 
 const openDialog = (event: Event) => {
   event.preventDefault();

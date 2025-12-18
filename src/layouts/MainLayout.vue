@@ -41,13 +41,7 @@
           </template>
         </q-btn-group>
         <q-space />
-        <ares-btn
-          :icon="iconProgram"
-          label="Program"
-          type="router-link"
-          :to="{ name: 'program' }"
-          class="q-ml-xl"
-        />
+        <ares-btn :icon="iconProgram" label="Program" type="router-link" :to="{ name: 'program' }" class="q-ml-xl" />
         <!-- PWA Install Button -->
         <q-btn
           v-if="pwaInstall.isInstallable.value"
@@ -221,7 +215,6 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { storeToRefs } from 'pinia';
 
 import { usePWAInstall } from '@evan/composables/usePWAInstall';
 import { useEventStore } from '@evan/stores/event';
@@ -254,7 +247,9 @@ interface MenuItem {
 const eventStore = useEventStore();
 const pwaInstall = usePWAInstall();
 
-const { _loaded, event, contentsDict } = storeToRefs(eventStore);
+const event = computed(() => eventStore.event);
+const contentsDict = computed(() => eventStore.contentsDict);
+const _loaded = computed(() => eventStore._loaded);
 
 const rightDrawer = ref<boolean>(false);
 const menu: MenuItem[] = [
@@ -297,5 +292,5 @@ const footerText = computed<string>(() => {
   return `The ${event.value.full_name} (${event.value.name}), will be held ${dates} in ${event.value.city}, ${event.value.country.name}.`;
 });
 
-const submissionsUrl = computed<Url | null>(() => (contentsDict.value['call_for_papers.url']?.value as string) || null);
+const submissionsUrl = computed<Url | null>(() => contentsDict.value['call_for_papers.url']?.value || null);
 </script>

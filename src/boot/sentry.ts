@@ -1,6 +1,8 @@
 import { boot } from 'quasar/wrappers';
 import * as Sentry from '@sentry/vue';
 
+import { initLogger } from '@evan/utils/logger';
+
 // See https://sentry.io/eo06/ares2025/getting-started/javascript-vue/
 
 const PRELOAD_ERRORS = [
@@ -13,6 +15,8 @@ const PRELOAD_ERRORS = [
 ];
 
 export default boot(({ app, router }) => {
+  const isProduction = !!process.env.PROD;
+
   if (process.env.PROD) {
     Sentry.setTag('app.mode', process.env.MODE);
     Sentry.init({
@@ -21,6 +25,7 @@ export default boot(({ app, router }) => {
       release: process.env.GIT_COMMIT_HASH || 'dev',
       environment: 'production',
       integrations: [Sentry.browserTracingIntegration({ router })],
+      enableLogs: true,
       // Ignore some errors: https://docs.sentry.io/platforms/javascript/configuration/filtering/
       // - ResizeObserver loop errors
       // - 'vite:preloadError` equivalent errors
@@ -29,4 +34,7 @@ export default boot(({ app, router }) => {
       attachProps: false,
     });
   }
+
+  // Initialize logger with Sentry module (or null in dev mode)
+  initLogger(isProduction ? Sentry : null, isProduction);
 });

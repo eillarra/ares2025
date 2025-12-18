@@ -50,14 +50,14 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
-import { storeToRefs } from 'pinia';
 import { useRoute, useRouter } from 'vue-router';
 
-import { api } from '@/boot/axios';
 import { useEventStore } from '@evan/stores/event';
 import { formatImportantDate, passedImportantDate } from '@evan/utils/dates';
+import type { EvanTrack, EvanSession } from '@evan/types';
 
 import AresDialog from '@/components//AresDialog.vue';
+
 import SessionDialogContent from '@/pages/program/SessionDialogContent.vue';
 
 import { iconSend } from '@/icons';
@@ -71,12 +71,13 @@ const eventStore = useEventStore();
 const route = useRoute();
 const router = useRouter();
 
-const { contentsDict, event } = storeToRefs(eventStore);
+const contentsDict = computed(() => eventStore.contentsDict);
+const event = computed(() => eventStore.event);
 
 const sessionSlug = computed<string | string[] | null>(() => (route.params.sessionSlug as string) || null);
 const selectedSession = ref(null);
 
-const submissionsUrl = computed<Url | null>(() => (contentsDict.value['call_for_papers.url']?.value as string) || null);
+const submissionsUrl = computed<Url | null>(() => contentsDict.value['call_for_papers.url']?.value || null);
 
 const dialogVisible = computed<boolean>({
   get() {
@@ -85,7 +86,7 @@ const dialogVisible = computed<boolean>({
   set(value) {
     if (!value) {
       selectedSession.value = null;
-      router.push({ name: 'program' });
+      void router.push({ name: 'program' });
     }
   },
 });
@@ -138,32 +139,36 @@ const tracksAndSessions = computed<TrackWithSessions[]>(() => {
 const fetchSessionInfo = async () => {
   if (route.params.sessionSlug) {
     if (!event.value) {
-      setTimeout(fetchSessionInfo, 100);
+      setTimeout(() => {
+        void fetchSessionInfo();
+      }, 100);
       return;
     }
 
     const session = event.value.sessions.find((s) => s.slug === route.params.sessionSlug);
 
     if (!session) {
-      router.push({ name: 'program' });
+      void router.push({ name: 'program' });
       return;
     }
 
-    api.get(session.self).then((response) => {
-      selectedSession.value = response.data;
-    });
+    try {
+      selectedSession.value = await eventStore.fetchSessionDetail(session);
+    } catch (error) {
+      console.error('Failed to fetch session details', error);
+    }
   }
 };
 
 watch(sessionSlug, (newSlug) => {
   if (newSlug) {
-    fetchSessionInfo();
+    void fetchSessionInfo();
   }
 });
 
 onMounted(() => {
   if (route.params.sessionSlug) {
-    fetchSessionInfo();
+    void fetchSessionInfo();
   }
 });
 </script>

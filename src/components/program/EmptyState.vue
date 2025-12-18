@@ -41,6 +41,6 @@ const showViewAllDaysAction = computed(() => {
 const clearDayFilter = () => {
   const query = { ...route.query };
   delete query.day;
-  router.replace({ query });
+  void router.replace({ query });
 };
 </script>

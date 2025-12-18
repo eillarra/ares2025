@@ -62,8 +62,8 @@ import { useRoute, useRouter } from 'vue-router';
 import { useEventStore } from '@evan/stores/event';
 import AresDialog from '@/components/AresDialog.vue';
 
-import { api } from '@/boot/axios';
 import { useFavorites } from '@/composables/useFavorites';
+
 import {
   filterSessionsWithTypes,
   groupSessionsByDayAdvanced as _groupSessionsByDayAdvanced,
@@ -99,7 +99,7 @@ const showSessionDialog = computed<boolean>({
 
       if (route.params.sessionSlug) {
         window.history.replaceState({ ...window.history.state, preserveScroll: true }, '');
-        router.replace({
+        void router.replace({
           name: 'program',
           query: route.query,
         });
@@ -241,23 +241,22 @@ const fetchSessionBySlug = async (slug: string) => {
   const session = eventStore.sessions.find((s) => s.slug === slug);
 
   if (!session) {
-    router.push({ name: 'program', query: route.query });
+    void router.push({ name: 'program', query: route.query });
     return;
   }
 
   try {
-    const response = await api.get(session.self);
-    selectedSession.value = response.data;
+    selectedSession.value = await eventStore.fetchSessionDetail(session);
   } catch (error) {
     console.error('Failed to fetch session details:', error);
-    router.push({ name: 'program', query: route.query });
+    void router.push({ name: 'program', query: route.query });
   }
 };
 
 watch(sessionSlug, (newSlug) => {
   if (newSlug) {
     if (!selectedSession.value || selectedSession.value.slug !== newSlug) {
-      fetchSessionBySlug(newSlug);
+      void fetchSessionBySlug(newSlug);
     }
   } else {
     selectedSession.value = null;
@@ -266,7 +265,7 @@ watch(sessionSlug, (newSlug) => {
 
 onMounted(() => {
   if (route.params.sessionSlug) {
-    fetchSessionBySlug(route.params.sessionSlug as string);
+    void fetchSessionBySlug(route.params.sessionSlug as string);
   }
 });
 </script>

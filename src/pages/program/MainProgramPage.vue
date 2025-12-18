@@ -194,7 +194,7 @@ const navigationItems = computed((): NavigationItem[] => [
 
 const navigateTo = (routeName: string) => {
   const query = selectedDay.value !== 'all' ? { day: selectedDay.value } : {};
-  router.push({ name: routeName, query });
+  void router.push({ name: routeName, query });
 };
 
 const isActiveRoute = (routeName: string) => {
@@ -215,7 +215,7 @@ const selectDay = (day: string) => {
     query.day = day;
   }
 
-  router.replace({ query });
+  void router.replace({ query });
 };
 
 const setInitialDaySelection = () => {

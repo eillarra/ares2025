@@ -74,7 +74,7 @@ const enhancedHtml = computed(() => {
   if (!props.text) return '';
 
   // First render the markdown
-  let html = render(props.text) as string;
+  let html = render(props.text);
 
   // Then replace paper-ref markers with target divs
   html = html.replace(/<paper-ref\s+([^>]+)><\/paper-ref>/g, (match, attributes) => {
@@ -135,7 +135,7 @@ function updateKeynoteRefs() {
   keynoteRefs.value = newKeynoteRefs;
 
   // Mount the teleport targets after DOM update
-  nextTick(() => {
+  void nextTick(() => {
     keynoteRefs.value.forEach((keynoteRef) => {
       const target = document.getElementById(`keynote-ref-${keynoteRef.id}`);
       if (target) {
@@ -169,7 +169,7 @@ function updatePaperRefs() {
   paperRefs.value = newPaperRefs;
 
   // Mount the teleport targets after DOM update
-  nextTick(() => {
+  void nextTick(() => {
     paperRefs.value.forEach((paperRef) => {
       const target = document.getElementById(`paper-ref-${paperRef.id}`);
       if (target) {

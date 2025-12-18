@@ -19,18 +19,15 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { storeToRefs } from 'pinia';
 import { useMeta } from 'quasar';
 
 import { useEventStore } from '@evan/stores/event';
 
 const eventStore = useEventStore();
 
-const { contentsDict } = storeToRefs(eventStore);
+const contentsDict = computed(() => eventStore.contentsDict);
 
-const committeesText = computed<MarkdownText | null>(
-  () => (contentsDict.value['committees']?.value as MarkdownText) || null,
-);
+const committeesText = computed<MarkdownText | null>(() => contentsDict.value['committees']?.value || null);
 
 useMeta(() => {
   return {

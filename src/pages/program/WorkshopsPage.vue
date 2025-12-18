@@ -169,7 +169,7 @@ const workshopsByTrack = computed(() => {
       });
     }
 
-    grouped.get(key)!.workshops.push(workshop);
+    grouped.get(key)?.workshops.push(workshop);
   });
 
   const result = Array.from(grouped.values());

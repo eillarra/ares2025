@@ -38,7 +38,6 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { storeToRefs } from 'pinia';
 import { useMeta } from 'quasar';
 
 import { useEventStore } from '@evan/stores/event';
@@ -47,13 +46,12 @@ import { iconEmail, iconSend } from '@/icons';
 
 const eventStore = useEventStore();
 
-const { contactEmail, contentsDict } = storeToRefs(eventStore);
+const contactEmail = computed(() => eventStore.contactEmail);
+const contentsDict = computed(() => eventStore.contentsDict);
 
-const submissionsText = computed<MarkdownText | null>(
-  () => (contentsDict.value['call_for_papers']?.value as MarkdownText) || null,
-);
+const submissionsText = computed<MarkdownText | null>(() => contentsDict.value['call_for_papers']?.value || null);
 
-const submissionsUrl = computed<Url | null>(() => (contentsDict.value['call_for_papers.url']?.value as string) || null);
+const submissionsUrl = computed<Url | null>(() => contentsDict.value['call_for_papers.url']?.value || null);
 
 useMeta(() => {
   return {

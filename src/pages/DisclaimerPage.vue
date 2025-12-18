@@ -16,18 +16,15 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { storeToRefs } from 'pinia';
 import { useMeta } from 'quasar';
 
 import { useEventStore } from '@evan/stores/event';
 
 const eventStore = useEventStore();
 
-const { contentsDict } = storeToRefs(eventStore);
+const contentsDict = computed(() => eventStore.contentsDict);
 
-const legalNoticeText = computed<MarkdownText | null>(
-  () => (contentsDict.value['disclaimer']?.value as MarkdownText) || null,
-);
+const legalNoticeText = computed<MarkdownText | null>(() => contentsDict.value['disclaimer']?.value || null);
 
 useMeta(() => {
   return {

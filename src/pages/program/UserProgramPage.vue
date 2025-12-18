@@ -165,7 +165,7 @@ const getSessionCardProps = (session: EvanSession) => {
   };
 };
 
-const openSessionDetails = async (session: EvanSession) => {
+const openSessionDetails = (session: EvanSession) => {
   selectedSession.value = session;
   showSessionDialog.value = true;
 };

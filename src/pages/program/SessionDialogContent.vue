@@ -267,26 +267,46 @@ const props = defineProps<{
 const sessionProgramContent = ref<string>('');
 const subsessionProgramContent = ref<Map<number, string>>(new Map());
 
-watchEffect(async () => {
+watchEffect(() => {
   if (props.session.program && eventStore.programDataLoaded) {
-    sessionProgramContent.value = await renderTemplate(props.session.program);
+    renderTemplate(props.session.program)
+      .then((content) => {
+        sessionProgramContent.value = content;
+      })
+      .catch((err) => {
+        console.error('Failed to render session template:', err);
+        sessionProgramContent.value = '';
+      });
   } else {
     sessionProgramContent.value = '';
   }
 });
 
-watchEffect(async () => {
+watchEffect(() => {
   const contentMap = new Map<number, string>();
 
   if (props.session.subsessions && eventStore.programDataLoaded) {
-    for (const subsession of props.session.subsessions) {
+    const promises = props.session.subsessions.map(async (subsession) => {
       if (subsession.program) {
-        contentMap.set(subsession.id, await renderTemplate(subsession.program));
+        try {
+          const content = await renderTemplate(subsession.program);
+          contentMap.set(subsession.id, content);
+        } catch (err) {
+          console.error(`Failed to render subsession ${subsession.id} template:`, err);
+        }
       }
-    }
-  }
+    });
 
-  subsessionProgramContent.value = contentMap;
+    Promise.all(promises)
+      .then(() => {
+        subsessionProgramContent.value = contentMap;
+      })
+      .catch((err) => {
+        console.error('Error rendering subsession templates:', err);
+      });
+  } else {
+    subsessionProgramContent.value = contentMap;
+  }
 });
 
 const sessionType = computed<'regular' | 'social' | 'catering'>(() => {

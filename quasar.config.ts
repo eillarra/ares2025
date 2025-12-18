@@ -15,7 +15,7 @@ export default configure((/* ctx */) => {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://quasar.dev/quasar-cli-vite/boot-files
-    boot: ['sentry', 'axios', 'components'],
+    boot: ['sentry', 'components'],
 
     // https://quasar.dev/quasar-cli-vite/quasar-config-js#css
     css: ['app.scss'],
@@ -52,11 +52,13 @@ export default configure((/* ctx */) => {
       env: {
         APP_DOMAIN: process.env.APP_DOMAIN || 'localhost:9200',
         GIT_COMMIT_HASH: process.env.GIT_COMMIT_HASH || 'dev',
+        ARCHIVED: process.env.ARCHIVED || '',
       },
+
       // rawDefine: {}
       // ignorePublicFolder: true,
       // minify: false,
-      polyfillModulePreload: true, // CHECK: https://github.com/quasarframework/quasar/issues/12866
+      // polyfillModulePreload: true,
       // distDir
 
       extendViteConf(viteConf) {
@@ -68,6 +70,9 @@ export default configure((/* ctx */) => {
           ...viteConf.resolve.alias,
           '@': path.resolve(__dirname, 'src'),
           '@evan': path.resolve(__dirname, 'evan-kit/src'),
+          pinia: path.resolve(__dirname, 'node_modules/pinia'),
+          vue: path.resolve(__dirname, 'node_modules/vue'),
+          'vue-router': path.resolve(__dirname, 'node_modules/vue-router'),
         };
       },
       // viteVuePluginOptions: {},
@@ -80,7 +85,8 @@ export default configure((/* ctx */) => {
               tsconfigPath: 'tsconfig.vue-tsc.json',
             },
             eslint: {
-              lintCommand: 'eslint "./**/*.{js,ts,mjs,cjs,vue}"',
+              lintCommand: 'eslint -c ./eslint.config.js "./src*/**/*.{ts,js,mjs,cjs,vue}"',
+              useFlatConfig: true,
             },
           },
           { server: false },
@@ -221,6 +227,14 @@ export default configure((/* ctx */) => {
       // extendBexScriptsConf (esbuildConf) {},
       // extendBexManifestJson (json) {},
 
+      /**
+       * The list of extra scripts (js/ts) not in your bex manifest that you want to
+       * compile and use in your browser extension. Maybe dynamic use them?
+       *
+       * Each entry in the list should be a relative filename to /src-bex/
+       *
+       * @example [ 'my-script.ts', 'sub-folder/my-other-script.js' ]
+       */
       extraScripts: [],
     },
   };

@@ -102,7 +102,6 @@
 
 <script setup lang="ts">
 import { computed, onMounted } from 'vue';
-import { storeToRefs } from 'pinia';
 import { useMeta } from 'quasar';
 
 import { useEventStore } from '@evan/stores/event';
@@ -112,7 +111,7 @@ import { iconRegistration } from '@/icons';
 
 const eventStore = useEventStore();
 
-const { event } = storeToRefs(eventStore);
+const event = computed(() => eventStore.event);
 
 // Load program data when component mounts
 onMounted(async () => {

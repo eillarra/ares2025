@@ -43,8 +43,20 @@
             <div v-if="sessionDisplay || subsessionDisplay" class="q-mb-lg">
               <div class="text-subtitle2 text-grey-7 q-mb-sm">Presentation schedule</div>
               <div v-if="!hideFavoriteBtn" class="float-right q-ml-xl">
-                <favorite-btn v-if="subsessionDisplay" type="subsession" :id="paper.subsession" :hide-label="!$q.screen.gt.sm" size="lg" />
-                <favorite-btn v-else-if="sessionDisplay" type="session" :id="paper.session" :hide-label="!$q.screen.gt.sm" size="lg" />
+                <favorite-btn
+                  v-if="subsessionDisplay"
+                  type="subsession"
+                  :id="paper.subsession"
+                  :hide-label="!$q.screen.gt.sm"
+                  size="lg"
+                />
+                <favorite-btn
+                  v-else-if="sessionDisplay"
+                  type="session"
+                  :id="paper.session"
+                  :hide-label="!$q.screen.gt.sm"
+                  size="lg"
+                />
               </div>
               <div v-if="subsessionDisplay">
                 <strong>Session:</strong> {{ subsessionDisplay.title }}<br />
